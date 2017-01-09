@@ -18,15 +18,65 @@ use Geoks\ApiBundle\Controller\ApiController;
  */
 abstract class SecurityController extends ApiController
 {
-    protected $className = 'User';
-    protected $userRepository = '';
+    /**
+     * @var string
+     */
+    protected $className;
 
+    /**
+     * @var string
+     */
+    protected $userRepository = "AppBundle\\Entity\\User";
+
+    /**
+     * @var string
+     */
     protected $formCreate = "Geoks\\ApiBundle\\Form\\Basic\\CreateForm";
+
+    /**
+     * @var string
+     */
     protected $adminViews = "GeoksAdminBundle";
 
-    public function loginFormAction()
+    /**
+     * @return string
+     */
+    public function getClassName()
     {
-        return $this->render($this->adminViews . ':Security:login.html.twig');
+        return (new \ReflectionClass($this->userRepository))->getShortName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserRepository()
+    {
+        if ($this->userRepository) {
+            return $this->userRepository;
+        }
+
+        return $this->getParameter('geoks_api.user_class');
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormCreate()
+    {
+        return $this->formCreate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdminViews()
+    {
+        return $this->adminViews;
+    }
+
+    public function __construct($userRepository = null)
+    {
+        $this->userRepository = $userRepository;
     }
 
     public function loginAction(Request $request)
@@ -38,7 +88,7 @@ abstract class SecurityController extends ApiController
             $em = $this->getDoctrine()->getManager();
 
             /** @var User $user */
-            $user = $em->getRepository($this->userRepository)->findOneByEmail($email);
+            $user = $em->getRepository($this->getUserRepository())->findOneByEmail($email);
 
             if (!$user) {
                 return $this->serializeResponse($this->get('translator')->trans('geoks.user.email.invalid'), Response::HTTP_NOT_FOUND);
@@ -50,7 +100,7 @@ abstract class SecurityController extends ApiController
                     $this->get('geoks.user_provider')->loadUserByUsername($user->getUsername());
 
                     return $this->serializeResponse([
-                        "user" => $user,
+                        "details" => $user,
                         "accessToken" => $this->get('geoks.user_provider')->getAccessToken()
                     ]);
                 } else {
@@ -102,7 +152,7 @@ abstract class SecurityController extends ApiController
             }
 
             return $this->serializeResponse([
-                "user" => $user,
+                "details" => $user,
                 "accessToken" => $this->get('geoks.user_provider')->getAccessToken()
             ]);
         }
@@ -115,7 +165,7 @@ abstract class SecurityController extends ApiController
         $em = $this->getDoctrine()->getManager();
 
         /** @var User $user */
-        $user = $em->getRepository($this->userRepository)->findOneByEmail($email);
+        $user = $em->getRepository($this->getUserRepository())->findOneByEmail($email);
 
         if ($user) {
             $token = $this->container->getParameter('fos_user.resetting.token_ttl');
@@ -148,7 +198,7 @@ abstract class SecurityController extends ApiController
         $em = $this->getDoctrine()->getManager();
 
         /** @var User $user */
-        $user = $em->getRepository($this->userRepository)->findOneByConfirmationToken($token);
+        $user = $em->getRepository($this->getUserRepository())->findOneByConfirmationToken($token);
 
         if (!$user) {
             return $this->serializeResponse($this->get('translator')->trans('geoks.user.token.notFound'), Response::HTTP_NOT_FOUND);
@@ -184,7 +234,7 @@ abstract class SecurityController extends ApiController
         $userManager = $this->get('fos_user.user_manager');
         $user = $userManager->createUser();
 
-        $formUser = new $this->formCreate($this->container, $this->userRepository);
+        $formUser = new $this->formCreate($this->container, $this->getUserRepository());
         $form = $this->createForm($formUser, $user);
         $form->handleRequest($request);
 
@@ -202,7 +252,7 @@ abstract class SecurityController extends ApiController
             $this->get('geoks.user_provider')->loadUserByUsername($user->getUsername());
 
             return $this->serializeResponse([
-                "user" => $user,
+                "details" => $user,
                 "accessToken" => $this->get('geoks.user_provider')->getAccessToken()
             ]);
         }
