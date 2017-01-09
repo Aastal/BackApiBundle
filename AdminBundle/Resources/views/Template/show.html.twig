@@ -1,0 +1,92 @@
+{% set className = class(entity) %}
+{% set fields = fields(class_repository(entity) ~ '\\' ~ className) %}
+{% set fields_associations = fields_associations(class_repository(entity) ~ '\\' ~ className) %}
+
+
+<h1>{{ className }} n°{{ entity.id }}</h1>
+
+<div class="row">
+    <div class="breadcrumb">
+        <a href="{{ path('geoks_admin_' ~ className|lower|first ~ className|slice(1) ~ 's_index') }}" class="btn btn-animate btn-light-blue">{{ "app.show.return"|trans }}</a>
+        <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ className|lower|first ~ className|slice(1) ~ 's_update', {'id': entity.id}) }}">Modifier</a>
+        <a class="btn btn-animate btn-danger" href="{{ path('geoks_admin_' ~ className|lower|first ~ className|slice(1) ~ 's_delete', {'id': entity.id}) }}">Supprimer</a>
+    </div>
+</div>
+<div class="row">
+    <div class="{% if fields_associations %}col-md-6{% else %}col-md-offset-1 col-md-10{% endif %}">
+        <div class="box box-info">
+            <div class="box-header">
+                <h3 class="box-title">{{ "app.show.attributes"|trans }}</h3>
+            </div>
+            <div class="box-body padding">
+                <div class="table-responsive">
+                    <table class="table no-margin">
+                        <tbody>
+                        {% for field in fields %}
+                            <tr>
+                                <td>{{ (className|lower ~ "." ~ field.fieldName)|trans({}, className|lower) }}</td>
+                                <td>
+                                    {% if attribute(entity, field.fieldName) %}
+                                        <b>
+                                            {% set fieldValue = attribute(entity, field.fieldName) %}
+
+                                            {% if fieldValue is iterable %}
+                                                {{ fieldValue|length }}
+                                            {% elseif fieldValue.timestamp is defined %}
+                                                {{ fieldValue|date('d/m/Y H:i:s') }}
+                                            {% else %}
+                                                {{ fieldValue }}
+                                            {% endif %}
+                                        </b>
+                                    {% else %}
+                                        <label class="label label-default">{{ "app.noData"|trans }}</label>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if fields_associations %}
+        <div class="col-md-6">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title">{{ "app.show.associations"|trans }}</h3>
+                </div>
+                <div class="box-body padding">
+                    <div class="table-responsive">
+                        <table class="table no-margin">
+                            <tbody>
+                            {% for field in fields_associations %}
+                                <tr>
+                                    <td>{{ field.fieldName }}</td>
+                                    <td>
+                                        {% if attribute(entity, field.fieldName) %}
+                                            <b>
+                                                {% set fieldValue = attribute(entity, field.fieldName) %}
+
+                                                {% if fieldValue is iterable %}
+                                                    {{ fieldValue|length }}
+                                                {% elseif fieldValue.timestamp is defined %}
+                                                    {{ fieldValue|date('d/m/Y H:i:s') }}
+                                                {% else %}
+                                                    {{ fieldValue }}
+                                                {% endif %}
+                                            </b>
+                                        {% else %}
+                                            <label class="label label-default">{{ "app.noData"|trans }}</label>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>

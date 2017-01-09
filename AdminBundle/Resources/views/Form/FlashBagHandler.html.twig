@@ -1,0 +1,5 @@
+{% for flashMessage in app.session.flashbag.get('form') %}
+    <div class="alert alert-{% if 'success' in flashMessage %}success{% elseif 'info' in flashMessage %}info{% else %}danger{% endif %}">
+        {{ flashMessage|trans }}
+    </div>
+{% endfor %}

@@ -1,0 +1,22 @@
+{
+  "name": "topinsight_ws",
+  "description": "topinsight",
+  "main": "",
+  "authors": [
+    "Geoks"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-sass": "^3.3.7",
+    "select2": "^4.0.3",
+    "roboto-fontface": "^0.6.0"
+  }
+}

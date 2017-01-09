@@ -1,0 +1,30 @@
+parameters:
+    hr:
+      name: 'hr'
+
+services:
+    geoks_admin.form.type.hr:
+        class: Geoks\AdminBundle\Form\Custom\HrType
+        arguments:
+            - "%hr%"
+        tags:
+            - { name: form.type, alias: hr }
+
+    geoks.flashbag.handler:
+        class: Geoks\AdminBundle\Services\FlashBagHandler
+        arguments: [ "@session" ]
+
+    geoks_admin.export:
+        class: Geoks\AdminBundle\Services\Export
+        arguments: [ "@service_container" ]
+
+    geoks_admin.twig_extension:
+        class: Geoks\AdminBundle\Twig\AdminExtension
+        arguments: [ "@service_container" ]
+        public: false
+        tags:
+            - { name: twig.extension }
+
+    geoks_admin.entity_fields:
+        class: Geoks\AdminBundle\Services\EntityFields
+        arguments: [ "@doctrine.orm.entity_manager" ]

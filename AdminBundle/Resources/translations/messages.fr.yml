@@ -1,0 +1,29 @@
+app:
+  noData: Aucune donnée
+  logout: Se deconnecter
+  users: Utilisateurs
+  index: Accueil
+  export: Exporter
+  fields:
+    id: ID
+  show:
+    attributes: Liste des attributs
+    associations: Liste des relations
+    return: Revenir à l'index
+
+form:
+  search: Rechercher
+  empty_filter: Vider les filtres
+  filter: Filtres
+  required: Champs requis
+  otherFields: Autres champs
+  submit: Valider
+  cancel: Annuler
+
+user:
+  credentials:
+      identity: Email
+      password: Mot de passe
+
+Previous: Précédent
+Next: Suivant

@@ -1,0 +1,18 @@
+services:
+    geoks.api.serializer:
+        class: Geoks\ApiBundle\Services\Serializer
+        arguments: [ "@service_container", "@jms_serializer" ]
+
+    geoks.api.mailer:
+        class: Geoks\ApiBundle\Services\AppMailer
+        arguments: [ "@service_container", "@translator", "@hip_mandrill.dispatcher", "@router" ]
+
+    geoks.api.pushnotifications:
+        class: Geoks\ApiBundle\Services\PushNotify
+        arguments: [ "%google.fcm.api.key%", "@translator", "@service_container" ]
+
+    geoks.api.oauth.facebook_extension:
+        class: Geoks\ApiBundle\OAuth\FacebookGrantExtension
+        tags:
+            - { name: fos_oauth_server.grant_extension, uri: "%facebook_grant_type%" }
+        arguments: [ "@service_container", "@doctrine.orm.entity_manager" ]

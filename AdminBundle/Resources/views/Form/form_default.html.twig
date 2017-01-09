@@ -1,0 +1,54 @@
+{% form_theme form 'GeoksAdminBundle:Form:fields.html.twig' %}
+
+{{ form_start(form) }}
+
+<h1>{% if form.vars.attr.id is defined %}{{ form.vars.attr.id|trans }}{% endif %}</h1>
+<hr>
+
+<div class="box box-info">
+    <div class="box-body padding box-form">
+        {% if singleForm is defined %}
+            {% for child in form.children %}
+                {{ form_row(child) }}
+            {% endfor %}
+        {% else %}
+            {% set notRequired = false %}
+
+            {% for child in form.children if child.vars.required == false %}
+                {% if child and notRequired == false %}
+                    {% set notRequired = true %}
+                {% endif %}
+            {% endfor %}
+
+            {% if notRequired %}
+                <div class="row">
+                    <div class="col-md-6 right-hr">
+                        <h3 align="center">{{ "form.required"|trans }}</h3>
+
+                        {% for child in form.children if child.vars.required == true %}
+                            {{ form_row(child) }}
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-6">
+                        <h3 align="center">{{ "form.otherFields"|trans }}</h3>
+
+                        {% for child in form.children if child.vars.required == false %}
+                            {{ form_row(child) }}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                {% for child in form.children %}
+                    {{ form_row(child) }}
+                {% endfor %}
+            {% endif %}
+        {% endif %}
+        <hr>
+        <div class="box-footer">
+            <button id="submit" class="btn btn-animate btn-blue {% if confirm is defined %}confirm-submit{% endif %}" type="submit">{{ "form.submit"|trans }}</button>
+            <a href="{{ path('geoks_admin_' ~ form.vars.attr.id|replace({'app.': ""}) ~ 's_index') }}" class="btn btn-animate btn-warning">{{ "form.cancel"|trans }}</a>
+        </div>
+    </div>
+</div>
+
+{{ form_end(form) }}

@@ -1,0 +1,87 @@
+{% block form_row %}
+    <div class="form-group">
+        {% if attr.class is defined %}
+            {% if 'checkbox-animate-right' in attr.class %}
+                <label class="col-lg-8 col-md-8 col-sm-8 col-xs-9 control-label">{{ form_label(form) }}</label>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-3">
+                    {{ form_widget(form) }}
+                    {{ form_errors(form) }}
+                </div>
+            {% else %}
+                {% if form.parent.vars.attr.class is defined and 'form-horizontal' in form.parent.vars.attr %}
+                    <label class="col-lg-4 col-md-4 col-sm-2 col-xs-6 control-label">
+                        {{ form_label(form) }}
+                    </label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
+                        {{ form_widget(form) }}
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        {{ form_errors(form) }}
+                    </div>
+                {% else %}
+                    <label class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label">
+                        {{ form_label(form) }}
+                    </label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
+                        {{ form_widget(form) }}
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        {{ form_errors(form) }}
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% else %}
+            {% if 'form_title' in attr %}
+                <h3>{{ form_label(form) }}</h3>
+                <hr class="form-hr">
+            {% else %}
+                <label class="col-lg-2 col-md-2 col-sm-2 col-xs-2 control-label">{{ form_label(form) }}</label>
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
+                    {{ form_widget(form) }}
+                    {{ form_errors(form) }}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock form_row %}
+
+{% block form_label %}
+    {% if label is not sameas(false) -%}
+        {% if not compound -%}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {%- endif %}
+        {% if required -%}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}*
+        {%- endif %}
+        {% if label is empty -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+        <label{% for attrname, attrvalue in label_attr %}
+        {{ attrname }}="{{ attrvalue }}"
+    {% endfor %}>
+        {{ label|trans({}, translation_domain) }}
+        </label>
+    {%- endif %}
+{% endblock form_label %}
+
+{% block checkbox_widget %}
+    <input type="checkbox" {{ block('widget_attributes') }}
+            {% if value is defined %}
+                value="{{ value }}"
+            {% endif %}
+            {% if checked %}
+                checked="checked"
+            {% endif %} />
+{% endblock checkbox_widget %}
+
+{% block form_errors %}
+    {% spaceless %}
+        {% if errors|length > 0 %}
+            <ul>
+                {% for error in errors %}
+                    <li>{{ error.message|trans }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_errors %}

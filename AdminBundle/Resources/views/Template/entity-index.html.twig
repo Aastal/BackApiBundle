@@ -1,0 +1,68 @@
+{% set name = filter_form.vars.attr.id|replace({'app.': ""}) %}
+
+<div class="row">
+    {{ include('GeoksAdminBundle:Form:filter.html.twig', {'form' : filter_form}) }}
+</div>
+<div class="resultNb">
+    <span class="badge">{{ numberOfResults }} résultats</span>
+</div>
+<hr>
+<a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ name ~ 's_create') }}">Ajouter</a>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="box box-info">
+            <div class="box-header">
+                <h3 class="box-title">{{ filter_form.vars.attr.id|trans }}</h3>
+            </div>
+            <div class="box-body">
+                <div class="table-responsive">
+                    <table class="table no-margin">
+                        <thead>
+                        <tr>
+                            {% for field in fields %}
+                                <th{% if entities.isSorted('a.' ~ field) %} class="sorted"{% endif %}>{{ knp_pagination_sortable(entities, (name|lower ~ "." ~ field)|trans({}, name|lower), ['a.' ~ field]) }}</th>
+                            {% endfor %}
+
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for entity in entities %}
+                        <tr>
+                            {% for field in fields %}
+                                <td>
+                                    {% if attribute(entity, field) is defined and attribute(entity, field) %}
+                                        {% set field = attribute(entity, field) %}
+
+                                        {% if field is iterable %}
+                                            {{ field|length }}
+                                        {% elseif field.timestamp is defined %}
+                                            {{ field|date('d/m/Y H:i:s') }}
+                                        {% else %}
+                                            {{ field }}
+                                        {% endif %}
+                                    {% else %}
+                                        <label class="label label-default">{{ "app.noData"|trans }}</label>
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+
+                            <td>
+                                <a class="btn btn-animate btn-info" href="{{ path('geoks_admin_' ~ name ~ 's_show', {'id': entity.id}) }}">Voir</a>
+                                <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ name ~ 's_update', {'id': entity.id}) }}">Modifier</a>
+                                <a class="btn btn-animate btn-danger" href="{{ path('geoks_admin_' ~ name ~ 's_delete', {'id': entity.id}) }}">Supprimer</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-center">
+        {{ knp_pagination_render(entities) }}
+    </div>
+</div>

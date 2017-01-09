@@ -1,0 +1,31 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+    <div class="col-md-offset-4 col-md-4">
+        <h1>Login</h1>
+        <hr>
+        <form action="{{ path('geoks_admin_login_check') }}" method="post">
+            <div class="form-group">
+                <label class="control-label" for="email">
+                    {{ 'user.credentials.identity'|trans }} :
+                </label>
+
+                <input name="email" placeholder="{{ 'user.credentials.identity'|trans }}" class="form-control" type="text">
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="password">
+                    {{ 'user.credentials.password'|trans }} :
+                </label>
+
+                <input name="password" placeholder="{{ 'user.credentials.password'|trans }}" class="form-control" type="password">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    {{ 'form.submit'|trans }}
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}{{ app_name }}{% endblock %}</title>
+    {% stylesheets filter="scssphp" output='assets/css/main.css'
+    '@GeoksAdminBundle/Resources/public/sass/*.scss'%}
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+    {% block stylesheets %}{% endblock %}
+
+    {% import 'GeoksAdminBundle:Form:macro_choice.html.twig' as choice %}
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ path('geoks_admin_index') }}">{{ app_name }}</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{{ path('geoks_admin_logout') }}">{{ "app.logout"|trans }}</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="{{ "geoks_admin_index" == app.request.attributes.get('_route') ? "active" }}">
+                    <a href=""><span class="glyphicon glyphicon-home"></span> {{ "app.index"|trans }}</a>
+                </li>
+                <li class="{{ "geoks_admin_users_index" == app.request.attributes.get('_route') ? "active" }}">
+                    <a href=""><span class="glyphicon glyphicon-user"></span> {{ "app.users"|trans }}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="notification alert">
+                {% include 'GeoksAdminBundle:Form:FlashBagHandler.html.twig' %}
+            </div>
+
+            {% block body %}{% endblock %}
+        </div>
+    </div>
+</div>
+
+{% javascripts output="assets/js/app.js"
+'%kernel.root_dir%/../web/vendors/jquery/dist/jquery.min.js'
+'%kernel.root_dir%/../web/vendors/bootstrap-sass/assets/javascripts/bootstrap.min.js'
+'@GeoksAdminBundle/Resources/public/js/main.js' %}
+<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+{% block javascripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,30 @@
+Geoks\UserBundle\Entity\User:
+    constraints:
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: email
+        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity: username
+    properties:
+        email:
+            - Length:
+                min: 5
+                minMessage: "geoks.user.email.assert.tooShort"
+                max: 255
+                maxMessage: "geoks.user.email.assert.tooLong"
+            - NotNull:
+                message: "geoks.user.email.assert.notNull"
+            - Email:
+                message: "geoks.user.email.assert.type"
+        firstname:
+            - NotNull:
+                message: "geoks.user.firstname.assert.notNull"
+        lastname:
+            - NotNull:
+                message: "geoks.user.lastname.assert.notNull"
+        plainPassword:
+            - Length:
+                min: 4
+                minMessage: "geoks.user.plainPassword.assert.tooShort"
+                max: 18
+                maxMessage: "geoks.user.plainPassword.assert.tooLong"
+            - NotNull:
+                message: "geoks.user.plainPassword.assert.notNull"
+                groups: [Registration, ResetPassword, ChangePassword]

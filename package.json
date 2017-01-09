@@ -1,0 +1,14 @@
+{
+  "name": "topinsight_ws",
+  "version": "1.0.0",
+  "description": "topinsight",
+  "repository": {
+    "type": "git",
+    "url": "git@git.geoks-dev.fr:topinsight/topinsight_ws.git"
+  },
+  "author": "Geoks",
+  "license": "ISC",
+  "dependencies": {
+    "bower": "^1.8.0"
+  }
+}
