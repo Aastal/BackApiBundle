@@ -48,7 +48,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
      */
     public function getUserRepository()
     {
-        return $this->getParameter('geoks_api_user_class');
+        return $this->getParameter('geoks_api.user_class');
     }
 
     /**
