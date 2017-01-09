@@ -47,11 +47,11 @@ abstract class SecurityController extends ApiController
             if ($this->checkUserPassword($user, $password)) {
                 if ($user->isEnabled()) {
 
-                    $this->get('user_provider')->loadUserByUsername($user->getUsername());
+                    $this->get('geoks.user_provider')->loadUserByUsername($user->getUsername());
 
                     return $this->serializeResponse([
                         "user" => $user,
-                        "accessToken" => $this->get('user_provider')->getAccessToken()
+                        "accessToken" => $this->get('geoks.user_provider')->getAccessToken()
                     ]);
                 } else {
                     return $this->serializeResponse($this->get('translator')->trans('geoks.user.disabled'), Response::HTTP_FORBIDDEN);
@@ -93,7 +93,7 @@ abstract class SecurityController extends ApiController
         $facebookToken = $request->get('facebook_token');
 
         if ($facebookToken) {
-            $user = $this->get('user_provider')->loadByFacebookToken($facebookToken);
+            $user = $this->get('geoks.user_provider')->loadByFacebookToken($facebookToken);
 
             if (!$user) {
                 return $this->serializeResponse([
@@ -103,7 +103,7 @@ abstract class SecurityController extends ApiController
 
             return $this->serializeResponse([
                 "user" => $user,
-                "accessToken" => $this->get('user_provider')->getAccessToken()
+                "accessToken" => $this->get('geoks.user_provider')->getAccessToken()
             ]);
         }
 
@@ -199,11 +199,11 @@ abstract class SecurityController extends ApiController
 
             $userManager->updateUser($user);
 
-            $this->get('user_provider')->loadUserByUsername($user->getUsername());
+            $this->get('geoks.user_provider')->loadUserByUsername($user->getUsername());
 
             return $this->serializeResponse([
                 "user" => $user,
-                "accessToken" => $this->get('user_provider')->getAccessToken()
+                "accessToken" => $this->get('geoks.user_provider')->getAccessToken()
             ]);
         }
 

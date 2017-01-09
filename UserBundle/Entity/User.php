@@ -21,6 +21,11 @@ use JMS\Serializer\Annotation\SerializedName;
 abstract class User extends BaseUser
 {
     /**
+     * @var mixed
+     */
+    protected $id;
+
+    /**
      * @var \DateTime
      *
      * @Expose
@@ -118,6 +123,14 @@ abstract class User extends BaseUser
         $now = new \DateTime();
 
         $this->updated = $now;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

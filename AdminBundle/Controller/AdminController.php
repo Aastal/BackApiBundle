@@ -199,7 +199,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
             if ($this->checkUserPassword($user, $password)) {
                 if ($user->isEnabled()) {
 
-                    $this->get('user_provider')->loadUserByUsername($user->getUsername(), true);
+                    $this->get('geoks.user_provider')->loadUserByUsername($user->getUsername(), true);
 
                     return $this->redirectToRoute('geoks_admin_index');
                 } else {

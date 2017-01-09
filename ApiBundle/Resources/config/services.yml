@@ -1,3 +1,6 @@
+parameters:
+    geoks.user_provider.class: Geoks\ApiBundle\Security\User\EntityUserProvider
+
 services:
     geoks.api.serializer:
         class: Geoks\ApiBundle\Services\Serializer
@@ -16,3 +19,11 @@ services:
         tags:
             - { name: fos_oauth_server.grant_extension, uri: "%facebook_grant_type%" }
         arguments: [ "@service_container", "@doctrine.orm.entity_manager" ]
+
+    geoks.user_provider:
+        class: "%geoks.user_provider.class%"
+        arguments: ["@doctrine", "%geoks_api.user_class%", { facebook: "%facebook_app_id%" }, "@service_container", "@session", "@security.token_storage"]
+
+    geoks.apikey_authenticator:
+        class:  Geoks\ApiBundle\Security\User\ApiKeyAuthenticator
+        public: false

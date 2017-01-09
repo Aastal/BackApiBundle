@@ -4,29 +4,22 @@ namespace Geoks\ApiBundle\Entity;
 
 use FOS\OAuthServerBundle\Entity\AccessToken as BaseAccessToken;
 use Doctrine\ORM\Mapping as ORM;
+use Geoks\UserBundle\Entity\User;
 
-/**
- * Class AccessToken
- * @package Geoks\ApiBundle\Entity
- *
- * @ORM\MappedSuperclass
- */
-abstract class AccessToken extends BaseAccessToken
+class AccessToken extends BaseAccessToken
 {
     /**
-     * @var mixed
+     * @var integer
      */
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Geoks\ApiBundle\Entity\Client")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @var Client
      */
     protected $client;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var User
      */
     protected $user;
 }
