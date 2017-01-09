@@ -14,11 +14,83 @@ use Geoks\UserBundle\Entity\User;
  */
 abstract class GlobalController extends ApiController implements GlobalControllerInterface
 {
-    protected $className = '';
-    protected $entityRepository = '';
+    /**
+     * @var string
+     */
+    private $className;
 
-    protected $formCreate = "";
-    protected $formUpdate = "";
+    /**
+     * @var string
+     */
+    private $entityRepository;
+
+    /**
+     * @var string
+     */
+    private $formCreate = "Geoks\\ApiBundle\\Form\\Basic\\CreateForm";
+
+    /**
+     * @var string
+     */
+    private $formUpdate = "Geoks\\ApiBundle\\Form\\Basic\\UpdateForm";
+
+    /**
+     * @return string
+     */
+    public function getClassName()
+    {
+        return $this->className;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityRepository()
+    {
+        return $this->entityRepository;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormCreate()
+    {
+        return $this->formCreate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormUpdate()
+    {
+        return $this->formUpdate;
+    }
+
+    /**
+     * AdminController constructor.
+     *
+     * @param null|string $entityRepository
+     * @param null|string $formCreate
+     * @param null|string $formUpdate
+     */
+    public function __construct($entityRepository = null, $formCreate = null, $formUpdate = null)
+    {
+        // Entity Naming
+        $this->entityRepository = $entityRepository;
+
+        if ($this->entityRepository) {
+            $this->className = (new \ReflectionClass($entityRepository))->getShortName();
+        }
+
+        // Forms
+        if ($formCreate) {
+            $this->formCreate = $formCreate;
+        }
+
+        if ($formUpdate) {
+            $this->formUpdate = $formUpdate;
+        }
+    }
 
     public function getAll($secure = null)
     {
