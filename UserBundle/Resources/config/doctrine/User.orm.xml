@@ -4,7 +4,7 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                   http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <mapped-superclass name="Geoks\UserBundle\Entity\User">
+    <mapped-superclass name="Geoks\UserBundle\Entity\User" table="users">
 
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
