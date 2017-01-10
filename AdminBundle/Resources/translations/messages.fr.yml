@@ -1,4 +1,6 @@
 app:
+  yes: Oui
+  no: Non
   noData: Aucune donnée
   logout: Se deconnecter
   users: Utilisateurs

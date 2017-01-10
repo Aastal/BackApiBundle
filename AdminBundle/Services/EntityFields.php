@@ -3,6 +3,7 @@
 namespace Geoks\AdminBundle\Services;
 
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -16,11 +17,17 @@ class EntityFields
     private $em;
 
     /**
-     * @param EntityManager $em
+     * @var ContainerInterface
      */
-    public function __construct(EntityManager $em)
+    private $container;
+
+    /**
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
     {
-        $this->em = $em;
+        $this->container = $container;
+        $this->em = $container->get('doctrine')->getManager();
     }
 
     public function getEntityName($table)
@@ -62,7 +69,7 @@ class EntityFields
     public function switchType($entityName, $name, $type)
     {
         $r = [];
-        $fieldName = $entityName . "." . $name;
+        $fieldName = $this->container->get('translator')->trans($entityName . "." . $name);
 
         switch ($type) {
             case 'integer':

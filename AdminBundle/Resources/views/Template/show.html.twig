@@ -26,17 +26,20 @@
                                 <td>{{ (className|lower ~ "." ~ field.fieldName)|trans({}, className|lower) }}</td>
                                 <td>
                                     {% if attribute(entity, field.fieldName) is defined and attribute(entity, field.fieldName) %}
+                                        {% set fieldValue = attribute(entity, field.fieldName) %}
                                         <b>
-                                            {% set fieldValue = attribute(entity, field.fieldName) %}
-
                                             {% if fieldValue is iterable %}
                                                 {{ fieldValue|length }}
                                             {% elseif fieldValue.timestamp is defined %}
                                                 {{ fieldValue|date('d/m/Y H:i:s') }}
+                                            {% elseif fieldValue == 'true' %}
+                                                {{ "app.yes"|trans }}
                                             {% else %}
                                                 {{ fieldValue }}
                                             {% endif %}
                                         </b>
+                                    {% elseif fieldValue == 'false' %}
+                                        {{ "app.no"|trans }}
                                     {% else %}
                                         <label class="label label-default">{{ "app.noData"|trans }}</label>
                                     {% endif %}

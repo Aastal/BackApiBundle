@@ -15,6 +15,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class ExportType extends AbstractType
 {
+    private $entityName;
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -22,15 +24,15 @@ class ExportType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $container = $options["service_container"];
-        $table = $options["data_class"];
+        $table = $options["class"];
 
-        $entityName = lcfirst($container->get('geoks_admin.entity_fields')->getEntityName($table));
+        $this->entityName = strtolower($container->get('geoks_admin.entity_fields')->getEntityName($table));
         $rowArr = $container->get('geoks_admin.entity_fields')->getFieldsName($table);
         $rowAssos = $container->get('geoks_admin.entity_fields')->getFieldsAssociations($table);
 
         foreach ($rowArr as $name => $field) {
             if ($field["type"] != 'array') {
-                $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($entityName, $name, $field["type"]);
+                $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);
 
                 $builder
                     ->add($name, $typeOptions['type'], $typeOptions['options']);
@@ -71,11 +73,13 @@ class ExportType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
+            'data_class' => null,
             'csrf_protection' => false,
             'allow_extra_fields' => true,
             "required" => false
         ));
 
+        $resolver->setRequired('class');
         $resolver->setRequired('service_container');
     }
 }

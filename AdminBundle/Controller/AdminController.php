@@ -328,8 +328,9 @@ abstract class AdminController extends Controller implements AdminControllerInte
                     'id' => "app." . lcfirst($this->className)
                 ],
                 'method' => 'GET',
-                'data_class' => $this->entityRepository,
-                'service_container' => $this->get('service_container')
+                'class' => $this->entityRepository,
+                'service_container' => $this->get('service_container'),
+                'translation_domain' => strtolower($this->className)
             ]);
         } else {
             $form = $this->createForm($this->getFormFilter(), null, [
@@ -337,7 +338,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
                     'id' => "app." . lcfirst($this->className)
                 ],
                 'method' => 'GET',
-                'data_class' => $this->entityRepository
+                'translation_domain' => strtolower($this->className)
             ]);
         }
 

@@ -27,4 +27,4 @@ services:
 
     geoks_admin.entity_fields:
         class: Geoks\AdminBundle\Services\EntityFields
-        arguments: [ "@doctrine.orm.entity_manager" ]
+        arguments: [ "@service_container" ]
