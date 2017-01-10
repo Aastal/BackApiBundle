@@ -2,9 +2,11 @@
 
 namespace Geoks\ApiBundle\Controller;
 
+use ApiBundle\Form\User\CreateForm;
 use Geoks\ApiBundle\Entity\AccessToken;
 use Geoks\ApiBundle\Form\Security\ResetPasswordForm;
 use Geoks\UserBundle\Entity\User;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Geoks\ApiBundle\Services\RestRequest;
@@ -232,28 +234,28 @@ abstract class SecurityController extends ApiController
     public function subscribeAction(Request $request)
     {
         $userManager = $this->get('fos_user.user_manager');
+
+        /** @var User $user */
         $user = $userManager->createUser();
 
-        $formUser = new $this->formCreate($this->container, $this->getUserRepository());
-        $form = $this->createForm($formUser, $user);
+        $form = $this->createForm(CreateForm::class, $user, ['method' => 'POST']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $user->addRole('ROLE_USER');
-            $user->setEnabled(1);
-            $user->setPlainPassword($user->getPassword());
+            $em = $this->getDoctrine()->getManager();
+            $clearPassword = $user->getPlainPassword();
 
-            if (!$user->getUsername()) {
-                $user->setUsername($user->getEmail().$user->getFirstname().$user->getLastname());
-            }
+            $user->addRole('ROLE_DEFAULT');
+            $em->persist($user);
+            $em->flush();
 
-            $userManager->updateUser($user);
-
-            $this->get('geoks.user_provider')->loadUserByUsername($user->getUsername());
+            $oauth = new RestRequest($this->container);
+            $oauth->login($user->getUsername(), $clearPassword);
 
             return $this->serializeResponse([
                 "details" => $user,
-                "accessToken" => $this->get('geoks.user_provider')->getAccessToken()
+                "access_token" => $oauth->getAccessToken(),
+                "refresh_token" => $oauth->getRefreshToken()
             ]);
         }
 

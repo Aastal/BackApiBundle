@@ -10,11 +10,6 @@
             <generator strategy="IDENTITY"/>
         </id>
 
-        <lifecycle-callbacks>
-            <lifecycle-callback type="prePersist" method="prePersist"/>
-            <lifecycle-callback type="preUpdate" method="preUpdate"/>
-        </lifecycle-callbacks>
-
         <!-- Datetime -->
         <field name="dateOfBirth" column="date_of_birth" type="datetime" nullable="true" />
 

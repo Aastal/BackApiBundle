@@ -193,11 +193,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
             $user = $em->getRepository($this->getUserRepository())->findOneByEmail($email);
 
-            if (!$user) {
-                $this->container->get('session')->getFlashBag()->set('error', $this->get('translator')->trans('geoks.user.notFound'));
-            }
-
-            if ($this->checkUserPassword($user, $password)) {
+            if ($user && $this->checkUserPassword($user, $password)) {
                 if ($user->isEnabled()) {
 
                     $this->get('geoks.user_provider')->loadUserByUsername($user->getUsername(), true);
@@ -211,7 +207,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
             }
         }
 
-        $this->container->get('session')->getFlashBag()->set('error', $this->get('translator')->trans('geoks.missing_params'));
+        $this->container->get('session')->getFlashBag()->set('error', $this->get('translator')->trans('geoks.user.notFound'));
 
         return $this->render($this->getAdminBundle() . ':Security:login.html.twig');
     }
