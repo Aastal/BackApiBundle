@@ -91,7 +91,7 @@ class EntityFields
                     'widget' => 'single_text',
                     'format' => 'yyyy-MM-dd HH:mm:ssZ',
                     'attr' => [
-                        'class' => 'control-animate'
+                        'class' => 'control-animate datetimepicker'
                     ]
                 ];
                 break;

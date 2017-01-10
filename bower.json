@@ -16,7 +16,9 @@
   ],
   "dependencies": {
     "bootstrap-sass": "^3.3.7",
+    "jquery": "^1.9",
     "select2": "^4.0.3",
-    "roboto-fontface": "^0.6.0"
+    "roboto-fontface": "^0.6.0",
+    "eonasdan-bootstrap-datetimepicker": "^0.0.11"
   }
 }

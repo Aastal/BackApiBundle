@@ -2,7 +2,6 @@
 {% set fields = fields(class_repository(entity) ~ '\\' ~ className) %}
 {% set fields_associations = fields_associations(class_repository(entity) ~ '\\' ~ className) %}
 
-
 <h1>{{ className }} n°{{ entity.id }}</h1>
 
 <div class="row">
@@ -26,7 +25,7 @@
                             <tr>
                                 <td>{{ (className|lower ~ "." ~ field.fieldName)|trans({}, className|lower) }}</td>
                                 <td>
-                                    {% if attribute(entity, field.fieldName) %}
+                                    {% if attribute(entity, field.fieldName) is defined and attribute(entity, field.fieldName) %}
                                         <b>
                                             {% set fieldValue = attribute(entity, field.fieldName) %}
 
@@ -64,7 +63,7 @@
                                 <tr>
                                     <td>{{ field.fieldName }}</td>
                                     <td>
-                                        {% if attribute(entity, field.fieldName) %}
+                                        {% if attribute(entity, field.fieldName) is defined and attribute(entity, field.fieldName) %}
                                             <b>
                                                 {% set fieldValue = attribute(entity, field.fieldName) %}
 

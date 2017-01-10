@@ -6,6 +6,14 @@ $('.confirm-submit').on('click', function () {
     return confirm("Voulez-vous vraiment envoyer ?");
 });
 
+$('.datetimepicker').on('click', function () {
+    $(this).datetimepicker({
+        format: 'dd/MM/yyyy HH:mm',
+        inline: true,
+        sideBySide: true
+    });
+});
+
 /**
  * @param target
  * @param url

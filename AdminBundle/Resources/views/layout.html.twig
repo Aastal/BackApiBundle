@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <title>{% block title %}{{ app_name }}{% endblock %}</title>
     {% stylesheets filter="scssphp" output='assets/css/main.css'
-    '@GeoksAdminBundle/Resources/public/sass/*.scss'%}
+    '@GeoksAdminBundle/Resources/public/sass/*.scss'
+    '%kernel.root_dir%/../web/vendors/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}
     <link rel="stylesheet" type="text/css" href="{{ asset_url }}"/>
     {% endstylesheets %}
     {% block stylesheets %}{% endblock %}
@@ -57,6 +58,7 @@
 {% javascripts output="assets/js/app.js"
 '%kernel.root_dir%/../web/vendors/jquery/dist/jquery.min.js'
 '%kernel.root_dir%/../web/vendors/bootstrap-sass/assets/javascripts/bootstrap.min.js'
+'%kernel.root_dir%/../web/vendors/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js'
 '@GeoksAdminBundle/Resources/public/js/main.js' %}
 <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
