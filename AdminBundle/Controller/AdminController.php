@@ -3,6 +3,7 @@
 namespace Geoks\AdminBundle\Controller;
 
 use Geoks\AdminBundle\Controller\Interfaces\AdminControllerInterface;
+use Geoks\AdminBundle\Form\Export\ExportType;
 use Geoks\ApiBundle\Controller\Traits\ApiResponseTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -325,16 +326,24 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $filters = [];
         $payload = [];
 
-        $fileForm = $this->getFormFilter();
-        $formFilter = new $fileForm($this->container, $this->entityRepository);
-
-        // Create the filter form
-        $form = $this->createForm($formFilter, null, [
-            'attr' => [
-                'id' => "app." . lcfirst($this->className)
-            ],
-            'method' => 'GET'
-        ]);
+        if ($this->getFormFilter() == ExportType::class) {
+            $form = $this->createForm($this->getFormFilter(), null, [
+                'attr' => [
+                    'id' => "app." . lcfirst($this->className)
+                ],
+                'method' => 'GET',
+                'data_class' => $this->entityRepository,
+                'service_container' => $this->get('service_container')
+            ]);
+        } else {
+            $form = $this->createForm($this->getFormFilter(), null, [
+                'attr' => [
+                    'id' => "app." . lcfirst($this->className)
+                ],
+                'method' => 'GET',
+                'data_class' => $this->entityRepository
+            ]);
+        }
 
         $form->handleRequest($request);
 
@@ -364,7 +373,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
         $payload['entities'] = $paginator->paginate(
             $entities,
-            ((count($results) / 10) < ($this->get('request')->query->get('page', 1)-1)) ? 1 : $this->get('request')->query->get('page', 1),
+            ((count($results) / 10) < ($request->query->get('page', 1)-1)) ? 1 : $request->query->get('page', 1),
             10, array('wrap-queries' => true)
         );
 

@@ -11,8 +11,6 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 class AdminDoc extends AdminController
 {
     /**
-     * @Route("/login", name="geoks_admin_login")
-     *
      * @return \Symfony\Component\HttpFoundation\Response|void
      */
     public function loginAction()
@@ -21,8 +19,6 @@ class AdminDoc extends AdminController
     }
 
     /**
-     * @Route("/login/check", name="geoks_admin_login_check")
-     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response|void
      */
