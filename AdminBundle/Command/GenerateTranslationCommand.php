@@ -36,7 +36,7 @@ class GenerateTranslationCommand extends ContainerAwareCommand
         $parser = new Yaml();
         $kernel = $this->getContainer()->get('kernel');
 
-        $entityNamespace = $this->getContainer()->getParameter('geoks_api')["bundle"];
+        $entityNamespace = $this->getContainer()->getParameter('geoks_api.app_bundle');
         $entityFields = $this->getContainer()->get('geoks_admin.entity_fields')->getFieldsName($input->getArgument('class'));
         $entityName = strtolower($this->getContainer()->get('doctrine')->getManager()->getClassMetadata($input->getArgument('class'))->getReflectionClass()->getShortName());
 
