@@ -8,10 +8,21 @@ $('.confirm-submit').on('click', function () {
 
 $('.datetimepicker').on('click', function () {
     $(this).datetimepicker({
-        format: 'dd/MM/yyyy HH:mm',
-        inline: true,
-        sideBySide: true
+        format: 'd/m/Y H:i',
+        lang: '{{ locale }}'
     });
+});
+
+$('.collapse-link').on("click", function () {
+    var chevron = $(this).find('span');
+
+    if (chevron.hasClass('glyphicon-chevron-down')) {
+        chevron.removeClass('glyphicon-chevron-down');
+        chevron.addClass('glyphicon-chevron-up');
+    } else {
+        chevron.removeClass('glyphicon-chevron-up');
+        chevron.addClass('glyphicon-chevron-down');
+    }
 });
 
 /**

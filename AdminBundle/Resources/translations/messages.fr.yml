@@ -6,6 +6,7 @@ app:
   users: Utilisateurs
   index: Accueil
   export: Exporter
+  last_users: Derniers utilisateurs
   fields:
     id: ID
   show:

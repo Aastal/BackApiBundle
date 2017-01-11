@@ -60,7 +60,11 @@ class EntityFields
         $rows = $cm->getAssociationNames();
 
         foreach ($rows as $row) {
-            $rowAssos[$row] = $cm->getAssociationMapping($row);
+            $findDatas = $this->em->getRepository($cm->getAssociationTargetClass($row))->findAll();
+
+            if (count($findDatas) > 0) {
+                $rowAssos[$row] = $cm->getAssociationMapping($row);
+            }
         }
 
         return $rowAssos;
@@ -96,7 +100,7 @@ class EntityFields
                 $r['options'] = [
                     'label' => $fieldName,
                     'widget' => 'single_text',
-                    'format' => 'yyyy-MM-dd HH:mm:ssZ',
+                    'format' => 'dd/MM/yyyy HH:mm',
                     'attr' => [
                         'class' => 'control-animate datetimepicker'
                     ]

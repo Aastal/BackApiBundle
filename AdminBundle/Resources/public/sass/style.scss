@@ -477,6 +477,11 @@ select.control-animate {
     line-height: 1;
     border-bottom: 1px solid #f4f4f4;
 
+    .glyphicon-chevron-down,
+    .glyphicon-chevron-up {
+      top: 3px;
+      margin-right: 5px;
+    }
     .box-title {
       display: inline-block;
       font-size: 18px;

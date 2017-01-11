@@ -3,35 +3,40 @@
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="box box-filter">
-            <div class="box-header">
-                <h3 class="box-title">{{ "form.filter"|trans }}</h3>
-            </div>
-            <div class="box-body padding">
-                <div class="row">
-                    {% for child in form.children %}
-                        {% if child.vars.name != "export" %}
-                            <div class="col-md-4">
-                                <div class="row">
-                                    {{ form_row(child) }}
+            <a class="collapse-link" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFilter" aria-expanded="true" aria-controls="collapseFilter">
+                <div class="box-header">
+                    <span class="glyphicon glyphicon-chevron-{% if form.children|length < 8 %}up{% else %}down{% endif %}"></span>
+                    <h3 class="box-title">{{ "form.filter"|trans }}</h3>
+                </div>
+            </a>
+            <div id="collapseFilter" class="panel-collapse collapse {% if form.children|length < 8 %}in{% endif %}" role="tabpanel" aria-labelledby="headingFilter">
+                <div class="box-body padding">
+                    <div class="row">
+                        {% for child in form.children %}
+                            {% if child.vars.name != "export" %}
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        {{ form_row(child) }}
+                                    </div>
                                 </div>
-                            </div>
 
-                            {% if (loop.index)%3 == 0 %}
-                                <div class="col-md-12">
-                                    <br>
-                                </div>
+                                {% if (loop.index)%3 == 0 %}
+                                    <div class="col-md-12">
+                                        <br>
+                                    </div>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                    {% endfor %}
+                        {% endfor %}
 
-                    <div class="col-md-12">
-                        <br/>
-                        <button class='btn btn-animate btn-light-blue' type="submit">{{ "form.search"|trans }}</button>
-                        <button class='btn btn-animate btn-light-info' type="reset">{{ "form.empty_filter"|trans }}</button>
+                        <div class="col-md-12">
+                            <br/>
+                            <button class='btn btn-animate btn-light-blue' type="submit">{{ "form.search"|trans }}</button>
+                            <button class='btn btn-animate btn-light-info' type="reset">{{ "form.empty_filter"|trans }}</button>
 
-                        {% if form.export is defined %}
-                            {{ form_widget(form.export, { 'attr': { 'class': 'btn btn-animate btn-light-blue pull-right export' } }) }}
-                        {% endif %}
+                            {% if form.export is defined %}
+                                {{ form_widget(form.export, { 'attr': { 'class': 'btn btn-animate btn-light-blue pull-right export' } }) }}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
