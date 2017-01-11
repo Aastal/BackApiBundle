@@ -219,7 +219,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         $em = $this->getDoctrine()->getManager();
         $entity = new $this->entityRepository();
 
-        $form = $this->createForm($this->getFormCreate(), null, [
+        $form = $this->createForm($this->getFormCreate(), $entity, [
             'attr' => [
                 'id' => "app." . lcfirst($this->className)
             ],
