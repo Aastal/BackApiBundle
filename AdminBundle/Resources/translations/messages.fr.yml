@@ -22,6 +22,7 @@ form:
   otherFields: Autres champs
   submit: Valider
   cancel: Annuler
+  choice: Selectionnez une valeur
 
 user:
   credentials:

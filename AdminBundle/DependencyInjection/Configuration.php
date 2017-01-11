@@ -28,6 +28,11 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('app_name')
                     ->defaultValue('Geoks')
                 ->end()
+                ->arrayNode('ban_fields')
+                    ->useAttributeAsKey('params')
+                        ->prototype('variable')
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

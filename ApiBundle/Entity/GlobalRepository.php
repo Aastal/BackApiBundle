@@ -32,11 +32,12 @@ abstract class GlobalRepository extends EntityRepository
          */
         $filter = function (&$queryBuilder, $key, $search, $i) {
             if (is_bool($search)) {
-                $joinLetter = strtolower(substr($key, -3)) . rand(1, 100);
-
                 if ($search === true) {
                     $queryBuilder
-                        ->innerJoin('a.' . $key, $joinLetter);
+                        ->andWhere('a.' . $key . ' = 1');
+                } else {
+                    $queryBuilder
+                        ->andWhere('a.' . $key . ' = 0');
                 }
             } elseif (is_object($search) && !$search instanceof \DateTime) {
                 $joinLetter = strtolower(substr($key, -3));

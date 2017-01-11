@@ -73,7 +73,7 @@ class EntityFields
     public function switchType($entityName, $name, $type)
     {
         $r = [];
-        $fieldName = $this->container->get('translator')->trans($entityName . "." . $name);
+        $fieldName = $entityName . "." . $name;
 
         switch ($type) {
             case 'integer':
@@ -118,5 +118,20 @@ class EntityFields
         }
 
         return $r;
+    }
+
+    public function fieldsBanList()
+    {
+        $customList = $this->container->getParameter('geoks_admin.ban_fields');
+        $autoBan = [
+            "created", "created_at", "updated", "updated_at", "passwordRequestedAt", "credentialsExpireAt", "confirmationToken",
+            "usernameCanonical", "emailCanonical", "lastLogin", "expired", "expired_at", "credentialsExpired", "token",
+            "twoStepVerificationCode", "gcm_token", "expiresAt", "credentialsExpired", "timezone", "createdAt", "updatedAt",
+            "password"
+        ];
+
+        $banList = array_merge($customList, $autoBan);
+
+        return $banList;
     }
 }

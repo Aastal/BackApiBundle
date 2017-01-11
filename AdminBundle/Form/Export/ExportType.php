@@ -15,6 +15,9 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class ExportType extends AbstractType
 {
+    /**
+     * @var string
+     */
     private $entityName;
 
     /**
@@ -26,12 +29,14 @@ class ExportType extends AbstractType
         $container = $options["service_container"];
         $table = $options["class"];
 
+        $banList = $container->get('geoks_admin.entity_fields')->fieldsBanList();
+
         $this->entityName = strtolower($container->get('geoks_admin.entity_fields')->getEntityName($table));
         $rowArr = $container->get('geoks_admin.entity_fields')->getFieldsName($table);
         $rowAssos = $container->get('geoks_admin.entity_fields')->getFieldsAssociations($table);
 
         foreach ($rowArr as $name => $field) {
-            if ($field["type"] != 'array') {
+            if ($field["type"] != 'array' && !in_array($name, $banList)) {
                 $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);
 
                 $builder
@@ -46,6 +51,7 @@ class ExportType extends AbstractType
                     ->add($name, EntityType::class, [
                         'label' => ucfirst($name),
                         'class' => $class['targetEntity'],
+                        'empty_value' => "",
                         'attr' => [
                             'class' => 'control-animate'
                         ]

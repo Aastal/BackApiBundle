@@ -217,15 +217,16 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $em = $this->getDoctrine()->getManager();
         $entity = new $this->entityRepository();
 
-        $formCreate = new $this->formCreate($this->container, $this->entityRepository);
-
-        $form = $this->createForm($formCreate, $entity, array(
+        $form = $this->createForm($this->getFormCreate(), $entity, array(
             'attr' => [
                 'id' => "app." . lcfirst($this->className),
                 'class' => "form-horizontal"
             ],
             'action' => $this->generateUrl(sprintf('geoks_admin_' . lcfirst($this->className) . 's_create')),
             'method' => 'POST',
+            'translation_domain' => strtolower($this->className),
+            'data_class' => $this->entityRepository,
+            'service_container' => $this->get('service_container')
         ));
 
         $form->handleRequest($request);
@@ -253,15 +254,16 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository($this->entityRepository)->find($id);
 
-        $formUpdate = new $this->formUpdate($this->container, $this->entityRepository);
-
-        $form = $this->createForm($formUpdate, $entity, array(
+        $form = $this->createForm($this->getFormUpdate(), $entity, array(
             'attr' => [
                 'id' => "app." . lcfirst($this->className),
                 'class' => "form-horizontal"
             ],
             'action' => $this->generateUrl(sprintf('geoks_admin_' . lcfirst($this->className) . 's_update'), ['id' => $id]),
             'method' => $request->getMethod(),
+            'translation_domain' => strtolower($this->className),
+            'data_class' => $this->entityRepository,
+            'service_container' => $this->get('service_container')
         ));
 
         $form->handleRequest($request);

@@ -16,39 +16,9 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 class UpdateForm extends AbstractType
 {
     /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * @var string
-     */
-    private $table;
-
-    /**
      * @var string
      */
     private $entityName;
-
-    /**
-     * @var array
-     */
-    private $rowArr;
-
-    /**
-     * @var array
-     */
-    private $rowAssos;
-
-    public function __construct(ContainerInterface $container, $table)
-    {
-        $this->table = $table;
-        $this->container = $container;
-
-        $this->entityName = strtolower($this->container->get('geoks_admin.entity_fields')->getEntityName($table));
-        $this->rowArr = $this->container->get('geoks_admin.entity_fields')->getFieldsName($table);
-        $this->rowAssos = $this->container->get('geoks_admin.entity_fields')->getFieldsAssociations($table);
-    }
 
     /**
      * @param FormBuilderInterface $builder
@@ -56,9 +26,18 @@ class UpdateForm extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        foreach ($this->rowArr as $name => $field) {
-            if ($field["type"] != 'array' && $name != 'created' && $name != 'updated') {
-                $typeOptions = $this->container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);
+        $container = $options["service_container"];
+        $table = $options["data_class"];
+
+        $banList = $container->get('geoks_admin.entity_fields')->fieldsBanList();
+
+        $this->entityName = strtolower($container->get('geoks_admin.entity_fields')->getEntityName($table));
+        $rowArr = $container->get('geoks_admin.entity_fields')->getFieldsName($table);
+        $rowAssos = $container->get('geoks_admin.entity_fields')->getFieldsAssociations($table);
+
+        foreach ($rowArr as $name => $field) {
+            if ($field["type"] != 'array' && !in_array($name, $banList)) {
+                $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);
 
                 if ((isset($field["nullable"]) && $field["nullable"]) && $field["type"] != 'datetime' || $field["type"] == 'boolean') {
                     $typeOptions['options']['required'] = false;
@@ -71,11 +50,12 @@ class UpdateForm extends AbstractType
             }
         }
 
-        foreach ($this->rowAssos as $name => $class) {
+        foreach ($rowAssos as $name => $class) {
+
             if ($class['isOwningSide']) {
                 $builder
                     ->add($name, EntityType::class, [
-                        'label' => ucfirst($name),
+                        'label' => $this->entityName . "." . $name,
                         'class' => $class['targetEntity'],
                         'attr' => [
                             'class' => 'control-animate'
@@ -96,10 +76,10 @@ class UpdateForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => $this->table,
             'csrf_protection' => false,
-            'allow_extra_fields' => true,
-            'translation_domain' => $this->entityName
+            'allow_extra_fields' => true
         ));
+
+        $resolver->setRequired('service_container');
     }
 }

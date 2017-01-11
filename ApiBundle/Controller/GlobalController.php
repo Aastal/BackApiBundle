@@ -219,9 +219,15 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         $em = $this->getDoctrine()->getManager();
         $entity = new $this->entityRepository();
 
-        $formCreate = new $this->formCreate($this->container, $this->entityRepository);
+        $form = $this->createForm($this->getFormCreate(), null, [
+            'attr' => [
+                'id' => "app." . lcfirst($this->className)
+            ],
+            'method' => 'POST',
+            'data_class' => $this->entityRepository,
+            'service_container' => $this->get('service_container')
+        ]);
 
-        $form = $this->createForm($formCreate, $entity, ['method' => $request->getMethod()]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -251,9 +257,12 @@ abstract class GlobalController extends ApiController implements GlobalControlle
             return $this->serializeResponse('geoks.entity.notFound', Response::HTTP_NOT_FOUND);
         }
 
-        $formUpdate = new $this->formUpdate($this->container, $this->entityRepository);
+        $form = $this->createForm($this->getFormUpdate(), $entity, [
+            'method' => $request->getMethod(),
+            'data_class' => $this->entityRepository,
+            'service_container' => $this->get('service_container')
+        ]);
 
-        $form = $this->createForm($formUpdate, $entity, ['method' => $request->getMethod()]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

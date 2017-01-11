@@ -25,6 +25,12 @@ class GeoksAdminExtension extends Extension
         $container->setParameter('geoks_admin.local_bundle', $config['local_bundle']);
         $container->setParameter('geoks_admin.app_name', $config['app_name']);
 
+        if (isset($config['ban_fields'])) {
+            $container->setParameter('geoks_admin.ban_fields', $config['ban_fields']);
+        } else {
+            $container->setParameter('geoks_admin.ban_fields', null);
+        }
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }
