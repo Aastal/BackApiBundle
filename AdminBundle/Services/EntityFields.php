@@ -95,6 +95,7 @@ class EntityFields
                     ]
                 ];
                 break;
+            case 'date':
             case 'datetime':
                 $r['type'] = DateTimeType::class;
                 $r['options'] = [
