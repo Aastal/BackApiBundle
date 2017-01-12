@@ -193,6 +193,12 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
             $user = $em->getRepository($this->getUserRepository())->findOneByEmail($email);
 
+            if (!$user) {
+                $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'user.notFound');
+
+                return $this->render($this->getAdminBundle() . ':Security:login.html.twig');
+            }
+
             if ($user && $this->checkUserPassword($user, $password)) {
                 if ($user->isEnabled()) {
 
@@ -206,8 +212,6 @@ abstract class AdminController extends Controller implements AdminControllerInte
                 $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'user.login.wrong');
             }
         }
-
-        $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'user.notFound');
 
         return $this->render($this->getAdminBundle() . ':Security:login.html.twig');
     }
@@ -233,6 +237,11 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+
+                if ($form->get('plainPassword')) {
+                    $entity->setPassword($this->encodeUserPassword($entity, $entity->getPlainPassword()));
+                }
+
                 $em->persist($entity);
                 $em->flush();
 
@@ -254,6 +263,12 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository($this->entityRepository)->find($id);
 
+        $changePassword = false;
+
+        if (($request->isXmlHttpRequest() && $request->get('changePassword') == true)) {
+            $changePassword = true;
+        }
+
         $form = $this->createForm($this->getFormUpdate(), $entity, array(
             'attr' => [
                 'id' => "app." . lcfirst($this->className),
@@ -263,13 +278,19 @@ abstract class AdminController extends Controller implements AdminControllerInte
             'method' => 'PATCH',
             'translation_domain' => strtolower($this->className),
             'data_class' => $this->entityRepository,
-            'service_container' => $this->get('service_container')
+            'service_container' => $this->get('service_container'),
+            'change_password' => $changePassword
         ));
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+
+                if ($changePassword) {
+                    $entity->setPassword($this->encodeUserPassword($entity, $entity->getPlainPassword()));
+                }
+
                 $em->flush();
 
                 $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'update');

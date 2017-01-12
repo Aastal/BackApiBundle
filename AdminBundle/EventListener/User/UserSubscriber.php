@@ -19,8 +19,7 @@ class UserSubscriber implements EventSubscriber
     public function getSubscribedEvents()
     {
         return array(
-            'postPersist',
-            'postUpdate',
+            'preUpdate',
             'prePersist'
         );
     }
@@ -30,7 +29,7 @@ class UserSubscriber implements EventSubscriber
         $this->container = $container;
     }
 
-    public function postUpdate(LifecycleEventArgs $args)
+    public function preUpdate(LifecycleEventArgs $args)
     {
         $this->index($args);
     }
@@ -47,24 +46,17 @@ class UserSubscriber implements EventSubscriber
         }
     }
 
-    public function postPersist(LifecycleEventArgs $args)
-    {
-        $this->index($args);
-    }
-
     public function index(LifecycleEventArgs $args)
     {
         $user = $args->getEntity();
 
         if ($user instanceof User) {
-            $entityManager = $args->getEntityManager();
+            if ($user->getPlainPassword()) {
+                $encoder = $this->container->get('security.password_encoder');
+                $encoded = $encoder->encodePassword($user, $user->getPlainPassword());
 
-            $encoder = $this->container->get('security.password_encoder');
-            $encoded = $encoder->encodePassword($user, $user->getPlainPassword());
-
-            $user->setPassword($encoded);
-
-            $entityManager->flush();
+                $user->setPassword($encoded);
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -65,6 +66,16 @@ class CreateForm extends AbstractType
                         ]
                     ]);
             }
+        }
+
+        if ($this->entityName == "user") {
+            $builder
+                ->add('plainPassword', PasswordType::class, [
+                    'label' => 'user.password',
+                    'attr' => [
+                        'class' => 'control-animate'
+                    ]
+                ]);
         }
     }
 

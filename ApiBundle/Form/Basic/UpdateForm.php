@@ -26,11 +26,17 @@ class UpdateForm extends AbstractType
     private $entityName;
 
     /**
+     * @var boolean
+     */
+    private $changePassword;
+
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->changePassword = $options["change_password"];
         $container = $options["service_container"];
         $table = $options["data_class"];
 
@@ -66,6 +72,51 @@ class UpdateForm extends AbstractType
                     ]);
             }
         }
+
+        if ($this->entityName == "user") {
+            $builder
+                ->add('changePassword', ButtonType::class, [
+                    'label' => "user.changePassword",
+                    'attr' => [
+                        'class' => 'btn btn-animate btn-light-blue'
+                    ]
+                ]);
+        }
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $form = $event->getForm();
+
+                if ($this->changePassword) {
+                    $form
+                        ->remove('changePassword')
+                        ->add('password_title', HrType::class, [
+                            'label'    => 'user.changePassword',
+                            'mapped'   => false,
+                            'required' => false,
+                            'attr' => [
+                                'class' => 'form_title'
+                            ]
+                        ])
+                        ->add('plainPassword', PasswordType::class, [
+                            'label' => 'user.password',
+                            'attr' => [
+                                'class' => 'control-animate'
+                            ]
+                        ])
+                        ->add('passwordConfirm', PasswordType::class, [
+                            'label' => 'user.confirmPassword',
+                            'required' => true,
+                            'mapped' => false,
+                            'attr' => [
+                                'class' => 'control-animate'
+                            ]
+                        ])
+                    ;
+                }
+            }
+        );
     }
 
     public function getBlockPrefix()
@@ -83,6 +134,7 @@ class UpdateForm extends AbstractType
             'allow_extra_fields' => true,
         ));
 
+        $resolver->setRequired('change_password');
         $resolver->setRequired('service_container');
     }
 }
