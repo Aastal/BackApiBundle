@@ -2,8 +2,8 @@
 
 namespace Geoks\ApiBundle\Controller;
 
-use ApiBundle\Form\User\CreateForm;
 use Geoks\ApiBundle\Entity\AccessToken;
+use Geoks\ApiBundle\Form\Basic\CreateForm;
 use Geoks\ApiBundle\Form\Security\ResetPasswordForm;
 use Geoks\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -238,24 +238,26 @@ abstract class SecurityController extends ApiController
         /** @var User $user */
         $user = $userManager->createUser();
 
-        $form = $this->createForm(CreateForm::class, $user, ['method' => 'POST']);
+        $form = $this->createForm(CreateForm::class, $user, [
+            'method' => 'POST',
+            'data_class' => $this->getUserRepository(),
+            'service_container' => $this->get('service_container')
+        ]);
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $clearPassword = $user->getPlainPassword();
 
             $user->addRole('ROLE_DEFAULT');
             $em->persist($user);
             $em->flush();
 
-            $oauth = new RestRequest($this->container);
-            $oauth->login($user->getUsername(), $clearPassword);
+            $this->get('geoks.user_provider')->loadUserByUsername($user->getUsername());
 
             return $this->serializeResponse([
                 "details" => $user,
-                "access_token" => $oauth->getAccessToken(),
-                "refresh_token" => $oauth->getRefreshToken()
+                "accessToken" => $this->get('geoks.user_provider')->getAccessToken()
             ]);
         }
 

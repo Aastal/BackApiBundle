@@ -21,6 +21,7 @@ class UserSubscriber implements EventSubscriber
         return array(
             'postPersist',
             'postUpdate',
+            'prePersist'
         );
     }
 
@@ -34,9 +35,32 @@ class UserSubscriber implements EventSubscriber
         $this->index($args);
     }
 
+    public function prePersist(LifecycleEventArgs $args)
+    {
+        $user = $args->getEntity();
+
+        if ($user instanceof User) {
+            if (!$user->getUsername()) {
+                $user->setUsername($user->getEmail());
+                $user->setUsernameCanonical($user->getEmail());
+            }
+        }
+    }
+
     public function postPersist(LifecycleEventArgs $args)
     {
         $this->index($args);
+
+        $user = $args->getEntity();
+
+        if ($user instanceof User) {
+            if (!$user->getUsername()) {
+                $user->setUsername($user->getEmail());
+            }
+
+            $entityManager = $args->getEntityManager();
+            $entityManager->flush();
+        }
     }
 
     public function index(LifecycleEventArgs $args)
