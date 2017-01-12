@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <title>{% block title %}{{ app_name }}{% endblock %}</title>
-    {% stylesheets filter="scssphp" output='assets/css/main.css'
+    {% stylesheets filter="scssphp" output='css/main.css'
     '%kernel.root_dir%/../web/vendors/bootstrap-sass/assets/stylesheets/_bootstrap.scss'
     '%kernel.root_dir%/../web/vendors/select2/src/scss/core.scss'
-    '@GeoksAdminBundle/Resources/public/sass/*.scss'
-    '%kernel.root_dir%/../web/vendors/datetimepicker/jquery.datetimepicker.css' %}
+    '%kernel.root_dir%/../web/vendors/datetimepicker/jquery.datetimepicker.css'
+    '@GeoksAdminBundle/Resources/public/sass/*.scss' %}
     <link rel="stylesheet" type="text/css" href="{{ asset_url }}"/>
     {% endstylesheets %}
     {% block stylesheets %}{% endblock %}
@@ -57,7 +57,7 @@
     </div>
 </div>
 
-{% javascripts output="assets/js/app.js"
+{% javascripts output="js/app.js"
 '%kernel.root_dir%/../web/vendors/jquery/dist/jquery.min.js'
 '%kernel.root_dir%/../web/vendors/bootstrap-sass/assets/javascripts/bootstrap.min.js'
 '%kernel.root_dir%/../web/vendors/datetimepicker/build/jquery.datetimepicker.full.min.js'
