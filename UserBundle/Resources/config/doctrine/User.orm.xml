@@ -20,7 +20,7 @@
         <field name="facebookUid" column="facebook_uid" type="text" length="255" nullable="true" />
         <field name="facebookName" column="facebook_name" type="text" length="255" nullable="true" />
         <field name="facebookAccessToken" column="facebook_access_token" type="text" length="255" nullable="true" />
-        <field name="phone" column="phone" type="integer" nullable="true" />
+        <field name="phone" length="13" column="phone" type="string" nullable="true" />
         <field name="address" column="address" type="text" length="255" nullable="true" />
 
     </mapped-superclass>

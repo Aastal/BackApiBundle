@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>{% block title %}{{ app_name }}{% endblock %}</title>
-    {% stylesheets filter="scssphp" output='assets/css/main.css'
+    {% stylesheets filter="scssphp" output='css/main.css'
     "assets/sass/*.scss"
     '@GeoksAdminBundle/Resources/public/sass/*.scss' %}
     <link rel="stylesheet" type="text/css" href="{{ asset_url }}"/>
@@ -26,7 +26,7 @@
     </div>
 </div>
 
-{% javascripts output="assets/js/app.js"
+{% javascripts output="js/app.js"
 '%kernel.root_dir%/../web/vendors/jquery/dist/jquery.min.js'
 '%kernel.root_dir%/../web/vendors/bootstrap-sass/assets/javascripts/bootstrap.min.js' %}
 <script src="{{ asset_url }}"></script>
