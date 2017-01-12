@@ -50,17 +50,6 @@ class UserSubscriber implements EventSubscriber
     public function postPersist(LifecycleEventArgs $args)
     {
         $this->index($args);
-
-        $user = $args->getEntity();
-
-        if ($user instanceof User) {
-            if (!$user->getUsername()) {
-                $user->setUsername($user->getEmail());
-            }
-
-            $entityManager = $args->getEntityManager();
-            $entityManager->flush();
-        }
     }
 
     public function index(LifecycleEventArgs $args)
