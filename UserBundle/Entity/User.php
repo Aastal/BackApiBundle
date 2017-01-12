@@ -103,6 +103,7 @@ abstract class User extends BaseUser
         parent::__construct();
 
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+        $this->enabled = true;
     }
 
     public function __toString()

@@ -3,6 +3,7 @@ app:
   no: Non
   noData: Aucune donnée
   logout: Se deconnecter
+  user: Utilisateur
   users: Utilisateurs
   index: Accueil
   export: Exporter
@@ -23,6 +24,19 @@ form:
   submit: Valider
   cancel: Annuler
   choice: Selectionnez une valeur
+  success:
+    create: Entitée créée
+    update: Entitée modifiée
+    delete: Entitée supprimé
+  fail:
+    create: Erreur lors de la création de l'entitée
+    update: Erreur lors de la modification de l'entitée
+    delete: Problème lors de la suppréssion
+    user:
+      disabled: Votre compte est désactivé
+      notFound: Utilisateur introuvable
+      login:
+        wrong: La combinaison Identifiant / Mot de passe est incorrect
 
 user:
   credentials:

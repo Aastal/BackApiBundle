@@ -33,7 +33,7 @@ class Export
     public function export($entities, array $fields)
     {
         if (!$entities) {
-            throw new NotFoundHttpException("No Data");
+            return null;
         }
 
         $name = (new \ReflectionClass($entities[0]))->getShortName();

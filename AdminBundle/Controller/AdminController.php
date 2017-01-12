@@ -200,14 +200,14 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
                     return $this->redirectToRoute('geoks_admin_index');
                 } else {
-                    $this->container->get('session')->getFlashBag()->set('error', $this->get('translator')->trans('geoks.user.disabled'));
+                    $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'user.disabled');
                 }
             } else {
-                $this->container->get('session')->getFlashBag()->set('error', $this->get('translator')->trans('geoks.user.login.wrong'));
+                $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'user.login.wrong');
             }
         }
 
-        $this->container->get('session')->getFlashBag()->set('error', $this->get('translator')->trans('geoks.user.notFound'));
+        $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'user.notFound');
 
         return $this->render($this->getAdminBundle() . ':Security:login.html.twig');
     }
@@ -236,11 +236,11 @@ abstract class AdminController extends Controller implements AdminControllerInte
                 $em->persist($entity);
                 $em->flush();
 
-                $this->container->get('session')->getFlashBag()->set('success', 'Entitée créée');
+                $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'create');
 
                 return $this->redirect($this->generateUrl('geoks_admin_' . lcfirst($this->className) . 's_index'));
             } else {
-                $this->container->get('session')->getFlashBag()->set('error', 'Erreur lors de la création de l\'entitée');
+                $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'create');
             }
         }
 
@@ -272,11 +272,11 @@ abstract class AdminController extends Controller implements AdminControllerInte
             if ($form->isValid()) {
                 $em->flush();
 
-                $this->container->get('session')->getFlashBag()->set('success', 'Entitée modifiée');
+                $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'update');
 
                 return $this->redirect($this->generateUrl('geoks_admin_' . lcfirst($this->className) . 's_index'));
             } else {
-                $this->container->get('session')->getFlashBag()->set('error', 'Erreur lors de la modification de l\'entitée');
+                $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'update');
             }
         }
 
@@ -291,7 +291,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $entity = $em->getRepository($this->entityRepository)->find($id);
 
         if (!$entity) {
-            $this->container->get('session')->getFlashBag()->set('error', 'Entitée introuvable');
+            $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'delete');
 
             return $this->redirect($this->generateUrl('geoks_admin_' . lcfirst($this->className) . 's_index'));
         }
@@ -299,7 +299,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $em->remove($entity);
         $em->flush();
 
-        $this->container->get('session')->getFlashBag()->set('success', 'Entitée supprimé');
+        $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'delete');
 
         return $this->redirect($this->generateUrl('geoks_admin_' . lcfirst($this->className) . 's_index'));
     }

@@ -28,3 +28,9 @@ services:
     geoks_admin.entity_fields:
         class: Geoks\AdminBundle\Services\EntityFields
         arguments: [ "@service_container" ]
+
+    geoks.user.subscriber:
+        class: Geoks\AdminBundle\EventListener\User\UserSubscriber
+        arguments: [ "@service_container" ]
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
