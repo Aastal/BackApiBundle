@@ -76,9 +76,13 @@ abstract class SecurityController extends ApiController
         return $this->adminViews;
     }
 
-    public function __construct($userRepository = null)
+    public function __construct($userRepository = null, $formCreate = null)
     {
         $this->userRepository = $userRepository;
+
+        if ($formCreate) {
+            $this->formCreate = $formCreate;
+        }
     }
 
     public function loginAction(Request $request)
@@ -89,7 +93,6 @@ abstract class SecurityController extends ApiController
         if ($email !== null && $password !== null) {
             $em = $this->getDoctrine()->getManager();
 
-            /** @var User $user */
             $user = $em->getRepository($this->getUserRepository())->findOneByEmail($email);
 
             if (!$user) {
@@ -103,7 +106,7 @@ abstract class SecurityController extends ApiController
 
                     return $this->serializeResponse([
                         "details" => $user,
-                        "accessToken" => $this->get('geoks.user_provider')->getAccessToken()
+                        "access_token" => $this->get('geoks.user_provider')->getAccessToken()
                     ]);
                 } else {
                     return $this->serializeResponse($this->get('translator')->trans('geoks.user.disabled'), Response::HTTP_FORBIDDEN);
@@ -238,11 +241,17 @@ abstract class SecurityController extends ApiController
         /** @var User $user */
         $user = $userManager->createUser();
 
-        $form = $this->createForm(CreateForm::class, $user, [
-            'method' => 'POST',
-            'data_class' => $this->getUserRepository(),
-            'service_container' => $this->get('service_container')
-        ]);
+        if ($this->getFormCreate() == CreateForm::class) {
+            $form = $this->createForm($this->getFormCreate(), $user, [
+                'method' => 'POST',
+                'data_class' => $this->getUserRepository(),
+                'service_container' => $this->get('service_container')
+            ]);
+        } else {
+            $form = $this->createForm($this->getFormCreate(), $user, [
+                'method' => 'POST'
+            ]);
+        }
 
         $form->handleRequest($request);
 
@@ -257,7 +266,7 @@ abstract class SecurityController extends ApiController
 
             return $this->serializeResponse([
                 "details" => $user,
-                "accessToken" => $this->get('geoks.user_provider')->getAccessToken()
+                "access_token" => $this->get('geoks.user_provider')->getAccessToken()
             ]);
         }
 

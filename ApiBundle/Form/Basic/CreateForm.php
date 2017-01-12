@@ -45,8 +45,11 @@ class CreateForm extends AbstractType
                     $typeOptions['options']['required'] = true;
                 }
 
-                $builder
-                    ->add($name, $typeOptions['type'], $typeOptions['options']);
+                if ($name == "password") {
+                    $builder->add('plainPassword', $typeOptions['type'], $typeOptions['options']);
+                } else {
+                    $builder->add($name, $typeOptions['type'], $typeOptions['options']);
+                }
             }
         }
 

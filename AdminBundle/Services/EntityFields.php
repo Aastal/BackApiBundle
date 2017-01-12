@@ -127,7 +127,8 @@ class EntityFields
         $autoBan = [
             "created", "created_at", "updated", "updated_at", "passwordRequestedAt", "credentialsExpireAt", "confirmationToken",
             "usernameCanonical", "emailCanonical", "lastLogin", "expired", "expired_at", "credentialsExpired", "token",
-            "twoStepVerificationCode", "gcm_token", "expiresAt", "credentialsExpired", "timezone", "createdAt", "updatedAt"
+            "twoStepVerificationCode", "gcm_token", "expiresAt", "credentialsExpired", "timezone", "createdAt", "updatedAt",
+            "password"
         ];
 
         $banList = array_merge($customList, $autoBan);

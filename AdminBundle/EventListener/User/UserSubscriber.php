@@ -63,7 +63,6 @@ class UserSubscriber implements EventSubscriber
             $encoded = $encoder->encodePassword($user, $user->getPlainPassword());
 
             $user->setPassword($encoded);
-            $user->setPlainPassword(null);
 
             $entityManager->flush();
         }

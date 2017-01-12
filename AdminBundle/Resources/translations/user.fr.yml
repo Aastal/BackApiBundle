@@ -1,0 +1,4 @@
+user:
+  password: Mot de passe
+  confirmPassword: Confirmer le mot de passe
+  changePassword: Changer le mot de passe
