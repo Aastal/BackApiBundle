@@ -65,23 +65,8 @@ class EntityUserProvider extends BaseClass
         return $this->accessToken->getToken();
     }
 
-    public function getUsernameForApiKey($apiKey)
+    public function createToken($user, $session = null)
     {
-        $this->accessToken = $this->em->getRepository('GeoksApiBundle:AccessToken')->findOneBy(array('token' => $apiKey));
-
-        if (!$this->accessToken) {
-            return null;
-        }
-
-        return $this->accessToken->getUser()->getUsername();
-    }
-
-    public function loadUserByUsername($username, $session = null)
-    {
-        $user = $this->findUser(array('username' => $username));
-
-        $this->accessToken = $this->em->getRepository('GeoksApiBundle:AccessToken')->findOneBy(array('user' => $user));
-
         if (!$this->client) {
             throw new \Exception('Client must be defined');
         }
@@ -96,7 +81,7 @@ class EntityUserProvider extends BaseClass
             $accessToken = new AccessToken();
             $accessToken->setUser($user);
             $accessToken->setClient($this->client);
-            $accessToken->setToken(uniqid(md5($username)));
+            $accessToken->setToken(uniqid(md5($user->getUsername())));
             $accessToken->setExpiresAt($expire->format('U'));
             $accessToken->setScope('api');
 
@@ -117,6 +102,26 @@ class EntityUserProvider extends BaseClass
         }
 
         $this->em->flush();
+    }
+
+    public function getUsernameForApiKey($apiKey)
+    {
+        $this->accessToken = $this->em->getRepository('GeoksApiBundle:AccessToken')->findOneBy(array('token' => $apiKey));
+
+        if (!$this->accessToken) {
+            return null;
+        }
+
+        return $this->accessToken->getUser()->getUsername();
+    }
+
+    public function loadUserByUsername($username, $session = null)
+    {
+        $user = $this->findUser(array('username' => $username));
+
+        $this->accessToken = $this->em->getRepository('GeoksApiBundle:AccessToken')->findOneBy(array('user' => $user));
+
+        $this->createToken($user, $session);
 
         return $user;
     }
@@ -132,6 +137,8 @@ class EntityUserProvider extends BaseClass
         if ($user === false) {
             return false;
         }
+
+        $this->createToken($user);
 
         return $user;
     }
