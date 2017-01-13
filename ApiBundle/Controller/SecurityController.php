@@ -90,6 +90,10 @@ abstract class SecurityController extends ApiController
         $email = $request->get('email');
         $password = $request->get('password');
 
+        if ($request->getMethod() == "GET") {
+            return $this->serializeResponse($this->get('translator')->trans('geoks.error.access_token'), Response::HTTP_BAD_REQUEST);
+        }
+
         if ($email !== null && $password !== null) {
             $em = $this->getDoctrine()->getManager();
 
@@ -114,9 +118,10 @@ abstract class SecurityController extends ApiController
             } else {
                 return $this->serializeResponse($this->get('translator')->trans('geoks.user.login.wrong'), Response::HTTP_FORBIDDEN);
             }
+        } else {
+            return $this->serializeResponse($this->get('translator')->trans('geoks.missing_param'), Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->serializeResponse($this->get('translator')->trans('geoks.missing_param'), Response::HTTP_BAD_REQUEST);
     }
 
     public function loginOptionsAction()

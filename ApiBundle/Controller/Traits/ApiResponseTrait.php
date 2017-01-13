@@ -87,6 +87,11 @@ trait ApiResponseTrait
         return $encoder->isPasswordValid($user->getPassword(), $password, $user->getSalt());
     }
 
+    /**
+     * @param $user
+     * @param $raw
+     * @return mixed
+     */
     protected function encodeUserPassword($user, $raw)
     {
         $encoder = $this->get('security.password_encoder');
