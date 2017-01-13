@@ -26,7 +26,7 @@ class FacebookGrantExtension implements GrantExtensionInterface
      */
     public function checkGrantExtension(IOAuth2Client $client, array $inputData, array $authHeaders)
     {
-        $userRepository = $this->container->getParameter('geoks_api_user_class');
+        $userRepository = $this->container->getParameter('geoks_api.user_class');
         $facebookToken = $inputData['facebook_token'];
 
         $fb = new Facebook\Facebook([

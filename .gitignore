@@ -1,2 +1,5 @@
 node_modules
 bower_components
+web/js/*
+web/css/*
+web/exports/*
