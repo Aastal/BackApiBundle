@@ -163,7 +163,7 @@ abstract class SecurityController extends ApiController
 
             return $this->serializeResponse([
                 "details" => $user,
-                "accessToken" => $this->get('geoks.user_provider')->getAccessToken()
+                "access_token" => $this->get('geoks.user_provider')->getAccessToken()
             ]);
         }
 
