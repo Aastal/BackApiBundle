@@ -41,6 +41,7 @@ class UpdateForm extends AbstractType
         $table = $options["data_class"];
 
         $banList = $container->get('geoks_admin.entity_fields')->fieldsBanList();
+        $banList[] = "password";
 
         $this->entityName = strtolower($container->get('geoks_admin.entity_fields')->getEntityName($table));
         $rowArr = $container->get('geoks_admin.entity_fields')->getFieldsName($table);
