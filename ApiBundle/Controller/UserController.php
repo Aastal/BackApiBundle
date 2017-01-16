@@ -14,9 +14,83 @@ use Symfony\Component\HttpFoundation\Response;
  */
 abstract class UserController extends ApiController
 {
-    protected $userRepository = 'Geoks\\UserBundle\\Entity\\User';
-    protected $formUpdate = "Geoks\\ApiBundle\\Form\\Basic\\UpdateForm";
-    protected $className = 'User';
+    /**
+     * @var string
+     */
+    private $className;
+
+    /**
+     * @var string
+     */
+    private $userRepository;
+
+    /**
+     * @var string
+     */
+    private $formCreate = "Geoks\\ApiBundle\\Form\\Basic\\CreateForm";
+
+    /**
+     * @var string
+     */
+    private $formUpdate = "Geoks\\ApiBundle\\Form\\Basic\\UpdateForm";
+
+    /**
+     * @return string
+     */
+    public function getClassName()
+    {
+        return $this->className;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserRepository()
+    {
+        return $this->userRepository;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormCreate()
+    {
+        return $this->formCreate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormUpdate()
+    {
+        return $this->formUpdate;
+    }
+
+    /**
+     * AdminController constructor.
+     *
+     * @param null|string $userRepository
+     * @param null|string $formCreate
+     * @param null|string $formUpdate
+     */
+    public function __construct($userRepository = null, $formCreate = null, $formUpdate = null)
+    {
+        // Entity Naming
+        $this->userRepository = $userRepository;
+
+        if ($this->userRepository) {
+            $this->className = (new \ReflectionClass($userRepository))->getShortName();
+        }
+
+        // Forms
+        if ($formCreate) {
+            $this->formCreate = $formCreate;
+        }
+
+        if ($formUpdate) {
+            $this->formUpdate = $formUpdate;
+        }
+    }
 
     public function getAll()
     {
@@ -66,7 +140,7 @@ abstract class UserController extends ApiController
     public function update(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository($this->userRepository)->find($id);
+        $user = $em->getRepository($this->getUserRepository())->find($id);
 
         if (!$user) {
             return $this->serializeResponse('geoks.user.notFound', Response::HTTP_NOT_FOUND);
@@ -76,9 +150,13 @@ abstract class UserController extends ApiController
             return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
         }
 
-        $formUpdate = new $this->formUpdate($this->container, $this->userRepository);
+        $form = $this->createForm($this->getFormUpdate(), $user, [
+            'method' => $request->getMethod(),
+            'data_class' => $this->getUserRepository(),
+            'service_container' => $this->get('service_container'),
+            'change_password' => false
+        ]);
 
-        $form = $this->createForm($formUpdate, $user, ['method' => $request->getMethod()]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

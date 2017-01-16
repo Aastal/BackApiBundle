@@ -55,7 +55,7 @@ class AppMailer
         $this->translator = $translator;
         $this->dispatcher = $dispatcher;
         $this->router = $router;
-        $this->projectName = $this->container->getParameter('app_name');
+        $this->projectName = $this->container->getParameter('geoks_admin.app_name');
         $this->setConfig();
     }
 

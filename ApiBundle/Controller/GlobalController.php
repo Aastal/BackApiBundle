@@ -260,7 +260,8 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         $form = $this->createForm($this->getFormUpdate(), $entity, [
             'method' => $request->getMethod(),
             'data_class' => $this->entityRepository,
-            'service_container' => $this->get('service_container')
+            'service_container' => $this->get('service_container'),
+            'change_password' => false
         ]);
 
         $form->handleRequest($request);
