@@ -22,6 +22,9 @@ abstract class User extends BaseUser
 {
     /**
      * @var mixed
+     *
+     * @Expose
+     * @Groups({"details", "list"})
      */
     protected $id;
 
