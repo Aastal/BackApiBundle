@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\ORM\Functions;
+namespace Geoks\ApiBundle\ORM\Functions;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\Lexer;
@@ -37,14 +37,17 @@ class Distance extends FunctionNode
 
     public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
     {
-        $earthDiameterInKM = 1.609344 * 3956 * 2;
-
-        $sql = '('.$earthDiameterInKM.' * ASIN(SQRT(POWER(' .
-            'SIN(('.$this->fromLat->dispatch($sqlWalker).' - ABS('.$this->toLat->dispatch($sqlWalker).')) * PI() / 180 / 2), 2) + ' .
-            'COS('.$this->fromLat->dispatch($sqlWalker).' * PI() / 180) * COS(ABS('.$this->toLat->dispatch($sqlWalker).') * PI() / 180) * ' .
-            'POWER(SIN(('.$this->fromLng->dispatch($sqlWalker).' - '.$this->toLng->dispatch($sqlWalker).') * PI() / 180 / 2), 2) ' .
-            ')))';
-
-        return $sql;
+        // In Meters
+        return sprintf(
+            '((ACOS(SIN(%s * PI() / 180) * SIN(%s * PI() / 180) + COS(%s * PI() / 180) * COS(%s * PI() / 180)' .
+            ' * COS((%s - %s) * PI() / 180)) * 180 / PI()) * 60 * %s)',
+            $this->fromLat->dispatch($sqlWalker),
+            $this->toLat->dispatch($sqlWalker),
+            $this->fromLat->dispatch($sqlWalker),
+            $this->toLat->dispatch($sqlWalker),
+            $this->fromLng->dispatch($sqlWalker),
+            $this->toLng->dispatch($sqlWalker),
+            '1.1515 * 1609.34'
+        );
     }
 }
