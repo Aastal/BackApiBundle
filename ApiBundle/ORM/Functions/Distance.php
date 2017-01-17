@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\ORM\Functions;
+namespace Geoks\ApiBundle\ORM\Functions;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\Lexer;
@@ -41,12 +41,12 @@ class Distance extends FunctionNode
         return sprintf(
             '((ACOS(SIN(%s * PI() / 180) * SIN(%s * PI() / 180) + COS(%s * PI() / 180) * COS(%s * PI() / 180)' .
             ' * COS((%s - %s) * PI() / 180)) * 180 / PI()) * 60 * %s)',
-            $this->fromLat->rightExpression->dispatch($sqlWalker),
-            $this->toLat->leftExpression->dispatch($sqlWalker),
-            $this->fromLat->rightExpression->dispatch($sqlWalker),
-            $this->toLat->leftExpression->dispatch($sqlWalker),
-            $this->fromLng->rightExpression->dispatch($sqlWalker),
-            $this->toLng->leftExpression->dispatch($sqlWalker),
+            $this->fromLat->dispatch($sqlWalker),
+            $this->toLat->dispatch($sqlWalker),
+            $this->fromLat->dispatch($sqlWalker),
+            $this->toLat->dispatch($sqlWalker),
+            $this->fromLng->dispatch($sqlWalker),
+            $this->toLng->dispatch($sqlWalker),
             '1.1515 * 1609.344'
         );
     }
