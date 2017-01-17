@@ -37,9 +37,9 @@ class Distance extends FunctionNode
 
     public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
     {
-        $earthDiameterInKM = 1.609344 * 3956 * 2;
+        $earthDiameterInM = 1609.344 * (3956 * 2);
 
-        $sql = '('.$earthDiameterInKM.' * ASIN(SQRT(POWER(' .
+        $sql = '('.$earthDiameterInM.' * ASIN(SQRT(POWER(' .
             'SIN(('.$this->fromLat->dispatch($sqlWalker).' - ABS('.$this->toLat->dispatch($sqlWalker).')) * PI() / 180 / 2), 2) + ' .
             'COS('.$this->fromLat->dispatch($sqlWalker).' * PI() / 180) * COS(ABS('.$this->toLat->dispatch($sqlWalker).') * PI() / 180) * ' .
             'POWER(SIN(('.$this->fromLng->dispatch($sqlWalker).' - '.$this->toLng->dispatch($sqlWalker).') * PI() / 180 / 2), 2) ' .
