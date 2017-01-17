@@ -37,14 +37,17 @@ class Distance extends FunctionNode
 
     public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
     {
-        $earthDiameterInM = 1609.344 * (3956 * 2);
-
-        $sql = '('.$earthDiameterInM.' * ASIN(SQRT(POWER(' .
-            'SIN(('.$this->fromLat->dispatch($sqlWalker).' - ABS('.$this->toLat->dispatch($sqlWalker).')) * PI() / 180 / 2), 2) + ' .
-            'COS('.$this->fromLat->dispatch($sqlWalker).' * PI() / 180) * COS(ABS('.$this->toLat->dispatch($sqlWalker).') * PI() / 180) * ' .
-            'POWER(SIN(('.$this->fromLng->dispatch($sqlWalker).' - '.$this->toLng->dispatch($sqlWalker).') * PI() / 180 / 2), 2) ' .
-            ')))';
-
-        return $sql;
+        // In Meters
+        return sprintf(
+            '((ACOS(SIN(%s * PI() / 180) * SIN(%s * PI() / 180) + COS(%s * PI() / 180) * COS(%s * PI() / 180)' .
+            ' * COS((%s - %s) * PI() / 180)) * 180 / PI()) * 60 * %s)',
+            $this->fromLat->rightExpression->dispatch($sqlWalker),
+            $this->toLat->leftExpression->dispatch($sqlWalker),
+            $this->fromLat->rightExpression->dispatch($sqlWalker),
+            $this->toLat->leftExpression->dispatch($sqlWalker),
+            $this->fromLng->rightExpression->dispatch($sqlWalker),
+            $this->toLng->leftExpression->dispatch($sqlWalker),
+            '1.1515 * 1609.344'
+        );
     }
 }
