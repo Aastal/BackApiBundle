@@ -94,8 +94,12 @@ abstract class UserController extends ApiController
 
     public function getAll()
     {
-        if (!$this->getUser() && !in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+        if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
+        }
+
+        if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            return $this->serializeResponse("geoks.user.forbidden", Response::HTTP_FORBIDDEN);
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -118,13 +122,17 @@ abstract class UserController extends ApiController
             return $this->serializeResponse("geoks.user.notFound", Response::HTTP_NOT_FOUND);
         }
 
+        if ($user != $this->getUser()) {
+            return $this->serializeResponse("geoks.user.forbidden", Response::HTTP_FORBIDDEN);
+        }
+
         return $this->serializeResponse(['details' => $user]);
     }
 
     public function getOne($id)
     {
-        if (!$this->getUser() && !in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
-            return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
+        if (!$this->getUser()) {
+            return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -146,7 +154,7 @@ abstract class UserController extends ApiController
             return $this->serializeResponse('geoks.user.notFound', Response::HTTP_NOT_FOUND);
         }
 
-        if ($this->getUser()->getUsername() != $user->getUsername() && !in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+        if ($this->getUser() != $user) {
             return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
         }
 
@@ -182,7 +190,7 @@ abstract class UserController extends ApiController
             return $this->serializeResponse("geoks.user.notFound", Response::HTTP_NOT_FOUND);
         }
 
-        if ($this->getUser() != $user && !in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+        if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
             return $this->serializeResponse("geoks.user.forbidden", Response::HTTP_FORBIDDEN);
         }
 
