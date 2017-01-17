@@ -37,8 +37,7 @@ class Distance extends FunctionNode
 
     public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
     {
-
-        // In KM
+        // In Meters
         return sprintf(
             '((ACOS(SIN(%s * PI() / 180) * SIN(%s * PI() / 180) + COS(%s * PI() / 180) * COS(%s * PI() / 180)' .
             ' * COS((%s - %s) * PI() / 180)) * 180 / PI()) * 60 * %s)',
@@ -48,7 +47,7 @@ class Distance extends FunctionNode
             $this->toLat->dispatch($sqlWalker),
             $this->fromLng->dispatch($sqlWalker),
             $this->toLng->dispatch($sqlWalker),
-            '1.1515 * 1.609344'
+            '1.1515 * 1609.34'
         );
     }
 }
