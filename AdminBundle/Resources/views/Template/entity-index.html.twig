@@ -45,7 +45,7 @@
                                             {% else %}
                                                 {{ field }}
                                             {% endif %}
-                                        {% elseif field == 'false' %}
+                                        {% elseif attribute(entity, field) is not null %}
                                             {{ "app.no"|trans }}
                                         {% else %}
                                             <label class="label label-default">{{ "app.noData"|trans }}</label>

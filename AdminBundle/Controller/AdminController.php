@@ -238,7 +238,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
 
-                if ($form->get('plainPassword')) {
+                if ($form->has('plainPassword')) {
                     $entity->setPassword($this->encodeUserPassword($entity, $entity->getPlainPassword()));
                 }
 
@@ -282,9 +282,10 @@ abstract class AdminController extends Controller implements AdminControllerInte
             'change_password' => $changePassword
         ));
 
-        $form->handleRequest($request);
+        if ($request->getMethod() == 'PATCH') {
 
-        if ($form->isSubmitted()) {
+            $form->submit($request, true);
+
             if ($form->isValid()) {
 
                 if ($changePassword) {
@@ -296,9 +297,9 @@ abstract class AdminController extends Controller implements AdminControllerInte
                 $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'update');
 
                 return $this->redirect($this->generateUrl('geoks_admin_' . lcfirst($this->className) . 's_index'));
-            } else {
-                $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'update');
             }
+
+            $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'update');
         }
 
         return $this->render($this->getAdminBundle() . ':' . $this->className . ':form.html.twig', [

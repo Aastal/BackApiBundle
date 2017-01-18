@@ -38,7 +38,7 @@
                                                 {{ fieldValue }}
                                             {% endif %}
                                         </b>
-                                    {% elseif fieldValue == 'false' %}
+                                    {% elseif field.type is defined and field.type == 'boolean' %}
                                         {{ "app.no"|trans }}
                                     {% else %}
                                         <label class="label label-default">{{ "app.noData"|trans }}</label>
