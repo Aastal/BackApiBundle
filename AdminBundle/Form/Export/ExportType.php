@@ -35,6 +35,14 @@ class ExportType extends AbstractType
         $rowArr = $container->get('geoks_admin.entity_fields')->getFieldsName($table);
         $rowAssos = $container->get('geoks_admin.entity_fields')->getFieldsAssociations($table);
 
+        $builder
+            ->add('id', IntegerType::class, [
+                'label' => "ID",
+                'attr' => [
+                    'class' => 'control-animate'
+                ]
+            ]);
+
         foreach ($rowArr as $name => $field) {
             if ($field["type"] != 'array' && !in_array($name, $banList)) {
                 $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);

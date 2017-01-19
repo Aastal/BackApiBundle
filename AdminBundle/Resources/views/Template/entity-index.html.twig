@@ -17,50 +17,55 @@
             <div class="box-body">
                 <div class="table-responsive">
                     <table class="table no-margin">
-                        <thead>
-                        <tr>
-                            {% for field in fields %}
-                                <th{% if entities.isSorted('a.' ~ field) %} class="sorted"{% endif %}>{{ knp_pagination_sortable(entities, (name|lower ~ "." ~ field)|trans({}, name|lower), ['a.' ~ field]) }}</th>
-                            {% endfor %}
-
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for entity in entities %}
+                        {% if entities|length %}
+                            <thead>
                             <tr>
                                 {% for field in fields %}
-                                    <td>
-                                        {% set field = field|replace({'_': ""}) %}
-
-                                        {% if attribute(entity, field) is defined and attribute(entity, field) %}
-                                            {% set field = attribute(entity, field) %}
-
-                                            {% if field is iterable %}
-                                                {{ field|length }}
-                                            {% elseif field.timestamp is defined %}
-                                                {{ field|date('d/m/Y H:i:s') }}
-                                            {% elseif field == 'true' %}
-                                                {{ "app.yes"|trans }}
-                                            {% else %}
-                                                {{ field }}
-                                            {% endif %}
-                                        {% elseif attribute(entity, field) is not null %}
-                                            {{ "app.no"|trans }}
-                                        {% else %}
-                                            <label class="label label-default">{{ "app.noData"|trans }}</label>
-                                        {% endif %}
-                                    </td>
+                                    <th{% if entities.isSorted('a.' ~ field) %} class="sorted"{% endif %}>{{ knp_pagination_sortable(entities, (name|lower ~ "." ~ field)|trans({}, name|lower), ['a.' ~ field]) }}</th>
                                 {% endfor %}
 
-                                <td>
-                                    <a class="btn btn-animate btn-info" href="{{ path('geoks_admin_' ~ name ~ 's_show', {'id': entity.id}) }}">Voir</a>
-                                    <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ name ~ 's_update', {'id': entity.id}) }}">Modifier</a>
-                                    <a class="btn btn-animate btn-danger" href="{{ path('geoks_admin_' ~ name ~ 's_delete', {'id': entity.id}) }}">Supprimer</a>
-                                </td>
+                                <th>Actions</th>
                             </tr>
-                        {% endfor %}
-                        </tbody>
+                            </thead>
+                            <tbody>
+                            {% for entity in entities %}
+                                <tr>
+                                    {% for field in fields %}
+                                        <td>
+                                            {% set field = field|replace({'_': ""}) %}
+
+                                            {% if attribute(entity, field) is defined and attribute(entity, field) %}
+                                                {% set field = attribute(entity, field) %}
+
+                                                {% if field is iterable %}
+                                                    {{ field|length }}
+                                                {% elseif field.timestamp is defined %}
+                                                    {{ field|date('d/m/Y H:i:s') }}
+                                                {% elseif field == 'true' %}
+                                                    {{ "app.yes"|trans }}
+                                                {% else %}
+                                                    {{ field }}
+                                                {% endif %}
+                                            {% elseif attribute(entity, field) is not null %}
+                                                {{ "app.no"|trans }}
+                                            {% else %}
+                                                <label class="label label-default">{{ "app.noData"|trans }}</label>
+                                            {% endif %}
+                                        </td>
+                                    {% endfor %}
+
+                                    <td>
+                                        <a class="btn btn-animate btn-info" href="{{ path('geoks_admin_' ~ name ~ 's_show', {'id': entity.id}) }}">Voir</a>
+                                        <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ name ~ 's_update', {'id': entity.id}) }}">Modifier</a>
+                                        <a class="btn btn-animate btn-danger" href="{{ path('geoks_admin_' ~ name ~ 's_delete', {'id': entity.id}) }}">Supprimer</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        {% else %}
+                            <br />
+                            <center>{{ "app.noData"|trans }}</center>
+                        {% endif %}
                     </table>
                 </div>
             </div>

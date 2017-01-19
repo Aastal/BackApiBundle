@@ -22,7 +22,7 @@ abstract class UserController extends ApiController
     /**
      * @var string
      */
-    private $userRepository;
+    private $userRepository = "AppBundle\\Entity\\User";
 
     /**
      * @var string
@@ -76,11 +76,11 @@ abstract class UserController extends ApiController
     public function __construct($userRepository = null, $formCreate = null, $formUpdate = null)
     {
         // Entity Naming
-        $this->userRepository = $userRepository;
-
-        if ($this->userRepository) {
-            $this->className = (new \ReflectionClass($userRepository))->getShortName();
+        if ($userRepository) {
+            $this->userRepository = $userRepository;
         }
+
+        $this->className = (new \ReflectionClass($this->userRepository))->getShortName();
 
         // Forms
         if ($formCreate) {
@@ -98,7 +98,7 @@ abstract class UserController extends ApiController
             return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
         }
 
-        if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+        if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->serializeResponse("geoks.user.forbidden", Response::HTTP_FORBIDDEN);
         }
 
@@ -190,7 +190,7 @@ abstract class UserController extends ApiController
             return $this->serializeResponse("geoks.user.notFound", Response::HTTP_NOT_FOUND);
         }
 
-        if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+        if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->serializeResponse("geoks.user.forbidden", Response::HTTP_FORBIDDEN);
         }
 
