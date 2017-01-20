@@ -42,7 +42,6 @@ class UpdateForm extends AbstractType
         $table = $options["data_class"];
 
         $banList = $container->get('geoks_admin.entity_fields')->fieldsBanList();
-        $banList[] = "password";
 
         $this->entityName = strtolower($container->get('geoks_admin.entity_fields')->getEntityName($table));
         $rowArr = $container->get('geoks_admin.entity_fields')->getFieldsName($table);
@@ -63,16 +62,21 @@ class UpdateForm extends AbstractType
         }
 
         foreach ($rowAssos as $name => $class) {
-            if ($class['isOwningSide']) {
-                $builder
-                    ->add($name, EntityType::class, [
-                        'label' => $this->entityName . "." . $name,
-                        'class' => $class['targetEntity'],
-                        'attr' => [
-                            'class' => 'control-animate'
-                        ]
-                    ]);
+
+            $typeOptions['options'] = [
+                'label' => $this->entityName . "." . $name,
+                'class' => $class['targetEntity'],
+                'attr' => [
+                    'class' => 'control-animate'
+                ]
+            ];
+
+            if ($class["type"] == 4 || $class["type"] == 8) {
+                $typeOptions['options']['multiple'] = true;
             }
+
+            $builder
+                ->add($name, EntityType::class, $typeOptions['options']);
         }
 
         if ($this->entityName == "user") {
