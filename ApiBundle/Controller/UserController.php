@@ -129,6 +129,26 @@ abstract class UserController extends ApiController
         return $this->serializeResponse(['details' => $user]);
     }
 
+    public function meCustom($group)
+    {
+        if (!$this->getUser()) {
+            return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository($this->userRepository)->findOneBy(array('username' => $this->getUser()->getUsername()));
+
+        if (!$user) {
+            return $this->serializeResponse("geoks.user.notFound", Response::HTTP_NOT_FOUND);
+        }
+
+        if ($user != $this->getUser()) {
+            return $this->serializeResponse("geoks.user.forbidden", Response::HTTP_FORBIDDEN);
+        }
+
+        return $this->serializeResponse([$group => $user]);
+    }
+
     public function getOne($id)
     {
         if (!$this->getUser()) {
