@@ -81,6 +81,11 @@ abstract class User extends BaseUser
     protected $address;
 
     /**
+     * @var string
+     */
+    protected $gcmToken;
+
+    /**
      * @Expose
      * @Groups({"details", "list"})
      *
@@ -329,5 +334,21 @@ abstract class User extends BaseUser
     public function setAddress($address)
     {
         $this->address = $address;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGcmToken()
+    {
+        return $this->gcmToken;
+    }
+
+    /**
+     * @param mixed $gcmToken
+     */
+    public function setGcmToken($gcmToken)
+    {
+        $this->gcmToken = $gcmToken;
     }
 }

@@ -265,7 +265,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
         $changePassword = false;
 
-        if (($request->isXmlHttpRequest() && $request->get('changePassword') == true)) {
+        if ($request->get('changePassword') == true || $request->get('plainPassword')) {
             $changePassword = true;
         }
 

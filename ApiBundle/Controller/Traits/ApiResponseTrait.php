@@ -55,7 +55,7 @@ trait ApiResponseTrait
         foreach ($form->getErrors() as $error) {
             if ($first) {
                 $errors[$error->getOrigin()->getName()][] = $error->getMessage();
-            }else{
+            } else {
                 $errors[] = $error->getMessage();
             }
         }

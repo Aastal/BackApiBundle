@@ -292,7 +292,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
             return $this->serializeResponse("geoks.entity.notFound", Response::HTTP_NOT_FOUND);
         }
 
-        if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+        if (!$this->isGranted('ROLE_ADMIN')) {
             return $this->serializeResponse("geoks.user.forbidden", Response::HTTP_FORBIDDEN);
         }
 

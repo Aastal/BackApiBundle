@@ -47,8 +47,15 @@ class UpdateForm extends AbstractType
         $rowArr = $container->get('geoks_admin.entity_fields')->getFieldsName($table);
         $rowAssos = $container->get('geoks_admin.entity_fields')->getFieldsAssociations($table);
 
+        $passwordExist = false;
+
+        if (isset($rowArr["password"]) || isset($rowArr["plainPassword"])) {
+            $passwordExist = true;
+        }
+
         foreach ($rowArr as $name => $field) {
-            if ($field["type"] != 'array' && !in_array($name, $banList)) {
+            if (($field["type"] != 'array' && $field["type"]) && !in_array($name, $banList)) {
+
                 $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);
 
                 if ((isset($field["nullable"]) && $field["nullable"]) && $field["type"] != 'datetime' || $field["type"] == 'boolean') {
@@ -79,7 +86,7 @@ class UpdateForm extends AbstractType
                 ->add($name, EntityType::class, $typeOptions['options']);
         }
 
-        if ($this->entityName == "user") {
+        if ($passwordExist == true) {
             $builder
                 ->add('changePassword', ButtonType::class, [
                     'label' => "user.changePassword",

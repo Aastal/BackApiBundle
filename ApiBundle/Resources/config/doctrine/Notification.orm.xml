@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Geoks\ApiBundle\Entity\Notification" table="notifications">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+
+        <field name="type" type="string" column="type" nullable="false" />
+        <field name="title" type="string" column="title" nullable="false" />
+        <field name="body" type="string" column="body" nullable="false" />
+        <field name="created_at" type="datetime" column="created_at" nullable="false" />
+        <field name="is_read" type="boolean" column="is_read" nullable="false" />
+
+        <many-to-one field="receiver" target-entity="Geoks\UserBundle\Entity\User">
+            <join-column name="receiver_id" referenced-column-name="id" on-delete="CASCADE"/>
+        </many-to-one>
+
+        <many-to-one field="sender" target-entity="Geoks\UserBundle\Entity\User">
+            <join-column name="sender_id" referenced-column-name="id" on-delete="CASCADE"/>
+        </many-to-one>
+    </entity>
+
+</doctrine-mapping>

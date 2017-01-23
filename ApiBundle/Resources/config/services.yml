@@ -27,3 +27,6 @@ services:
     geoks.apikey_authenticator:
         class:  Geoks\ApiBundle\Security\User\ApiKeyAuthenticator
         public: false
+
+    geoks.uploader:
+        class: Geoks\ApiBundle\Services\FileUploader

@@ -210,8 +210,10 @@ abstract class UserController extends ApiController
             return $this->serializeResponse("geoks.user.notFound", Response::HTTP_NOT_FOUND);
         }
 
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->serializeResponse("geoks.user.forbidden", Response::HTTP_FORBIDDEN);
+        if ($this->getUser() != $user) {
+            if (!$this->isGranted('ROLE_ADMIN')) {
+                return $this->serializeResponse("geoks.user.forbidden", Response::HTTP_FORBIDDEN);
+            }
         }
 
         $em->remove($user);
@@ -239,7 +241,7 @@ abstract class UserController extends ApiController
 
             $userManager->updateUser($user);
 
-            return $this->serializeResponse($user);
+            return $this->serializeResponse(["details" => $user]);
         }
 
         return $this->serializeResponse($form, Response::HTTP_BAD_REQUEST);

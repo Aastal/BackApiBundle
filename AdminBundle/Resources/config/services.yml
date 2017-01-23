@@ -10,6 +10,11 @@ services:
         tags:
             - { name: form.type, alias: hr }
 
+    geoks_admin.form.type.update:
+        class: Geoks\ApiBundle\Form\Basic\UpdateForm
+        tags:
+            - { name: form.type, alias: form_update }
+
     geoks.flashbag.handler:
         class: Geoks\AdminBundle\Services\FlashBagHandler
         arguments: [ "@session" ]

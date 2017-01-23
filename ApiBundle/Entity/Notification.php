@@ -13,41 +13,32 @@ use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * @ORM\Table("notifications")
- * @ORM\Entity(repositoryClass="Geoks\ApiBundle\Entity\NotificationRepository")
  * @ExclusionPolicy("all")
  */
 class Notification extends BaseNotification
 {
     /**
-     * @ORM\Id()
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @var integer
      */
     private $id;
 
     /**
      * @var string
-     * @ORM\Column(name="title", type="string", length=255)
      */
     protected $title;
 
     /**
      * @var string
-     * @ORM\Column(name="body", type="string", length=255)
      */
     protected $body;
 
     /**
      * @var integer
-     * @ORM\Column(name="type", type="integer")
-     * @Assert\NotNull()
      */
     protected $type;
 
     /**
      * @var boolean
-     * @ORM\Column(name="is_read", type="boolean")
      */
     protected $is_read = false;
 
@@ -63,8 +54,6 @@ class Notification extends BaseNotification
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="created_at", type="datetime")
-     * @Assert\NotNull()
      */
     protected $created_at;
 
