@@ -279,4 +279,12 @@ abstract class SecurityController extends ApiController
 
         return $this->serializeResponse($form, Response::HTTP_BAD_REQUEST);
     }
+
+    public function verifyEmailAction($email)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository($this->getUserRepository())->findOneByEmail($email);
+
+        return $this->serializeResponse(['already-subscribed' => ($user) ? true : false]);
+    }
 }
