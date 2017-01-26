@@ -51,16 +51,22 @@ class CreateForm extends AbstractType
         }
 
         foreach ($rowAssos as $name => $class) {
+            if (!in_array($name, $banList)) {
+                $typeOptions['options'] = [
+                    'label' => $this->entityName . "." . $name,
+                    'class' => $class['targetEntity'],
+                    'attr' => [
+                        'class' => 'control-animate'
+                    ]
+                ];
 
-            if ($class['isOwningSide']) {
+                if ($class["type"] == 4 || $class["type"] == 8) {
+                    $typeOptions['options']['required'] = false;
+                    $typeOptions['options']['multiple'] = true;
+                }
+
                 $builder
-                    ->add($name, EntityType::class, [
-                        'label' => $this->entityName . "." . $name,
-                        'class' => $class['targetEntity'],
-                        'attr' => [
-                            'class' => 'control-animate'
-                        ]
-                    ]);
+                    ->add($name, EntityType::class, $typeOptions['options']);
             }
         }
 
