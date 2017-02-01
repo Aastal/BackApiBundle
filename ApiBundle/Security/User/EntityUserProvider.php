@@ -56,6 +56,7 @@ class EntityUserProvider extends BaseClass
         $this->client = $this->em->getRepository('GeoksApiBundle:Client')->findOneBy(array(
             'secret' => $this->container->getParameter('api_client_secret')
         ));
+
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
     }
@@ -99,6 +100,8 @@ class EntityUserProvider extends BaseClass
 
             $this->tokenStorage->setToken($token);
             $this->accessToken->setScope('admin');
+        } else {
+            $this->accessToken->setScope('api');
         }
 
         $this->em->flush();

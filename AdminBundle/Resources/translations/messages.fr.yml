@@ -2,6 +2,7 @@ app:
   yes: Oui
   no: Non
   noData: Aucune donnée
+  login: Se connecter
   logout: Se deconnecter
   user: Utilisateur
   users: Utilisateurs

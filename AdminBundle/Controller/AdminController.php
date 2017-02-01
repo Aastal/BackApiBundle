@@ -254,7 +254,8 @@ abstract class AdminController extends Controller implements AdminControllerInte
         }
 
         return $this->render($this->getAdminBundle() . ':' . $this->className . ':form.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'entity' => $entity
         ]);
     }
 
