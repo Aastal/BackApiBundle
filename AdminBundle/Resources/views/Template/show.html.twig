@@ -63,21 +63,25 @@
                         <table class="table no-margin">
                             <tbody>
                             {% for field in fields_associations %}
+                                {% set fieldName = field.fieldName|replace({'_': ""}) %}
                                 <tr>
-                                    <td>{{ field.fieldName }}</td>
+                                    <td>{{ (className|lower ~ "." ~ field.fieldName)|trans({}, className|lower) }}</td>
                                     <td>
-                                        {% if attribute(entity, field.fieldName) is defined and attribute(entity, field.fieldName) %}
+                                        {% if attribute(entity, fieldName) is defined and attribute(entity, fieldName) %}
+                                            {% set fieldValue = attribute(entity, fieldName) %}
                                             <b>
-                                                {% set fieldValue = attribute(entity, field.fieldName) %}
-
                                                 {% if fieldValue is iterable %}
                                                     {{ fieldValue|length }}
                                                 {% elseif fieldValue.timestamp is defined %}
                                                     {{ fieldValue|date('d/m/Y H:i:s') }}
+                                                {% elseif fieldValue == 'true' %}
+                                                    {{ "app.yes"|trans }}
                                                 {% else %}
                                                     {{ fieldValue }}
                                                 {% endif %}
                                             </b>
+                                        {% elseif field.type is defined and field.type == 'boolean' %}
+                                            {{ "app.no"|trans }}
                                         {% else %}
                                             <label class="label label-default">{{ "app.noData"|trans }}</label>
                                         {% endif %}

@@ -69,21 +69,23 @@ class UpdateForm extends AbstractType
         }
 
         foreach ($rowAssos as $name => $class) {
+            if (!in_array($name, $banList)) {
+                $typeOptions['options'] = [
+                    'label' => $this->entityName . "." . $name,
+                    'class' => $class['targetEntity'],
+                    'attr' => [
+                        'class' => 'control-animate'
+                    ]
+                ];
 
-            $typeOptions['options'] = [
-                'label' => $this->entityName . "." . $name,
-                'class' => $class['targetEntity'],
-                'attr' => [
-                    'class' => 'control-animate'
-                ]
-            ];
+                if ($class["type"] == 4 || $class["type"] == 8) {
+                    $typeOptions['options']['required'] = false;
+                    $typeOptions['options']['multiple'] = true;
+                }
 
-            if ($class["type"] == 4 || $class["type"] == 8) {
-                $typeOptions['options']['multiple'] = true;
+                $builder
+                    ->add($name, EntityType::class, $typeOptions['options']);
             }
-
-            $builder
-                ->add($name, EntityType::class, $typeOptions['options']);
         }
 
         if ($passwordExist == true) {

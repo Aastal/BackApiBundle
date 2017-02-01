@@ -73,6 +73,6 @@ class NotificationRepository extends EntityRepository
             ->setParameter(':userId', $user->getId())
         ;
 
-        return $query->getQuery()->getResult();
+        return $query->getQuery()->getScalarResult();
     }
 }

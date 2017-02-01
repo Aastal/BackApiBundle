@@ -22,6 +22,8 @@ abstract class GlobalRepository extends EntityRepository
      */
     public function filterBy(array $parameters = [])
     {
+        $joins = $this->getClassMetadata()->getAssociationMappings();
+
         /**
          * Param closure, check if notification has given key search
          *
@@ -29,10 +31,16 @@ abstract class GlobalRepository extends EntityRepository
          * @param $key
          * @param $search
          * @param $i
+         * @param $joins
          */
-        $filter = function (&$queryBuilder, $key, $search, $i) {
+        $filter = function (&$queryBuilder, $key, $search, $i, &$joins) {
             if (is_bool($search)) {
-                if ($search === true) {
+                $joinLetter = strtolower(substr($key, -3)) . rand(1, 100);
+
+                if ($search === true && $joins[$key]) {
+                    $queryBuilder
+                        ->innerJoin('a.' . $key, $joinLetter);
+                } elseif ($search === true) {
                     $queryBuilder
                         ->andWhere('a.' . $key . ' = 1');
                 }
@@ -63,9 +71,9 @@ abstract class GlobalRepository extends EntityRepository
 
         $i = 0;
         foreach ($parameters as $key => $value) {
-            $filter($queryBuilder, $key, $value, $i++);
+            $filter($queryBuilder, $key, $value, $i++, $joins);
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder->orderBy('a.id', 'DESC')->getQuery();
     }
 }
