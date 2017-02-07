@@ -1,5 +1,7 @@
 parameters:
     geoks.user_provider.class: Geoks\ApiBundle\Security\User\EntityUserProvider
+    sms.api.url: null
+    sms.api.key: null
 
 services:
     geoks.api.serializer:
