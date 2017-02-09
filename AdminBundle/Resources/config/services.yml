@@ -1,6 +1,8 @@
 parameters:
     hr:
       name: 'hr'
+    phone:
+      name: 'phone'
 
 services:
     geoks_admin.form.type.hr:
@@ -9,6 +11,13 @@ services:
             - "%hr%"
         tags:
             - { name: form.type, alias: hr }
+
+    geoks_admin.form.type.phone:
+        class: Geoks\AdminBundle\Form\Custom\PhoneType
+        arguments:
+            - "@geoks_admin.contries_phone"
+        tags:
+            - { name: form.type, alias: phone }
 
     geoks_admin.form.type.update:
         class: Geoks\ApiBundle\Form\Basic\UpdateForm
@@ -39,3 +48,6 @@ services:
         arguments: [ "@service_container" ]
         tags:
             - { name: doctrine.event_subscriber, connection: default }
+
+    geoks_admin.contries_phone:
+        class: Geoks\AdminBundle\Services\CountriesPhone

@@ -44,13 +44,13 @@ class PushNotify
     /**
      * @param string $type
      * @param array $data
-     * @param array $bodyParam
+     * @param array $arrayMessage
      * @param User $receiver
-     * @param User $sender
+     * @param User|null $sender
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function send($type, $data, $bodyParam, $receiver, $sender)
+    public function send($type, $data, $arrayMessage, $receiver, $sender = null)
     {
         $em = $this->container->get('doctrine')->getManager();
 
@@ -58,17 +58,22 @@ class PushNotify
         $client->setApiKey($this->apiKey);
         $client->injectHttpClient(new \GuzzleHttp\Client());
 
-        $note = new Notification($bodyParam['title'], $bodyParam['body']);
+        $note = new Notification();
+        $note->setTitle($arrayMessage['title']);
+        $note->setBody($arrayMessage['body']);
         $note->setType($type);
         $note->setReceiver($receiver);
-        $note->setSender($sender);
         $note->setCreatedAt(new \DateTime());
+
+        if ($sender) {
+            $note->setSender($sender);
+        }
 
         $em->persist($note);
         $em->flush();
 
         $message = new Message();
-        $notification = new \paragraph1\phpFCM\Notification($bodyParam['title'], $bodyParam['body']);
+        $notification = new \paragraph1\phpFCM\Notification($arrayMessage['title'], $arrayMessage['body']);
         $message->addRecipient(new Device($receiver->getGcmToken()));
         $message->setNotification($notification)->setData($data);
 

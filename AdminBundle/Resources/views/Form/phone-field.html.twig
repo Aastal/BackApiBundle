@@ -1,0 +1,24 @@
+{% block phone_widget %}
+    <div class="intl-tel-input allow-dropdown separate-dial-code">
+        <div class="flag-container">
+            <div class="selected-flag" tabindex="0" title="{{ countries_phone[0].nom }}: +{{ countries_phone[0].dialCode }}">
+                <div class="iti-flag {{ countries_phone[0].countryCode }}"></div>
+                <div class="selected-dial-code">+{{ countries_phone[0].dialCode }}</div>
+                <div class="iti-arrow"></div>
+            </div>
+
+            <ul class="country-list hide">
+                {% for c in countries_phone %}
+                    <li class="country" data-dial-code="{{ c.dialCode }}" data-country-code="{{ c.countryCode }}">
+                        <div class="flag-box">
+                            <div class="iti-flag {{ c.countryCode }}"></div>
+                        </div>
+                        <span class="country-name">{{ c.nom }}</span>
+                        <span class="dial-code">+{{ c.dialCode }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <input type="tel" {{ block('widget_attributes') }} value="{{ value }}" rel="theme" />
+    </div>
+{% endblock phone_widget %}

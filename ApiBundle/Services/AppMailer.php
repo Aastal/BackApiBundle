@@ -77,6 +77,10 @@ class AppMailer
                 'subject' => $lc . '.user.lock'
             ),
         );
+
+        if ($this->container->get('app.mailer')) {
+            $this->config += $this->container->get('app.mailer')->getConfig($this->projectName);
+        }
     }
 
     /**

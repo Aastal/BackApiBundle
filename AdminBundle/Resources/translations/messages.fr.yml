@@ -3,7 +3,7 @@ app:
   no: Non
   noData: Aucune donnée
   login: Se connecter
-  logout: Se deconnecter
+  logout: Se déconnecter
   user: Utilisateur
   users: Utilisateurs
   index: Accueil

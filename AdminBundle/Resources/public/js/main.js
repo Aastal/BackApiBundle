@@ -25,6 +25,8 @@ $('.collapse-link').on("click", function () {
     }
 });
 
+
+
 /**
  * @param target
  * @param url
