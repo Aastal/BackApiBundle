@@ -13,4 +13,6 @@ country.on('click', function () {
 
     selectedFlag.find('.iti-flag').removeClass().addClass('iti-flag ' + flag);
     selectedFlag.find('.selected-dial-code').text(dialCode);
+
+    $('.intl-tel-input input').val(dialCode);
 });

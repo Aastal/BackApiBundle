@@ -4,6 +4,9 @@ namespace Geoks\AdminBundle\Form\Custom;
 
 use Geoks\AdminBundle\Services\CountriesPhone;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,7 +25,7 @@ class PhoneType extends AbstractType
     }
 
     /**
-     * Pass the image URL to the view
+     * Pass the countries list
      *
      * @param FormView $view
      * @param FormInterface $form
