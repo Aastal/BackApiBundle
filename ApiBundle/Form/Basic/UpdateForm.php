@@ -80,7 +80,9 @@ class UpdateForm extends AbstractType
 
                 if ($class["type"] == 4 || $class["type"] == 8) {
                     $typeOptions['options']['required'] = false;
+                    $typeOptions['options']['expanded'] = true;
                     $typeOptions['options']['multiple'] = true;
+                    $typeOptions['options']['attr']['class'] = 'multiple';
                 }
 
                 $builder
