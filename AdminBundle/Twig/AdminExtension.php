@@ -21,6 +21,7 @@ class AdminExtension extends \Twig_Extension
     {
         return array(
             'class' => new \Twig_SimpleFunction('class', array($this, 'getClass')),
+            'name_pluralize' => new \Twig_SimpleFunction('name_pluralize', array($this, 'getNamePluralize')),
             'class_repository' => new \Twig_SimpleFunction('class_repository', array($this, 'getRepository')),
             'fields' => new \Twig_SimpleFunction('fields', array($this, 'getFieldsName')),
             'fields_associations' => new \Twig_SimpleFunction('fields_associations', array($this, 'getFieldsAssociations'))
@@ -35,6 +36,13 @@ class AdminExtension extends \Twig_Extension
     public function getClass($object)
     {
         return (new \ReflectionClass($object))->getShortName();
+    }
+
+    public function getNamePluralize($object)
+    {
+        $object = $this->container->get('geoks.api.pluralization')->pluralize($object);
+
+        return $object;
     }
 
     public function getRepository($object)

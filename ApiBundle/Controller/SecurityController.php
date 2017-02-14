@@ -100,7 +100,7 @@ abstract class SecurityController extends ApiController
             $user = $em->getRepository($this->getUserRepository())->findOneByEmail($email);
 
             if (!$user) {
-                return $this->serializeResponse($this->get('translator')->trans('geoks.user.email.invalid'), Response::HTTP_NOT_FOUND);
+                return $this->serializeResponse($this->get('translator')->trans('geoks.user.login.wrong'), Response::HTTP_FORBIDDEN);
             }
 
             if ($this->checkUserPassword($user, $password)) {
@@ -284,6 +284,14 @@ abstract class SecurityController extends ApiController
     {
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository($this->getUserRepository())->findOneByEmail($email);
+
+        return $this->serializeResponse(['already-subscribed' => ($user) ? true : false]);
+    }
+
+    public function verifyUsernameAction($username)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository($this->getUserRepository())->findOneByUsername($username);
 
         return $this->serializeResponse(['already-subscribed' => ($user) ? true : false]);
     }

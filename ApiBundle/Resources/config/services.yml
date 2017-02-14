@@ -4,9 +4,12 @@ parameters:
     sms.api.key: null
 
 services:
+    geoks.api.pluralization:
+        class: Geoks\ApiBundle\Services\Pluralization
+
     geoks.api.serializer:
         class: Geoks\ApiBundle\Services\Serializer
-        arguments: [ "@service_container", "@jms_serializer" ]
+        arguments: [ "@service_container", "@jms_serializer", "%geoks_api.class_pluralize%" ]
 
     geoks.api.mailer:
         class: Geoks\ApiBundle\Services\AppMailer

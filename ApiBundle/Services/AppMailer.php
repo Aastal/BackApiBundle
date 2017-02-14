@@ -78,7 +78,7 @@ class AppMailer
             ),
         );
 
-        if ($this->container->get('app.mailer')) {
+        if ($this->container->has('app.mailer')) {
             $this->config += $this->container->get('app.mailer')->getConfig($this->projectName);
         }
     }

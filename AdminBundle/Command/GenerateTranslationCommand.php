@@ -25,7 +25,7 @@ class GenerateTranslationCommand extends ContainerAwareCommand
         $this
             ->setName('generate:entity:translations')
             ->setDescription('generate translation based on entity fields')
-            ->addArgument('class', InputArgument::REQUIRED, 'Sets the entity class', null);
+            ->addArgument('class', InputArgument::OPTIONAL, 'Sets the entity class', 'AppBundle:User');
     }
 
     /**
@@ -37,8 +37,10 @@ class GenerateTranslationCommand extends ContainerAwareCommand
         $kernel = $this->getContainer()->get('kernel');
 
         $entityNamespace = $this->getContainer()->getParameter('geoks_api.app_bundle');
-        $entityFields = $this->getContainer()->get('geoks_admin.entity_fields')->getFieldsName($input->getArgument('class'));
         $entityName = strtolower($this->getContainer()->get('doctrine')->getManager()->getClassMetadata($input->getArgument('class'))->getReflectionClass()->getShortName());
+
+        $entityFields = $this->getContainer()->get('geoks_admin.entity_fields')->getFieldsName($input->getArgument('class'));
+        $entityFields["id"] = "ID";
 
         $array = [];
         foreach ($entityFields as $name => $type) {
@@ -50,8 +52,12 @@ class GenerateTranslationCommand extends ContainerAwareCommand
         $file = $kernel->getRootDir() . '/../src/' . $entityNamespace . '/Resources/translations/' . $entityName . '.fr.yml';
 
         if (!file_exists($file)) {
-            if (!file_exists($kernel->getRootDir() . '/../src/' . $entityNamespace . '/Resources/translations')) {
-                mkdir($kernel->getRootDir() . '/../src/' . $entityNamespace . '/Resources/translations');
+            if (!file_exists($kernel->getRootDir() . '/../src/' . $entityNamespace . '/Resources')) {
+                mkdir($kernel->getRootDir() . '/../src/' . $entityNamespace . '/Resources');
+
+                if (!file_exists($kernel->getRootDir() . '/../src/' . $entityNamespace . '/Resources/translations')) {
+                    mkdir($kernel->getRootDir() . '/../src/' . $entityNamespace . '/Resources/translations');
+                }
             }
 
             touch($file);

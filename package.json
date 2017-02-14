@@ -1,10 +1,10 @@
 {
-  "name": "topinsight_ws",
+  "name": "geoks-dev",
   "version": "1.0.0",
-  "description": "topinsight",
+  "description": "geoks-dev",
   "repository": {
     "type": "git",
-    "url": "git@git.geoks-dev.fr:topinsight/topinsight_ws.git"
+    "url": "git@git.geoks-dev.fr:geoks-dev/symfony-bundle.git"
   },
   "author": "Geoks",
   "license": "ISC",

@@ -1,4 +1,5 @@
 {% set name = filter_form.vars.attr.id|replace({'app.': ""}) %}
+{% set namePluralize = name_pluralize(name) %}
 
 <div class="row">
     {{ include('GeoksAdminBundle:Form:filter.html.twig', {'form' : filter_form}) }}
@@ -7,12 +8,12 @@
     <span class="badge">{{ numberOfResults }} résultats</span>
 </div>
 <hr>
-<a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ name ~ 's_create') }}">Ajouter</a>
+<a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_create') }}">Ajouter</a>
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="box box-info">
             <div class="box-header">
-                <h3 class="box-title">{{ (filter_form.vars.attr.id ~ 's')|trans }}</h3>
+                <h3 class="box-title">{{ namePluralize|trans }}</h3>
             </div>
             <div class="box-body">
                 <div class="table-responsive">
@@ -55,9 +56,9 @@
                                     {% endfor %}
 
                                     <td>
-                                        <a class="btn btn-animate btn-info" href="{{ path('geoks_admin_' ~ name ~ 's_show', {'id': entity.id}) }}">Voir</a>
-                                        <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ name ~ 's_update', {'id': entity.id}) }}">Modifier</a>
-                                        <a class="btn btn-animate btn-danger" href="{{ path('geoks_admin_' ~ name ~ 's_delete', {'id': entity.id}) }}">Supprimer</a>
+                                        <a class="btn btn-animate btn-info" href="{{ path('geoks_admin_' ~ namePluralize ~ '_show', {'id': entity.id}) }}">Voir</a>
+                                        <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_update', {'id': entity.id}) }}">Modifier</a>
+                                        <a class="btn btn-animate btn-danger" href="{{ path('geoks_admin_' ~ namePluralize ~ '_delete', {'id': entity.id}) }}">Supprimer</a>
                                     </td>
                                 </tr>
                             {% endfor %}
