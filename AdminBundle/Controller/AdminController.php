@@ -221,12 +221,14 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $em = $this->getDoctrine()->getManager();
         $entity = new $this->entityRepository();
 
+        $namePluralize = $this->get("geoks.api.pluralization")->pluralize(lcfirst($this->className));
+
         $form = $this->createForm($this->getFormCreate(), $entity, array(
             'attr' => [
                 'id' => "app." . lcfirst($this->className),
                 'class' => "form-horizontal"
             ],
-            'action' => $this->generateUrl(sprintf('geoks_admin_' . lcfirst($this->className) . 's_create')),
+            'action' => $this->generateUrl(sprintf('geoks_admin_' . $namePluralize . '_create')),
             'method' => 'POST',
             'translation_domain' => strtolower($this->className),
             'data_class' => $this->entityRepository,
@@ -247,7 +249,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
                 $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'create');
 
-                return $this->redirect($this->generateUrl('geoks_admin_' . lcfirst($this->className) . 's_index'));
+                return $this->redirect($this->generateUrl('geoks_admin_' . $namePluralize . '_index'));
             } else {
                 $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'create');
             }
@@ -264,6 +266,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository($this->entityRepository)->find($id);
 
+        $namePluralize = $this->get("geoks.api.pluralization")->pluralize(lcfirst($this->className));
         $changePassword = false;
 
         if ($request->get('changePassword') == true || $request->get('plainPassword')) {
@@ -275,7 +278,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
                 'id' => "app." . lcfirst($this->className),
                 'class' => "form-horizontal"
             ],
-            'action' => $this->generateUrl(sprintf('geoks_admin_' . lcfirst($this->className) . 's_update'), ['id' => $id]),
+            'action' => $this->generateUrl(sprintf('geoks_admin_' . $namePluralize . '_update'), ['id' => $id]),
             'method' => 'PATCH',
             'translation_domain' => strtolower($this->className),
             'data_class' => $this->entityRepository,
@@ -299,7 +302,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
                 $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'update');
 
-                return $this->redirect($this->generateUrl('geoks_admin_' . lcfirst($this->className) . 's_index'));
+                return $this->redirect($this->generateUrl('geoks_admin_' . $namePluralize . '_index'));
             }
 
             $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'update');
@@ -316,10 +319,12 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository($this->entityRepository)->find($id);
 
+        $namePluralize = $this->get("geoks.api.pluralization")->pluralize(lcfirst($this->className));
+
         if (!$entity) {
             $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'delete');
 
-            return $this->redirect($this->generateUrl('geoks_admin_' . lcfirst($this->className) . 's_index'));
+            return $this->redirect($this->generateUrl('geoks_admin_' . $namePluralize . '_index'));
         }
 
         $em->remove($entity);
@@ -327,7 +332,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
         $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'delete');
 
-        return $this->redirect($this->generateUrl('geoks_admin_' . lcfirst($this->className) . 's_index'));
+        return $this->redirect($this->generateUrl('geoks_admin_' . $namePluralize . '_index'));
     }
 
     public function searchAction(Request $request)

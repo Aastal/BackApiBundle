@@ -1,3 +1,4 @@
+{% set namePluralize = name_pluralize(form.vars.attr.id|replace({'app.': ""}) ) %}
 {% form_theme form 'GeoksAdminBundle:Form:fields.html.twig' %}
 
 {{ form_start(form) }}
@@ -63,7 +64,7 @@
         <hr>
         <div class="box-footer">
             <button id="submit" class="btn btn-animate btn-blue {% if confirm is defined %}confirm-submit{% endif %}" type="submit">{{ "form.submit"|trans }}</button>
-            <a href="{{ path('geoks_admin_' ~ form.vars.attr.id|replace({'app.': ""}) ~ 's_index') }}" class="btn btn-animate btn-warning">{{ "form.cancel"|trans }}</a>
+            <a href="{{ path('geoks_admin_' ~ namePluralize ~ '_index') }}" class="btn btn-animate btn-warning">{{ "form.cancel"|trans }}</a>
         </div>
     </div>
 </div>

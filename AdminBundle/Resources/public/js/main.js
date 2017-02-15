@@ -6,11 +6,9 @@ $('.confirm-submit').on('click', function () {
     return confirm("Voulez-vous vraiment envoyer ?");
 });
 
-$('.datetimepicker').on('click', function () {
-    $(this).datetimepicker({
-        format: 'd/m/Y H:i',
-        lang: '{{ locale }}'
-    });
+$('.datetimepicker').datetimepicker({
+    format: 'd/m/Y H:i',
+    lang: '{{ locale }}'
 });
 
 $('.collapse-link').on("click", function () {

@@ -31,15 +31,22 @@ class Serializer
     private $groups;
 
     /**
+     * @var boolean
+     */
+    private $pluralize;
+
+    /**
      * Serializer constructor.
      *
      * @param ContainerInterface $container
      * @param JMSSerializer $serializer
+     * @param $pluralize
      */
-    public function __construct(ContainerInterface $container, JMSSerializer $serializer)
+    public function __construct(ContainerInterface $container, JMSSerializer $serializer, $pluralize)
     {
         $this->container = $container;
         $this->serializer = $serializer;
+        $this->pluralize = $pluralize;
         $this->groups = $this->container->getParameter('geoks_api.jms_groups');
     }
 
@@ -88,7 +95,11 @@ class Serializer
             if (is_object($value)) {
                 $name = strtolower((new \ReflectionClass($value))->getShortName());
             } elseif (is_array($value) && !is_array(reset($value)) && !is_string(reset($value))) {
-                $name = strtolower((new \ReflectionClass(reset($value)))->getShortName()) . 's';
+                if ($this->pluralize) {
+                    $name = $this->container->get('geoks.api.pluralization')->pluralize(strtolower((new \ReflectionClass(reset($value)))->getShortName()));
+                } else {
+                    $name = strtolower((new \ReflectionClass(reset($value)))->getShortName()) . "s";
+                }
             } else {
                 $name = $this->key;
             }
@@ -110,7 +121,7 @@ class Serializer
      */
     private function getArrayValue($name, $value)
     {
-        if (in_array($this->key, $this->groups)) {
+        if (in_array($this->key, $this->groups) && is_string($this->key)) {
             $results = [
                 $name => $this->serializer->toArray(
                     $value, SerializationContext::create()->setGroups(array($this->key))

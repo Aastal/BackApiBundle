@@ -244,6 +244,24 @@ h1 {
   border-top: 1px solid $primary-color;
 }
 
+ul.multiple {
+  padding: 0;
+  list-style: none;
+
+  li {
+    line-height: 15px;
+    vertical-align: middle;
+
+    label {
+      vertical-align: bottom;
+    }
+
+    input {
+      margin-right: 5px;
+    }
+  }
+}
+
 .checkbox-animate {
   -webkit-appearance: inherit;
   border: 2px solid #000;

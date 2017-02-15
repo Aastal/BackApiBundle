@@ -25,6 +25,7 @@ class GeoksApiExtension extends Extension
         $container->setParameter('geoks_api.app_bundle', $config['app_bundle']);
         $container->setParameter('geoks_api.user_class', $config['user_class']);
         $container->setParameter('geoks_api.jms_groups', $config['jms_groups']);
+        $container->setParameter('geoks_api.class_pluralize', $config['class_pluralize']);
         $container->setParameter('geoks_api.tests.entities', $config['tests']['entities']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
