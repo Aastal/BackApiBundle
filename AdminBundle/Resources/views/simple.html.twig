@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>{% block title %}{{ app_name }}{% endblock %}</title>
-    {% stylesheets filter="scssphp" output='css/main.css'
+    {% stylesheets filter="scssphp" output='css/bo.css'
     '%kernel.root_dir%/../web/vendors/bootstrap-sass/assets/stylesheets/_bootstrap.scss'
     '%kernel.root_dir%/../web/vendors/select2/src/scss/core.scss'
     '@GeoksAdminBundle/Resources/public/sass/style.scss' %}
@@ -28,7 +28,7 @@
     </div>
 </div>
 
-{% javascripts output="js/app.js"
+{% javascripts output="js/bo.js"
 '%kernel.root_dir%/../web/vendors/jquery/dist/jquery.min.js'
 '%kernel.root_dir%/../web/vendors/bootstrap-sass/assets/javascripts/bootstrap.min.js' %}
 <script src="{{ asset_url }}"></script>
