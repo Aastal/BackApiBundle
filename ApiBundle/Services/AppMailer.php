@@ -76,6 +76,12 @@ class AppMailer
                 'fromName' => $this->projectName,
                 'subject' => $lc . '.user.lock'
             ),
+            'email_check' => array(
+                'to' => 'USEREMAIL',
+                'fromEmail' => 'noreply@' . $lc . '.fr',
+                'fromName' => $this->projectName,
+                'subject' => $lc . '.user.email_check'
+            )
         );
 
         if ($this->container->has('app.mailer')) {
