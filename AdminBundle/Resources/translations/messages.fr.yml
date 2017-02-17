@@ -37,7 +37,7 @@ form:
       disabled: Votre compte est désactivé
       notFound: Utilisateur introuvable
       login:
-        wrong: La combinaison Identifiant / Mot de passe est incorrect
+        wrong: Votre Identifiant et/ou Mot de passe est incorrecte
 
 user:
   credentials:
