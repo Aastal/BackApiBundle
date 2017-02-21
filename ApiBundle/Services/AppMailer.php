@@ -62,23 +62,24 @@ class AppMailer
     private function setConfig()
     {
         $lc = lcfirst($this->projectName);
+        $sender = $this->container->getParameter('hip_mandrill.default.sender');
 
         $this->config = array(
             'forgotten_password' => array(
                 'to' => 'USEREMAIL',
-                'fromEmail' => 'noreply@' . $lc . '.fr',
+                'fromEmail' => $sender,
                 'fromName' => $this->projectName,
                 'subject' => $lc . '.user.password.recovery'
             ),
             'login_lock' => array(
                 'to' => 'USEREMAIL',
-                'fromEmail' => 'noreply@' . $lc . '.fr',
+                'fromEmail' => $sender,
                 'fromName' => $this->projectName,
                 'subject' => $lc . '.user.lock'
             ),
             'email_check' => array(
                 'to' => 'USEREMAIL',
-                'fromEmail' => 'noreply@' . $lc . '.fr',
+                'fromEmail' => $sender,
                 'fromName' => $this->projectName,
                 'subject' => $lc . '.user.email_check'
             )
