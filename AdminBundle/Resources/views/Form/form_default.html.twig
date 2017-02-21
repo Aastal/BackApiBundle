@@ -6,6 +6,10 @@
 <h1>{% if form.vars.attr.id is defined %}{{ form.vars.attr.id|trans }}{% endif %}</h1>
 <hr>
 
+<div class="form-error">
+    {{ form_errors(form) }}
+</div>
+
 {% if form.changePassword is defined %}
     <div id="form-changePassword" class="box box-filter">
         <div class="box-body padding box-form">

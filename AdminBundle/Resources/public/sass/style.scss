@@ -262,6 +262,20 @@ ul.multiple {
   }
 }
 
+.form-error {
+  color: #fff;
+  font-size: 13px;
+  font-family: "Open Sans Light", sans-serif;
+  background-color: #B94A48;
+  line-height: 36px;
+  margin: 0;
+
+  ul {
+    list-style: circle;
+    margin: 0;
+  }
+}
+
 .checkbox-animate {
   -webkit-appearance: inherit;
   border: 2px solid #000;

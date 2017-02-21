@@ -1,0 +1,4 @@
+invalid_number: "Le numéro de carte est incorrecte."
+invalid_expiry_year: "L'année d'expiration est incorrecte."
+invalid_expiry_month: "Le mois d'expiration est incorrecte."
+card_declined: "La carte a été refusé."

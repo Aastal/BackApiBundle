@@ -86,7 +86,7 @@ class AppMailer
         );
 
         if ($this->container->has('app.mailer')) {
-            $this->config += $this->container->get('app.mailer')->getConfig($this->projectName);
+            $this->config += $this->container->get('app.mailer')->getConfig($sender, $senderName);
         }
     }
 
@@ -141,9 +141,17 @@ class AppMailer
     {
         $name = (new \ReflectionClass($entity))->getShortName();
 
+        if ($this->container->has('app.mailer')) {
+            $normalizer = $this->container->get('app.mailer')->getNormalizer($entity, $name);
+
+             if ($normalizer !== null) {
+                 return $normalizer;
+             }
+        }
+
         switch($name)
         {
-            default:
+            case 'User':
 
                 /** @var User $entity */
                 return [
@@ -151,6 +159,12 @@ class AppMailer
                     "FIRSTNAME" => $entity->getFirstname(),
                     "LASTNAME"  => $entity->getLastname(),
                     "TOKEN"     => $entity->getConfirmationToken(),
+                ];
+                break;
+
+            default:
+                return [
+                    "ID" => $entity->getId()
                 ];
                 break;
         }

@@ -52,12 +52,12 @@ class StripePayment
     public function sendByCard($card, $amount, $currency)
     {
         try {
-            $success = Charge::create(['card' => $card, 'amount' => $amount, 'currency' => $currency]);
+            $charge = Charge::create(['card' => $card, 'amount' => $amount, 'currency' => $currency]);
         } catch(Card $e) {
-            $success = $e->getJsonBody()['error'];
+            $charge = $e->getJsonBody();
         }
 
-        return $success->id;
+        return $charge;
     }
 
     /**
@@ -69,11 +69,11 @@ class StripePayment
     public function sendByCustomer($customer, $amount, $currency)
     {
         try {
-            $success = Charge::create(['customer' => $customer, 'amount' => $amount, 'currency' => $currency]);
+            $charge = Charge::create(['customer' => $customer, 'amount' => $amount, 'currency' => $currency]);
         } catch(Card $e) {
-            $success = $e->getJsonBody()['error'];
+            $charge = $e->getJsonBody();
         }
 
-        return $success->id;
+        return $charge;
     }
 }

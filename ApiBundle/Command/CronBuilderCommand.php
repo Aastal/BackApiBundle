@@ -38,36 +38,36 @@ class CronBuilderCommand extends ContainerAwareCommand
         $kernel = $this->getContainer()->get('kernel');
         $entries = $parser->parse($kernel->getRootDir() . '/config/crontab.yml');
 
-        $appName = explode('/',$kernel->getRootDir());
+        $appName = explode('/', $kernel->getRootDir());
         $appName = $appName[count($appName) -2];
 
         $env = $this->getContainer()->getParameter('app_env');
 
         $crons = $cronManager->get();
 
-        foreach ($cronManager->get() as $key => $entry) {
-            if($entry->getComment() == $appName){
+        foreach ($crons as $key => $entry) {
+            if ($entry->getComment() == $appName) {
                 $cronManager->remove($key);
             }
         }
 
-        //For each cronjobs configured in file
+        // For each cronjobs configured in file
         foreach ($entries as $key => $entry) {
-            //All fields enumarate below are mandatory
+            // All fields enumarate below are mandatory
             foreach (array('minute', 'hour', 'month', 'day_of_month', 'day_of_week') as $item) {
                 if (!isset($entry[$item])) {
                     throw new \InvalidArgumentException(sprintf("%s doesn't exists for cron %s", $item, $key));
                 }
             }
 
-            // CHeck if associate command launch by the cron i available
+            // Check if associate command launch by the cron i available
             if (!isset($entry['task']) && !isset($entry['command']) && !isset($entry['console'])) {
                 throw new \InvalidArgumentException(sprintf("You need to define a task or command entry for cron %s", $key));
             }
 
             $command = null;
 
-            //The is a difference between task and console types. A task is a already formatted command and a console command setup a cron for utilities cronjobs Ex : currency update
+            // The is a difference between task and console types. A task is a already formatted command and a console command setup a cron for utilities cronjobs Ex : currency update
             if (isset($entry['task'])) {
                 $command = sprintf(
                     '%s %s/app/console cron:task:%s',
@@ -75,7 +75,7 @@ class CronBuilderCommand extends ContainerAwareCommand
                     $kernel->getRootDir(),
                     $entry['task']
                 );
-            } elseif(isset($entry['console'])){
+            } elseif(isset($entry['console'])) {
                 $command = sprintf(
                     '%s %s/app/console %s',
                     $this->getContainer()->getParameter('backend_process_php_binary_path'),

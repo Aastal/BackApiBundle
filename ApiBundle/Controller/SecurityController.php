@@ -76,6 +76,10 @@ abstract class SecurityController extends ApiController
         return $this->adminViews;
     }
 
+    /**
+     * @param null|string $userRepository
+     * @param null|string $formCreate
+     */
     public function __construct($userRepository = null, $formCreate = null)
     {
         $this->userRepository = $userRepository;
@@ -145,7 +149,8 @@ abstract class SecurityController extends ApiController
                     "email" => "admin@gmail.fr",
                     "password" => "testLoginPassword"
                 ]
-            ]]);
+            ]]
+        );
     }
 
     public function loginFacebookAction(Request $request)
