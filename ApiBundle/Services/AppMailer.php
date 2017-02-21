@@ -55,32 +55,32 @@ class AppMailer
         $this->translator = $translator;
         $this->dispatcher = $dispatcher;
         $this->router = $router;
-        $this->projectName = $this->container->getParameter('geoks_admin.app_name');
         $this->setConfig();
     }
 
     private function setConfig()
     {
-        $lc = lcfirst($this->projectName);
+        $senderName = $this->container->getParameter('hip_mandrill.default.sender_name');
         $sender = $this->container->getParameter('hip_mandrill.default.sender');
+        $lc = strtolower($senderName);
 
         $this->config = array(
             'forgotten_password' => array(
                 'to' => 'USEREMAIL',
                 'fromEmail' => $sender,
-                'fromName' => $this->projectName,
+                'fromName' => $senderName,
                 'subject' => $lc . '.user.password.recovery'
             ),
             'login_lock' => array(
                 'to' => 'USEREMAIL',
                 'fromEmail' => $sender,
-                'fromName' => $this->projectName,
+                'fromName' => $senderName,
                 'subject' => $lc . '.user.lock'
             ),
             'email_check' => array(
                 'to' => 'USEREMAIL',
                 'fromEmail' => $sender,
-                'fromName' => $this->projectName,
+                'fromName' => $senderName,
                 'subject' => $lc . '.user.email_check'
             )
         );
