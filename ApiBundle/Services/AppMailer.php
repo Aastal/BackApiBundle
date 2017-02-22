@@ -151,20 +151,13 @@ class AppMailer
 
         switch($name)
         {
-            case 'User':
-
+            default:
                 /** @var User $entity */
                 return [
                     "USEREMAIL" => $entity->getEmail(),
                     "FIRSTNAME" => $entity->getFirstname(),
                     "LASTNAME"  => $entity->getLastname(),
                     "TOKEN"     => $entity->getConfirmationToken(),
-                ];
-                break;
-
-            default:
-                return [
-                    "ID" => $entity->getId()
                 ];
                 break;
         }
