@@ -9,6 +9,9 @@ services:
     geoks.api.pluralization:
         class: Geoks\ApiBundle\Services\Pluralization
 
+    geoks.api.geo:
+        class: Geoks\ApiBundle\Services\Geo
+
     geoks.api.serializer:
         class: Geoks\ApiBundle\Services\Serializer
         arguments: [ "@service_container", "@jms_serializer", "%geoks_api.class_pluralize%" ]
