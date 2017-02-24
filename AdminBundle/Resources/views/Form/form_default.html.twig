@@ -10,16 +10,20 @@
     {{ form_errors(form) }}
 </div>
 
+{% if form.plainPassword is defined and form.passwordConfirm is defined %}
+    <div id="form-changePassword" class="box box-filter">
+        <div class="box-body padding box-form">
+            <h3>{{ form_label(form.password_title) }}</h3>
+
+            {{ form_row(form.plainPassword) }}
+            {{ form_row(form.passwordConfirm) }}
+        </div>
+    </div>
+{% endif %}
+
 {% if form.changePassword is defined %}
     <div id="form-changePassword" class="box box-filter">
         <div class="box-body padding box-form">
-            {% if form.plainPassword is defined and form.passwordConfirm is defined %}
-                <h3>{{ form_label(form.password_title) }}</h3>
-
-                {{ form_row(form.plainPassword) }}
-                {{ form_row(form.passwordConfirm) }}
-            {% endif %}
-
             <div class="form-group">
                 <div class="col-md-8">
                     {{ form_row(form.changePassword) }}

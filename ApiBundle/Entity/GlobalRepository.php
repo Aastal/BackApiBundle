@@ -37,7 +37,7 @@ abstract class GlobalRepository extends EntityRepository
             if (is_bool($search)) {
                 $joinLetter = strtolower(substr($key, -3)) . rand(1, 100);
 
-                if ($search === true && $joins[$key]) {
+                if ($search === true && isset($joins[$key])) {
                     $queryBuilder
                         ->innerJoin('a.' . $key, $joinLetter);
                 } elseif ($search === true) {
