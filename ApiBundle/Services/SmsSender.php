@@ -50,8 +50,7 @@ class SmsSender
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array(
             'keyid' => $this->apiKey,
             'sms' => '[Les Robins] Votre code d\'activation : ' . $this->activationCode,
-            'num' => $number,
-            'nostop' => 1
+            'num' => $number
         )));
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
