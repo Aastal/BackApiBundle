@@ -37,12 +37,12 @@ abstract class AdminController extends Controller implements AdminControllerInte
     /**
      * @var string
      */
-    private $formCreate = "Geoks\\ApiBundle\\Form\\Basic\\CreateForm";
+    private $formCreate = "Geoks\\AdminBundle\\Form\\Basic\\CreateForm";
 
     /**
      * @var string
      */
-    private $formUpdate = "Geoks\\ApiBundle\\Form\\Basic\\UpdateForm";
+    private $formUpdate = "Geoks\\AdminBundle\\Form\\Basic\\UpdateForm";
 
     /**
      * @return string
