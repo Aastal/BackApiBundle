@@ -1,6 +1,6 @@
 <?php
 
-namespace Geoks\ApiBundle\Form\Basic;
+namespace Geoks\AdminBundle\Form\Basic;
 
 use Doctrine\ORM\EntityManager;
 use Geoks\AdminBundle\Form\Custom\HrType;

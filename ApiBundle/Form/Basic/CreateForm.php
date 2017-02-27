@@ -1,6 +1,6 @@
 <?php
 
-namespace Geoks\AdminBundle\Form\Basic;
+namespace Geoks\ApiBundle\Form\Basic;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
