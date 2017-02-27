@@ -70,14 +70,14 @@ class CronBuilderCommand extends ContainerAwareCommand
             // The is a difference between task and console types. A task is a already formatted command and a console command setup a cron for utilities cronjobs Ex : currency update
             if (isset($entry['task'])) {
                 $command = sprintf(
-                    '%s %s/app/console cron:task:%s',
+                    '%s %s/console cron:task:%s',
                     $this->getContainer()->getParameter('backend_process_php_binary_path'),
                     $kernel->getRootDir(),
                     $entry['task']
                 );
             } elseif(isset($entry['console'])) {
                 $command = sprintf(
-                    '%s %s/app/console %s',
+                    '%s %s/console %s',
                     $this->getContainer()->getParameter('backend_process_php_binary_path'),
                     $kernel->getRootDir(),
                     $entry['console']
