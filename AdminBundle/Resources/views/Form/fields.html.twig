@@ -7,21 +7,6 @@
                     {{ form_widget(form) }}
                     {{ form_errors(form) }}
                 </div>
-            {% elseif 'multiple' in attr.class %}
-                <label class="col-lg-4 col-md-4 col-sm-2 col-xs-6 control-label">
-                    {{ form_label(form) }}
-                </label>
-                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
-                    <ul {{ block('widget_container_attributes') }}>
-                        {% for c in choices %}
-                            <li>
-                                <input id="{{ c.label }}" type="checkbox" class="checkbox-animate" value="{{ c.value }}">
-                                <label for="{{ c.label }}"><b>{{ c.label }}</b></label>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    {{ form_errors(form) }}
-                </div>
             {% else %}
                 {% if form.parent.vars.attr.class is defined and 'form-horizontal' in form.parent.vars.attr %}
                     <label class="col-lg-4 col-md-4 col-sm-2 col-xs-6 control-label">
@@ -100,3 +85,20 @@
         {% endif %}
     {% endspaceless %}
 {% endblock form_errors %}
+
+{% block choice_widget_expanded %}
+    {% spaceless %}
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <ul {{ block('widget_container_attributes') }}>
+                {% for child in form %}
+                    <li>
+                        {{ form_widget(child, {'attr': {'class': attr.widget_class|default('') ~ ' checkbox-animate'}}) }}
+                        <b>{{ child.vars.label|trans({}, translation_domain) }}</b>
+                    </li>
+                {% endfor %}
+            </ul>
+            {{ form_errors(form) }}
+        </div>
+    {% endspaceless %}
+
+{% endblock choice_widget_expanded %}
