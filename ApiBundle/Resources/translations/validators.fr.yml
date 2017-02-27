@@ -1,0 +1,20 @@
+geoks:
+    user:
+        email:
+            assert:
+                already_used: "Cet email est déjà utilisé"
+                tooShort: "Cet email est trop court"
+                tooLong: "L'email ne peut pas excédé 255 caractères"
+                notNull: "Merci de renseigner un email"
+                type: "Cet email n'est pas valide"
+        plainPassword:
+            assert:
+                tooShort: "Le mot de passe est trop court"
+                tooLong: "Le mot de passe est trop long"
+                notNull: "Merci de renseigner un mot de passe"
+        firstname:
+            assert:
+                notNull: "Merci de renseigner un prénom"
+        lastname:
+            assert:
+                notNull: "Merci de renseigner un nom"

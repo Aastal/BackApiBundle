@@ -6,6 +6,9 @@ parameters:
     stripe.private.key: null
 
 services:
+    geoks.api.regex_utils:
+        class: Geoks\ApiBundle\Services\RegexUtils
+
     geoks.api.pluralization:
         class: Geoks\ApiBundle\Services\Pluralization
 

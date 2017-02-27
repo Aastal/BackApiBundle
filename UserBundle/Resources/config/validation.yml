@@ -2,10 +2,10 @@ Geoks\UserBundle\Entity\User:
     constraints:
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: [email]
-            message: 'This email is already in use'
+            message: 'geoks.user.email.assert.already_used'
         - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
             fields: [username]
-            message: 'This username is already in use'
+            message: 'geoks.user.username.assert.already_used'
     properties:
         email:
             - Length:
