@@ -74,6 +74,6 @@ abstract class GlobalRepository extends EntityRepository
             $filter($queryBuilder, $key, $value, $i++, $joins);
         }
 
-        return $queryBuilder->orderBy('a.id', 'DESC')->getQuery();
+        return $queryBuilder->select('a')->orderBy('a.id', 'DESC')->getQuery();
     }
 }

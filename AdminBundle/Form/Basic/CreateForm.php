@@ -40,7 +40,7 @@ class CreateForm extends AbstractType
             if ($field["type"] != 'array' && !in_array($name, $banList)) {
                 $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);
 
-                if ((isset($field["nullable"]) && $field["nullable"]) && $field["type"] != 'datetime' || $field["type"] == 'boolean') {
+                if ((isset($field["nullable"]) && $field["nullable"]) || $field["type"] == 'boolean') {
                     $typeOptions['options']['required'] = false;
                 } else {
                     $typeOptions['options']['required'] = true;
