@@ -4,6 +4,7 @@ namespace Geoks\ApiBundle\Security\User;
 
 use Geoks\ApiBundle\Entity\AccessToken;
 use Geoks\ApiBundle\Entity\Client;
+use Geoks\UserBundle\Entity\User;
 use HWI\Bundle\OAuthBundle\Security\Core\User\EntityUserProvider as BaseClass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -104,6 +105,8 @@ class EntityUserProvider extends BaseClass
             $this->accessToken->setScope('api');
         }
 
+        $user->setLastLogin(new \DateTime());
+
         $this->em->flush();
     }
 
@@ -120,6 +123,7 @@ class EntityUserProvider extends BaseClass
 
     public function loadUserByUsername($username, $session = null)
     {
+        /** @var User $user */
         $user = $this->findUser(array('username' => $username));
 
         $this->accessToken = $this->em->getRepository('GeoksApiBundle:AccessToken')->findOneBy(array('user' => $user));

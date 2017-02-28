@@ -175,6 +175,20 @@ abstract class SecurityController extends ApiController
         return $this->serializeResponse($this->get('translator')->trans('geoks.user.notFound'), Response::HTTP_NOT_FOUND);
     }
 
+    public function logoutAction()
+    {
+        if (!$this->getUser()) {
+            return $this->serializeResponse($this->get('translator')->trans('geoks.user.notFound'), Response::HTTP_NOT_FOUND);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $this->getUser()->setGcmToken(null);
+        $em->flush();
+
+        return $this->serializeResponse($this->get('translator')->trans('geoks.user.logout'));
+    }
+
     public function forgottenPasswordAction($email)
     {
         $em = $this->getDoctrine()->getManager();

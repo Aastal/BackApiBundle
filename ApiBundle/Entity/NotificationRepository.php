@@ -40,15 +40,16 @@ class NotificationRepository extends EntityRepository
      * @param User $user
      * @param $offset
      * @param $limit
+     * @param array $types
      * @return array
      */
-    public function getNotificationsByReceiver($user, $limit, $offset)
+    public function getNotificationsByReceiver($user, $limit, $offset, $types)
     {
         $builder = $this->createQueryBuilder('n');
 
         $query = $builder
             ->where('n.receiver = :userId')
-            ->andWhere('n.type IN (1,2)')
+            ->andWhere('n.type IN ('. implode(',', $types) . ')')
             ->setParameter(':userId', $user->getId())
             ->setMaxResults($limit)
             ->setFirstResult($offset)
@@ -56,23 +57,26 @@ class NotificationRepository extends EntityRepository
         ;
 
         $pag = new Paginator($query);
-        return $pag->getIterator()->getArrayCopy();    }
+        return $pag->getIterator()->getArrayCopy();
+    }
 
     /**
      * @param User $user
+     * @param array $types
      * @return array
      */
-    public function getNbUnreadNotifications($user)
+    public function getNbUnreadNotifications($user, $types)
     {
         $builder = $this->createQueryBuilder('n');
 
         $query = $builder
+            ->select('COUNT(n.id)')
             ->where('n.receiver = :userId')
-            ->andWhere('n.type IN (1,2)')
+            ->andWhere('n.type IN ('. implode(',', $types) . ')')
             ->andWhere('n.is_read IS NULL OR n.is_read = 0')
             ->setParameter(':userId', $user->getId())
         ;
 
-        return $query->getQuery()->getScalarResult();
+        return $query->getQuery()->getSingleScalarResult();
     }
 }
