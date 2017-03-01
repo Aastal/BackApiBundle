@@ -55,6 +55,8 @@ class AppMailer
         $this->translator = $translator;
         $this->dispatcher = $dispatcher;
         $this->router = $router;
+        $this->projectName = $this->container->getParameter('geoks_admin.app_name');
+
         $this->setConfig();
     }
 
@@ -62,7 +64,7 @@ class AppMailer
     {
         $senderName = $this->container->getParameter('hip_mandrill.default.sender_name');
         $sender = $this->container->getParameter('hip_mandrill.default.sender');
-        $lc = strtolower($senderName);
+        $lc = strtolower($this->projectName);
 
         $this->config = array(
             'forgotten_password' => array(
@@ -86,7 +88,7 @@ class AppMailer
         );
 
         if ($this->container->has('app.mailer')) {
-            $this->config += $this->container->get('app.mailer')->getConfig($sender, $senderName);
+            $this->config += $this->container->get('app.mailer')->getConfig($sender, $senderName, $lc);
         }
     }
 
