@@ -33,10 +33,20 @@
                                 <tr>
                                     {% for field in fields %}
                                         <td>
-                                            {% set field = field|replace({'_': ""}) %}
+                                            {% if '.' in field %}
+                                                {% set field = field|split('.') %}
 
-                                            {% if attribute(entity, field) is defined and attribute(entity, field) %}
-                                                {% set field = attribute(entity, field) %}
+                                                {% set fieldName = class(field[0])|lower %}
+                                                {% set fieldEntity = attribute(entity, fieldName) %}
+
+                                                {% set field = field[1]|replace({'_': ""}) %}
+                                            {% else  %}
+                                                {% set fieldEntity = entity %}
+                                                {% set field = field|replace({'_': ""}) %}
+                                            {% endif %}
+
+                                            {% if attribute(fieldEntity, field) is defined and attribute(fieldEntity, field) %}
+                                                {% set field = attribute(fieldEntity, field) %}
 
                                                 {% if field is iterable %}
                                                     {{ field|length }}
@@ -47,8 +57,6 @@
                                                 {% else %}
                                                     {{ field }}
                                                 {% endif %}
-                                            {% elseif attribute(entity, field) is not null %}
-                                                {{ "app.no"|trans }}
                                             {% else %}
                                                 <label class="label label-default">{{ "app.noData"|trans }}</label>
                                             {% endif %}
