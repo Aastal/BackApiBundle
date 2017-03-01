@@ -20,6 +20,7 @@
             </ul>
         </div>
 
-        <input type="tel" {{ block('widget_attributes') }} value="{{ value }}" rel="theme" />
+        {{ form_widget(form.dialCode) }}
+        {{ form_widget(form.phone) }}
     </div>
 {% endblock phone_widget %}

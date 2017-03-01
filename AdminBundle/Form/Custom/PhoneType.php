@@ -4,6 +4,9 @@ namespace Geoks\AdminBundle\Form\Custom;
 
 use Geoks\AdminBundle\Services\CountriesPhone;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -25,6 +28,41 @@ class PhoneType extends AbstractType
     }
 
     /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+            ->add('phone', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control phone',
+                    'maxlength' => 13
+                ]
+            ])
+            ->add('dialCode', HiddenType::class, [
+                'mapped' => false,
+                'data' => "+33",
+                'attr' => [
+                    'class' => 'dialCode'
+                ]
+            ])
+        ;
+
+        $builder
+            ->addEventListener(
+                FormEvents::SUBMIT,
+                function(FormEvent $event) {
+                    $form = $event->getForm();
+
+                    $concatData = $form->get('dialCode')->getData() . $form->get('phone')->getData();
+                    $event->setData($concatData);
+                }
+            )
+        ;
+    }
+
+    /**
      * Pass the countries list
      *
      * @param FormView $view
@@ -42,7 +80,7 @@ class PhoneType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'compound' => false,
+            'compound' => true,
             'max_length' => 13,
             'countries_phone' => $this->countriesPhone
         ));
