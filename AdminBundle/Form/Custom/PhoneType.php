@@ -36,6 +36,7 @@ class PhoneType extends AbstractType
         $builder
             ->add('phone', TextType::class, [
                 'attr' => [
+                    'placeholder' => 'form.phone',
                     'class' => 'form-control phone',
                     'maxlength' => 13
                 ]

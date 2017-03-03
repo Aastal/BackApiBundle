@@ -3,7 +3,7 @@
 {% set fields = fields(class_repository(entity) ~ '\\' ~ className) %}
 {% set fields_associations = fields_associations(class_repository(entity) ~ '\\' ~ className) %}
 
-<h1>{{ className }} n°{{ entity.id }}</h1>
+<h1>{{ ('app.' ~ className)|lower|trans }} n°{{ entity.id }}</h1>
 
 <div class="row">
     <div class="breadcrumb">

@@ -21,6 +21,7 @@ class AdminExtension extends \Twig_Extension
     {
         return array(
             'class' => new \Twig_SimpleFunction('class', array($this, 'getClass')),
+            'get_entity' => new \Twig_SimpleFunction('get_entity', array($this, 'getEntity')),
             'name_pluralize' => new \Twig_SimpleFunction('name_pluralize', array($this, 'getNamePluralize')),
             'class_repository' => new \Twig_SimpleFunction('class_repository', array($this, 'getRepository')),
             'fields' => new \Twig_SimpleFunction('fields', array($this, 'getFieldsName')),
@@ -36,6 +37,11 @@ class AdminExtension extends \Twig_Extension
     public function getClass($object)
     {
         return (new \ReflectionClass($object))->getShortName();
+    }
+
+    public function getEntity($repository, $id)
+    {
+        return $this->container->get('doctrine')->getManager()->getRepository($repository)->find($id);
     }
 
     public function getNamePluralize($object)
