@@ -23,29 +23,31 @@
                     <table class="table no-margin">
                         <tbody>
                         {% for field in fields %}
-                            <tr>
-                                <td>{{ (className|lower ~ "." ~ field.fieldName)|trans({}, className|lower) }}</td>
-                                <td>
-                                    {% if attribute(entity, field.fieldName) is defined and attribute(entity, field.fieldName) %}
-                                        {% set fieldValue = attribute(entity, field.fieldName) %}
-                                        <b>
-                                            {% if fieldValue is iterable %}
-                                                {{ fieldValue|length }}
-                                            {% elseif fieldValue.timestamp is defined %}
-                                                {{ fieldValue|date('d/m/Y H:i:s') }}
-                                            {% elseif fieldValue == 'true' %}
-                                                {{ "app.yes"|trans }}
-                                            {% else %}
-                                                {{ fieldValue }}
-                                            {% endif %}
-                                        </b>
-                                    {% elseif field.type is defined and field.type == 'boolean' %}
-                                        {{ "app.no"|trans }}
-                                    {% else %}
-                                        <label class="label label-default">{{ "app.noData"|trans }}</label>
-                                    {% endif %}
-                                </td>
-                            </tr>
+                            {% if banList is defined and field.fieldName not in banList %}
+                                <tr>
+                                    <td>{{ (className|lower ~ "." ~ field.fieldName)|trans({}, className|lower) }}</td>
+                                    <td>
+                                        {% if attribute(entity, field.fieldName) is defined and attribute(entity, field.fieldName) %}
+                                            {% set fieldValue = attribute(entity, field.fieldName) %}
+                                            <b>
+                                                {% if fieldValue is iterable %}
+                                                    {{ fieldValue|length }}
+                                                {% elseif fieldValue.timestamp is defined %}
+                                                    {{ fieldValue|date('d/m/Y H:i:s') }}
+                                                {% elseif fieldValue == 'true' %}
+                                                    {{ "app.yes"|trans }}
+                                                {% else %}
+                                                    {{ fieldValue }}
+                                                {% endif %}
+                                            </b>
+                                        {% elseif field.type is defined and field.type == 'boolean' %}
+                                            {{ "app.no"|trans }}
+                                        {% else %}
+                                            <label class="label label-default">{{ "app.noData"|trans }}</label>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                         </tbody>
                     </table>

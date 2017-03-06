@@ -669,3 +669,23 @@ select.control-animate {
     opacity: 1;
   }
 }
+
+// VichUploader
+
+.vich-file {
+  .form-delete {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+
+    input {
+      margin: 0 10px 0 0;
+      vertical-align: middle;
+    }
+
+    label {
+      margin: 0;
+      vertical-align: middle;
+    }
+  }
+}
