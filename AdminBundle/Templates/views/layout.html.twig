@@ -2,14 +2,17 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>{% block title %}{{ app_name }}{% endblock %}</title>
+    <title>{% block title %}{{ app_name }} : Back-office{% endblock %}</title>
+
     {% stylesheets filter="scssphp" output='css/bo.css'
     '%kernel.root_dir%/../web/vendors/bootstrap-sass/assets/stylesheets/_bootstrap.scss'
     '%kernel.root_dir%/../web/vendors/select2/src/scss/core.scss'
     '%kernel.root_dir%/../web/vendors/datetimepicker/jquery.datetimepicker.css'
     '@GeoksAdminBundle/Resources/public/sass/*.scss' %}
+
     <link rel="stylesheet" type="text/css" href="{{ asset_url }}"/>
     {% endstylesheets %}
+
     {% block stylesheets %}{% endblock %}
 
     {% import 'GeoksAdminBundle:Form:macro_choice.html.twig' as choice %}
@@ -40,17 +43,12 @@
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
                 <li class="{{ "geoks_admin_index" == app.request.attributes.get('_route') ? "active" }}">
-                    <a href=""><span class="glyphicon glyphicon-home"></span> {{ "app.index"|trans }}</a>
-                </li>
-                <li class="{{ "geoks_admin_users_index" == app.request.attributes.get('_route') ? "active" }}">
-                    <a href=""><span class="glyphicon glyphicon-user"></span> {{ "app.users"|trans }}</a>
+                    <a href="{{ path('geoks_admin_index') }}"><span class="glyphicon glyphicon-home"></span> {{ "app.index"|trans }}</a>
                 </li>
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <div class="notification alert">
-                {% include 'GeoksAdminBundle:Form:FlashBagHandler.html.twig' %}
-            </div>
+            {% include 'GeoksAdminBundle:Form:FlashBagHandler.html.twig' %}
 
             {% block body %}{% endblock %}
         </div>
@@ -61,9 +59,15 @@
 '%kernel.root_dir%/../web/vendors/jquery/dist/jquery.min.js'
 '%kernel.root_dir%/../web/vendors/bootstrap-sass/assets/javascripts/bootstrap.min.js'
 '%kernel.root_dir%/../web/vendors/datetimepicker/build/jquery.datetimepicker.full.min.js'
-'@GeoksAdminBundle/Resources/public/js/main.js' %}
-<script src="{{ asset_url }}"></script>
+"%kernel.root_dir%/../web/vendors/select2/dist/js/select2.full.min.js"
+"@GeoksAdminBundle/Resources/public/js/main.js"
+'bundles/fosjsrouting/js/router.js' %}
+
+<script src="{{ asset_url }}" type="text/javascript"></script>
+
 {% endjavascripts %}
+
+<script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 
 {% block javascripts %}{% endblock %}
 </body>

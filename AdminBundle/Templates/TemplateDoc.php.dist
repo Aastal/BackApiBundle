@@ -1,0 +1,91 @@
+<?php
+
+namespace AdminBundle\Controller\ApiDocs;
+
+use AdminBundle\Controller\TemplateController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * @Route("/template")
+ */
+class TemplateDoc extends TemplateController
+{
+    /**
+     * @Route("/index", name="geoks_admin_template_index")
+     * @Method({"GET"})
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function indexAction(Request $request)
+    {
+        return parent::indexAction($request);
+    }
+
+    /**
+     * @Route("/{id}/show", name="geoks_admin_template_show")
+     * @Method({"GET"})
+     *
+     * @param integer $id
+     * @return Response
+     */
+    public function showAction($id)
+    {
+        return parent::showAction($id);
+    }
+
+    /**
+     * @Route("/create", name="geoks_admin_template_create")
+     * @Method({"GET", "POST"})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function createAction(Request $request)
+    {
+        return parent::createAction($request);
+    }
+
+    /**
+     * @Route("/{id}/update", name="geoks_admin_template_update", options={"expose"=true})
+     * @Method({"GET", "PATCH"})
+     *
+     * @param Request $request
+     * @param integer $id
+     * @return Response
+     */
+    public function updateAction(Request $request, $id)
+    {
+        return parent::updateAction($request, $id);
+    }
+
+    /**
+     * @Route("/{id}/delete", name="geoks_admin_template_delete")
+     * @Method({"GET"})
+     *
+     * @param integer $id
+     * @return Response
+     */
+    public function deleteAction($id)
+    {
+        return parent::deleteAction($id);
+    }
+
+    /** AJAX */
+
+    /**
+     * @Route("/search", name="geoks_admin_template_search", options={"expose"=true})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function searchAction(Request $request)
+    {
+        return parent::searchAction($request);
+    }
+}

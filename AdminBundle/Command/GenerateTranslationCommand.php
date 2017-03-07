@@ -7,14 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Process\Exception\InvalidArgumentException;
-use BCC\CronManagerBundle\Manager\CronManager;
-use BCC\CronManagerBundle\Manager\Cron;
 
-/**
- * Class CronBuilderCommand
- * Used to setup commands as crons, read configuration into the file crontab.yml and add cronjob accordingly
- */
 class GenerateTranslationCommand extends ContainerAwareCommand
 {
     /**

@@ -1,0 +1,119 @@
+<?php
+
+namespace AppBundle\Controller\ApiDocs;
+
+use AppBundle\Controller\TemplateController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+
+/**
+ * @Route("/api/v1/template")
+ */
+class TemplateDoc extends TemplateController
+{
+    /**
+     * @ApiDoc(
+     *  section="Templates",
+     *  description="Get all templates",
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      403 = "geoks.user.notConnected",
+     *  },
+     * )
+     * @Route("", name="templates")
+     * @Method({"GET"})
+     *
+     * @param boolean $secure
+     * @return JsonResponse
+     */
+    public function getAll($secure = null)
+    {
+        return parent::getAll(false);
+    }
+
+    /**
+     * @ApiDoc(
+     *  section="Templates",
+     *  description="Get a template",
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      403 = "geoks.user.notConnected",
+     *  },
+     * )
+     * @Route("/{id}", name="template")
+     * @Method({"GET"})
+     *
+     * @param integer $id
+     * @return JsonResponse
+     */
+    public function getOne($id)
+    {
+        return parent::getOne($id);
+    }
+
+    /**
+     * @ApiDoc(
+     *  section="Templates",
+     *  description="Create a template",
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      403 = "geoks.user.notConnected",
+     *  },
+     * )
+     * @Route("", name="template_create")
+     * @Method({"POST"})
+     *
+     * @param Request $request
+     * @param array $customSetters
+     * @return JsonResponse
+     */
+    public function create(Request $request, $customSetters = [])
+    {
+        return parent::create($request, $customSetters);
+    }
+
+    /**
+     * @ApiDoc(
+     *  section="Templates",
+     *  description="Update a template",
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      403 = "geoks.user.notConnected",
+     *  },
+     * )
+     * @Route("/{id}", name="template_update")
+     * @Method({"PATCH"})
+     *
+     * @param Request $request
+     * @param integer $id
+     * @param array $customSetters
+     * @return JsonResponse
+     */
+    public function update(Request $request, $id, $customSetters = [])
+    {
+        return parent::update($request, $id, $customSetters);
+    }
+
+    /**
+     * @ApiDoc(
+     *  section="Templates",
+     *  description="Delete a template",
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      403 = "geoks.user.notConnected",
+     *  },
+     * )
+     * @Route("/{id}", name="template_delete")
+     * @Method({"DELETE"})
+     *
+     * @param integer $id
+     * @return JsonResponse
+     */
+    public function delete($id)
+    {
+        return parent::delete($id);
+    }
+}

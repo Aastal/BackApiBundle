@@ -1,0 +1,17 @@
+<?php
+
+namespace AdminBundle\Controller;
+
+use Geoks\AdminBundle\Controller\AdminController as GeoksAdminController;
+use Symfony\Component\HttpFoundation\Request;
+
+abstract class AdminController extends GeoksAdminController
+{
+    public function indexAction(Request $request = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        return $this->render($this->getAdminBundle() . '::index.html.twig', [
+        ]);
+    }
+}

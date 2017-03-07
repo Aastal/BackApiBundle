@@ -1,0 +1,16 @@
+<?php
+
+namespace AppBundle\Controller;
+
+use Geoks\ApiBundle\Controller\GlobalController as GeoksGlobalController;
+use Symfony\Component\HttpFoundation\Request;
+
+abstract class TemplateController extends GeoksGlobalController
+{
+    public function __construct()
+    {
+        $entityRepository = "AppBundle\\Entity\\Template";
+
+        parent::__construct($entityRepository);
+    }
+}

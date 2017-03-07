@@ -1,0 +1,64 @@
+security:
+
+    acl:
+        connection: default
+
+    encoders:
+        FOS\UserBundle\Model\UserInterface: sha512
+        AppBundle\Entity\User: sha512
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    providers:
+        hwi:
+            id: geoks.user_provider
+        user_projectName:
+            entity: { class: AppBundle\Entity\User, property: email }
+
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        secured_area:
+            pattern:  ^/api
+            anonymous: ~
+            context: oauth2
+            stateless: true
+            simple_preauth:
+                authenticator: geoks.apikey_authenticator
+            provider: hwi
+            oauth:
+                resource_owners:
+                    oauth2:       "/login/check"
+                login_path:        /api/v1/sessions/login
+                check_path:        /api/v1/sessions/login/check
+                use_forward:       false
+                failure_path:      /api/v1/sessions/login
+                oauth_user_provider:
+                    service: geoks.user_provider
+
+        admin:
+            pattern:            ^/admin
+            context:            user
+            form_login:
+                login_path:     geoks_admin_login
+                check_path:     geoks_admin_login
+            logout:
+                path:           geoks_admin_logout
+                target:         geoks_admin_login
+            anonymous:          true
+
+    access_control:
+        # Admin login page needs to be accessed without credential
+        - { path: "^/admin/[^/]+/login$", role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: "^/admin/[^/]+/login/check$", role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: "^/admin/[^/]+/logout$", role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        - { path: ^/admin, role: ROLE_ADMIN }
+        - { path: ^/api/v1/sessions, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api, roles: ROLE_USER }
+        - { path: "^/.*", role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: "^/public/doc", role: IS_AUTHENTICATED_ANONYMOUSLY }

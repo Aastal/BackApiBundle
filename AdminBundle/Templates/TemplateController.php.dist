@@ -1,0 +1,17 @@
+<?php
+
+namespace AdminBundle\Controller;
+
+use Geoks\AdminBundle\Controller\AdminController as GeoksAdminBundle;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+abstract class TemplateController extends GeoksAdminBundle
+{
+    public function __construct()
+    {
+        $entityRepository = "AppBundle\\Entity\\Template";
+
+        parent::__construct($entityRepository);
+    }
+}

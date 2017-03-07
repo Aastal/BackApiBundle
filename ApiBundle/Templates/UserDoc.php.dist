@@ -1,0 +1,140 @@
+<?php
+
+namespace AppBundle\Controller\ApiDocs;
+
+use AppBundle\Controller\UserController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+
+/**
+ * @Route("/api/v1/users")
+ */
+class UserDoc extends UserController
+{
+    /**
+     * @ApiDoc(
+     *  section="Users",
+     *  description="Get all users",
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      403 = "geoks.user.notConnected",
+     *  },
+     * )
+     * @Route("", name="users")
+     * @Method({"GET"})
+     *
+     * @return JsonResponse
+     */
+    public function getAll()
+    {
+        return parent::getAll();
+    }
+
+    /**
+     * @ApiDoc(
+     *  section="Users",
+     *  description="Get me",
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      403 = "geoks.user.notConnected",
+     *  },
+     * )
+     * @Route("/me", name="user_me")
+     * @Method({"GET"})
+     *
+     * @return JsonResponse
+     */
+    public function me()
+    {
+        return parent::me();
+    }
+
+    /**
+     * @ApiDoc(
+     *  section="Users",
+     *  description="Get a user",
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      403 = "geoks.user.notConnected",
+     *  },
+     * )
+     * @Route("/{id}", name="user")
+     * @Method({"GET"})
+     *
+     * @param integer $id
+     * @return JsonResponse
+     */
+    public function getOne($id)
+    {
+        return parent::getOne($id);
+    }
+
+    /**
+     * @ApiDoc(
+     *  section="Users",
+     *  description="Update a User",
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      403 = "geoks.user.notConnected",
+     *  },
+     * )
+     * @Route("/{id}", name="user_update")
+     * @Method({"PATCH"})
+     *
+     * @param Request $request
+     * @param integer $id
+     * @return JsonResponse
+     */
+    public function update(Request $request, $id)
+    {
+        return parent::update($request, $id);
+    }
+
+    /**
+     * @ApiDoc(
+     *  section="Users",
+     *  description="Delete a user",
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      403 = "geoks.user.notConnected",
+     *  },
+     * )
+     * @Route("/{id}", name="user_delete")
+     * @Method({"DELETE"})
+     *
+     * @param integer $id
+     * @return JsonResponse
+     */
+    public function delete($id)
+    {
+        return parent::delete($id);
+    }
+
+    /**
+     * @ApiDoc(
+     *  section="Users",
+     *  description="Change Password",
+     *  parameters={
+     *     {"name"="current_password", "dataType"="string", "required"=true, "description"="current password"},
+     *     {"name"="new[first]", "dataType"="string", "required"=true, "description"="new password"},
+     *     {"name"="new[second]", "dataType"="string", "required"=true, "description"="new password repeated"}
+     * },
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      400 = "Returned when the form contains errors"
+     *  },
+     * )
+     * @Route("/change-password", name="change_password")
+     * @Method({"POST"})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function changeUserPasswordAction(Request $request)
+    {
+        return parent::changeUserPasswordAction($request);
+    }
+}

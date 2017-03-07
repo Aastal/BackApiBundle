@@ -1,0 +1,185 @@
+<?php
+
+namespace AppBundle\Controller\ApiDocs;
+
+use AppBundle\Controller\SecurityController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+
+/**
+ * @Route("/api/v1/sessions")
+ */
+class SecurityDoc extends SecurityController
+{
+
+    /**
+     * @ApiDoc(
+     *  section="Sessions",
+     *  description="API connection",
+     *  parameters={
+     *      {"name"="email", "dataType"="string", "required"=true, "description"="E-Mail"},
+     *      {"name"="password", "dataType"="string", "required"=true, "description"="Password"},
+     * },
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      400 = "geoks.missing_param",
+     *      403 = "geoks.user.password.wrong | geoks.user.lock | geoks.user.disabled",
+     *      404 = "geoks.user.email.invalid"
+     *  },
+     * )
+     * @Route("/login", name="api_login_post")
+     * @Method({"POST"})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function loginAction(Request $request)
+    {
+        return parent::loginAction($request);
+    }
+
+    /**
+     * @ApiDoc(
+     *  section="Sessions",
+     *  description="API connection through Facebook",
+     *  parameters={
+     *      {"name"="facebook_token", "dataType"="string", "required"=true, "description"="Facebook Token"},
+     * },
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      400 = "Returned when the form contains errors"
+     *  },
+     * )
+     * @Route("/login/facebook", name="api_login_facebook")
+     * @Method({"POST"})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function loginFacebookAction(Request $request)
+    {
+        return parent::loginFacebookAction($request);
+    }
+
+    /**
+     * @ApiDoc(
+     *  section="Sessions",
+     *  description="Request Password Reset Code",
+     *  parameters={
+     *      {"name"="email", "dataType"="string", "required"=true, "description"="E-Mail"},
+     * },
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      208 = "Returned when user has already request a reset",
+     *      400 = "Returned when user is not found"
+     *  },
+     * )
+     * @Route("/{email}/password-recovery/request", name="send_password_reset_code")
+     * @Method({"PUT"})
+     *
+     * @param string $email
+     * @return JsonResponse
+     */
+    public function forgottenPasswordAction($email)
+    {
+        return parent::forgottenPasswordAction($email);
+    }
+
+    /**
+     * @ApiDoc(
+     *  section="Sessions",
+     *  description="Set New Password based on Reset Code",
+     *  parameters={
+     *      {"name"="new[first]", "dataType"="string", "required"=true, "description"="New Password"},
+     *      {"name"="new[second]", "dataType"="string", "required"=true, "description"="Confirmation New Password"},
+     * },
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      400 = "Returned when the form contains errors, token expired, invalid submissions"
+     *  },
+     * )
+     * @Route("/password-recovery/reset/{token}", name="reset_password_set_new")
+     * @Method({"POST"})
+     *
+     * @param string $token
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function setNewPasswordAction(Request $request, $token)
+    {
+        return parent::setNewPasswordAction($request, $token);
+    }
+
+    /**
+     * @ApiDoc(
+     *  section="Sessions",
+     *  description="Sign up as client using E-mail",
+     *  parameters={
+     *      {"name"="firstname", "dataType"="string", "required"=true, "description"="New User's Firstname"},
+     *      {"name"="lastname", "dataType"="string", "required"=true, "description"="New User's Lastname"},
+     *      {"name"="email", "dataType"="string", "required"=true, "description"="New User's email"},
+     *      {"name"="password", "dataType"="string", "required"=true, "description"="New User's password"},
+     * },
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *      400 = "Returned when the form contains errors"
+     *  },
+     * )
+     * @Route("/subscribe", name="subscribe")
+     * @Method({"POST"})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function subscribeAction(Request $request)
+    {
+        return parent::subscribeAction($request);
+    }
+
+    /**
+     * @ApiDoc(
+     *  section="Sessions",
+     *  description="Verify if Email is unique",
+     *  parameters={
+     *      {"name"="email", "dataType"="string", "required"=true, "description"="Email to be verified"}
+     * },
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *  },
+     * )
+     * @Route("/subscribe/{email}/verify-email", name="verify_email")
+     * @Method({"GET"})
+     *
+     * @param $email
+     * @return JsonResponse
+     */
+    public function verifyEmailAction($email)
+    {
+        return parent::verifyEmailAction($email);
+    }
+
+    /**
+     * @ApiDoc(
+     *  section="Sessions",
+     *  description="Verify if Username is unique",
+     *  parameters={
+     *      {"name"="username", "dataType"="string", "required"=true, "description"="Username to be verified"}
+     * },
+     *  statusCodes = {
+     *      200 = "Returned when successful",
+     *  },
+     * )
+     * @Route("/subscribe/{username}/verify-username", name="verify_username")
+     * @Method({"GET"})
+     *
+     * @param $username
+     * @return JsonResponse
+     */
+    public function verifyUsernameAction($username)
+    {
+        return parent::verifyUsernameAction($username);
+    }
+}

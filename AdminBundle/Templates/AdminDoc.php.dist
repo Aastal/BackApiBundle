@@ -1,0 +1,60 @@
+<?php
+
+namespace AdminBundle\Controller\ApiDocs;
+
+use AdminBundle\Controller\AdminController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\HttpFoundation\Response;
+
+class AdminDoc extends AdminController
+{
+    /**
+     * @Route("/login", name="geoks_admin_login")
+     * @Method({"GET"})
+     *
+     * @return Response
+     */
+    public function loginAction()
+    {
+        return parent::loginAction();
+    }
+
+    /**
+     * @Route("/login/check", name="geoks_admin_login_check")
+     * @Method({"POST"})
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function loginCheckAction(Request $request)
+    {
+        return parent::loginCheckAction($request);
+    }
+
+    /**
+     * @Route("/logout", name="geoks_admin_logout")
+     * @Method({"GET"})
+     *
+     * @return mixed
+     */
+    public function logoutAction()
+    {
+        return [];
+    }
+
+    /**
+     * @Route("/index", name="geoks_admin_index")
+     * @Method({"GET"})
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function indexAction(Request $request = null)
+    {
+        return parent::indexAction($request);
+    }
+}

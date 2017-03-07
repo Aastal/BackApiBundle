@@ -1,0 +1,14 @@
+<?php
+
+namespace AppBundle\Controller;
+
+use Geoks\ApiBundle\Controller\UserController as GeoksUserController;
+use Symfony\Component\HttpFoundation\Request;
+
+abstract class UserController extends GeoksUserController
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+}

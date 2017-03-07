@@ -1,0 +1,14 @@
+{% extends 'AdminBundle::layout.html.twig' %}
+
+{% form_theme filter_form 'GeoksAdminBundle:Form:fields.html.twig' %}
+
+{% block body %}
+
+    {{ include('GeoksAdminBundle:Template:entity-index.html.twig', {
+        "entities": entities,
+        "filter_form": filter_form,
+        "numberOfResults": numberOfResults,
+        "fields": ["id"]
+    }) }}
+
+{% endblock %}

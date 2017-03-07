@@ -1,0 +1,23 @@
+parameters:
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: projectName
+    database_user: root
+    database_password: root
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    secret: cc8e1af46050ccfb6f3380162c25bd824c32c399
+
+    # app
+    api_client_id: 1_5u23aqoubycksw00ks44s40k4w80k8wkkkcg0ckwoowwcsck0s
+    api_client_secret: 4higptbw03acskgow448808cksk008cocoos4kgs04sko0gk4s
+    base_url: 'http://projectName'
+    facebook_grant_type: 'http://projectName/grants/facebook'
+    facebook_app_id: 1605543279754549
+    facebook_app_secret: c199a54845425f679a5ce1b01ece6281
+    facebook_app_version: v2.8
+    google.fcm.api.key: AIzaSyBl2LiHfGVg_TE0sfbHJ9wxC2uOZ6G8Gdc
+    app_env: dev
+    backend_process_php_binary_path: /usr/bin/php
