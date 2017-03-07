@@ -100,5 +100,26 @@
             {{ form_errors(form) }}
         </div>
     {% endspaceless %}
-
 {% endblock choice_widget_expanded %}
+
+{% block vich_file_widget %}
+    {% spaceless %}
+        <div class="vich-file">
+            <div class="col-lg-12 col-md-12">
+                {{ form_widget(form.file) }}
+            </div>
+
+            {% if form.delete is defined %}
+                <div class="col-lg-12 col-md-12 form-delete">
+                    {{ form_widget(form.delete, {'attr': {'class': 'checkbox-animate'} }) }} {{ form_label(form.delete) }}
+                </div>
+            {% endif %}
+
+            {% if download_uri is defined and download_uri %}
+                <div class="col-lg-12 col-md-12">
+                    <a href="{{ download_uri }}">{{ 'download'|trans({}, 'VichUploaderBundle') }}</a>
+                </div>
+            {% endif %}
+        </div>
+    {% endspaceless %}
+{% endblock %}
