@@ -34,27 +34,26 @@ class GenerateAppCommand extends ContainerAwareCommand
         $fs = new Filesystem();
 
         // Generate bundles
-        if (!$fs->exists($kernel->getRootDir() . '/../src/AppBundle')) {
-            $bundles[] = exec('php app/console generate:bundle --format=annotation --namespace=AppBundle --bundle-name=AppBundle --no-interaction');
-        }
+        $bundles[] = exec('php app/console generate:bundle --format=annotation --namespace=AppBundle --bundle-name=AppBundle --no-interaction');
 
-        if (!$fs->exists($kernel->getRootDir() . '/../src/AdminBundle')) {
-            $bundles[] = exec('php app/console generate:bundle --bundle-name=AdminBundle --format=annotation --namespace=AdminBundle --no-interaction');
-        }
+        $bundles[] = exec('php app/console generate:bundle --bundle-name=AdminBundle --format=annotation --namespace=AdminBundle --no-interaction');
 
-        if ($input->getOption('website') && !$fs->exists($kernel->getRootDir() . '/../src/WebBundle')) {
+        if ($input->getOption('website')) {
             $bundles[] = exec('php app/console generate:bundle --bundle-name=WebBundle --format=annotation --namespace=WebBundle --no-interaction');
         }
 
-        if (!$fs->exists($kernel->getRootDir() . '/../composer.json')) {
-            $fs->copy(
-                $kernel->getRootDir() . '/../src/Geoks/composer.json.dist',
-                $kernel->getRootDir() . '/../composer.json'
-            );
-        }
+        $fs->copy(
+            $kernel->getRootDir() . '/../src/Geoks/composer.json.dist',
+            $kernel->getRootDir() . '/../composer.json'
+        );
+
+        exec('php app/console doctrine:database:create');
+        exec('php app/console doctrine:schema:create');
 
         exec('sudo composer self-update');
         exec('sudo composer update');
+
+        exec('sudo rm -Rf app/cache/*');
 
         $fs->copy(
             $kernel->getRootDir() . '/../src/Geoks/config.yml.dist',
@@ -65,6 +64,12 @@ class GenerateAppCommand extends ContainerAwareCommand
         $fs->copy(
             $kernel->getRootDir() . '/../src/Geoks/AppKernel.php.dist',
             $kernel->getRootDir() . '/AppKernel.php',
+            true
+        );
+
+        $fs->copy(
+            $kernel->getRootDir() . '/../src/Geoks/routing.yml.dist',
+            $kernel->getRootDir() . '/config/routing.yml',
             true
         );
 
@@ -111,28 +116,25 @@ class GenerateAppCommand extends ContainerAwareCommand
         file_put_contents($kernel->getRootDir() . '/config/security.yml', $content);
 
         // Create User Entity
-        if (!$fs->exists($kernel->getRootDir() . '/../src/AppBundle/Entity/User.php')) {
-            $fs->copy(
-                $kernel->getRootDir() . '/../src/Geoks/UserBundle/Entity/User.php.dist',
-                $kernel->getRootDir() . '/../src/AppBundle/Entity/User.php'
-            );
-        }
+        $fs->copy(
+            $kernel->getRootDir() . '/../src/Geoks/UserBundle/Entity/User.php.dist',
+            $kernel->getRootDir() . '/../src/AppBundle/Entity/User.php'
+        );
 
-        // Create Database and schema
-        exec('php app/console doctrine:database:create');
-        exec('php app/console doctrine:schema:create');
+        // Update schema
+        exec('php app/console doctrine:schema:update --force');
 
         // Npm and Bower
-        exec('npm install');
-        exec('bower install');
+        exec('cd src/Geoks && npm install');
+        exec('cd src/Geoks && bower install');
 
         // Remove Default Elements
         $fs->remove($kernel->getRootDir() . '/../tests');
 
-        $fs->remove($kernel->getRootDir() . '/../AdminBundle/Controller/DefaultController.php');
-        $fs->remove($kernel->getRootDir() . '/../AdminBundle/Resources/views/Default');
+        $fs->remove($kernel->getRootDir() . '/../src/AdminBundle/Controller/DefaultController.php');
+        $fs->remove($kernel->getRootDir() . '/../src/AdminBundle/Resources/views/Default');
 
-        $fs->remove($kernel->getRootDir() . '/../AppBundle/Controller/DefaultController.php');
-        $fs->remove($kernel->getRootDir() . '/../AppBundle/Resources/views/Default');
+        $fs->remove($kernel->getRootDir() . '/../src/AppBundle/Controller/DefaultController.php');
+        $fs->remove($kernel->getRootDir() . '/../src/AppBundle/Resources/views/Default');
     }
 }
