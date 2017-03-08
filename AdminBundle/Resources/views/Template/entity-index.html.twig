@@ -22,7 +22,13 @@
                             <thead>
                             <tr>
                                 {% for field in fields %}
-                                    <th{% if entities.isSorted('a.' ~ field) %} class="sorted"{% endif %}>{{ knp_pagination_sortable(entities, (name|lower ~ "." ~ field)|trans({}, name|lower), ['a.' ~ field]) }}</th>
+                                    <th{% if entities.isSorted('a.' ~ field) %} class="sorted"{% endif %}>
+                                        {% if entities[0] is not null and attribute(entities[0], field) is defined %}
+                                            {{ knp_pagination_sortable(entities, (name|lower ~ "." ~ field)|trans({}, name|lower), ['a.' ~ field]) }}
+                                        {% else %}
+                                            {{ (name|lower ~ "." ~ field)|trans({}, name|lower) }}
+                                        {% endif %}
+                                    </th>
                                 {% endfor %}
 
                                 <th>Actions</th>
