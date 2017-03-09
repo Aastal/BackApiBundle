@@ -16,7 +16,7 @@ class GenerateTranslationCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('generate:entity:translations')
+            ->setName('generate:geoks:translations')
             ->setDescription('generate translation based on entity fields')
             ->addArgument('class', InputArgument::OPTIONAL, 'Sets the entity class', 'AppBundle:User');
     }
