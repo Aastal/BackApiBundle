@@ -76,6 +76,7 @@ class PushNotify
         $notification = new \paragraph1\phpFCM\Notification($arrayMessage['title'], $arrayMessage['body']);
         $notification->setClickAction("FCM_PLUGIN_ACTIVITY");
 
+        $message->setPriority(Message::PRIORITY_HIGH);
         $message->addRecipient(new Device($receiver->getGcmToken()));
         $message->setNotification($notification)->setData($data);
 

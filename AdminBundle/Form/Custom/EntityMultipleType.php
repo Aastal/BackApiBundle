@@ -42,10 +42,6 @@ class EntityMultipleType extends EntityType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-
-        $resolver->setDefaults(array(
-            'compound' => true,
-        ));
     }
 
     public function getBlockPrefix()
