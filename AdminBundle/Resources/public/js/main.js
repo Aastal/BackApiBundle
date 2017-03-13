@@ -32,7 +32,7 @@ $('.collapse-link').on("click", function () {
  * @param returnObj
  */
 function searchAjax(target, url, text, returnObj) {
-    $(target).select2({
+    var select2 = $(target).select2({
         placeholder: text,
         allowClear: true,
 
@@ -90,5 +90,23 @@ function searchAjax(target, url, text, returnObj) {
             cache: false
         },
         minimumInputLength: 1
+    });
+
+    select2.on("select2:selecting", function(e) {
+        var id = e.params['args']['data']['id'];
+        var text = e.params['args']['data']['text'];
+
+        if (!$(target + "_" + id).length) {
+            $(document).find('.multiple').append(
+                "<li>" +
+                "<input type='checkbox' id=" + target.replace("#", "") + "_" + id + " name=" + target.replace("#", "") +"[] hidden='hidden' value='" + id +"' checked='checked'>" +
+                "<button role='button' class='btn btn-default btn-list-remove'>" + text + "</button>" +
+                "</li>"
+            );
+        }
+    });
+
+    $(document).on('click', ".btn-list-remove", function () {
+        $(this).parent().remove();
     });
 }
