@@ -48,3 +48,10 @@ $dark-background-color: #333;
   -o-transition: $transition-property $transition-time $method;
   transition: $transition-property $transition-time $method;
 }
+
+@mixin placeholder {
+  &::-webkit-input-placeholder {@content}
+  &:-moz-placeholder           {@content}
+  &::-moz-placeholder          {@content}
+  &:-ms-input-placeholder      {@content}
+}

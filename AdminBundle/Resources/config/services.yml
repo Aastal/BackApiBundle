@@ -12,6 +12,13 @@ services:
         tags:
             - { name: form.type, alias: hr }
 
+    geoks_admin.form.type.entity_multiple:
+        class: Geoks\AdminBundle\Form\Custom\EntityMultipleType
+        arguments:
+            - "@doctrine"
+        tags:
+            - { name: form.type, alias: entity_multiple }
+
     geoks_admin.form.type.phone:
         class: Geoks\AdminBundle\Form\Custom\PhoneType
         arguments:

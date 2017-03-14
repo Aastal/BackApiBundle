@@ -92,7 +92,7 @@
             <ul {{ block('widget_container_attributes') }}>
                 {% for child in form %}
                     <li>
-                        {{ form_widget(child, {'attr': {'class': attr.widget_class|default('') ~ ' checkbox-animate'}}) }}
+                        {{ form_widget(child, { 'attr': { 'class': attr.widget_class|default('') ~ ' checkbox-animate' } }) }}
                         <b>{{ child.vars.label|trans({}, translation_domain) }}</b>
                     </li>
                 {% endfor %}
@@ -101,6 +101,35 @@
         </div>
     {% endspaceless %}
 {% endblock choice_widget_expanded %}
+
+{% block entity_multiple_widget %}
+    {% spaceless %}
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <select title="{{ form.vars.label|trans({}, translation_domain) }}" name="{{ form.vars.name }}" id="{{ form.vars.id }}" class="control-animate">
+                <option value></option>
+                {% for child in form if child.vars.checked == 0 %}
+                    <option value="{{ child.vars.value }}">{{ child.vars.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <label class="multiple-label">{{ "form.choiced"|trans }}</label>
+
+            <ul class="multiple">
+                {% for child in form if child.vars.checked == 1 %}
+                    <li>
+                        {{ form_widget(child, { 'attr': { 'hidden': 'hidden' } }) }}
+                        <button role="button" class="btn btn-default btn-list-remove">{{ child.vars.label|trans({}, translation_domain) }}</button>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            {{ form_errors(form) }}
+        </div>
+    {% endspaceless %}
+
+{% endblock entity_multiple_widget %}
 
 {% block vich_file_widget %}
     {% spaceless %}

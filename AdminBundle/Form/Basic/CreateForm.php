@@ -3,6 +3,7 @@
 namespace Geoks\AdminBundle\Form\Basic;
 
 use Doctrine\ORM\EntityManager;
+use Geoks\AdminBundle\Form\Custom\EntityMultipleType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
@@ -52,6 +53,7 @@ class CreateForm extends AbstractType
 
         foreach ($rowAssos as $name => $class) {
             if (!in_array($name, $banList)) {
+
                 $typeOptions['options'] = [
                     'label' => $this->entityName . "." . $name,
                     'class' => $class['targetEntity'],
@@ -65,10 +67,11 @@ class CreateForm extends AbstractType
                     $typeOptions['options']['expanded'] = true;
                     $typeOptions['options']['multiple'] = true;
                     $typeOptions['options']['attr']['class'] = 'multiple';
-                }
 
-                $builder
-                    ->add($name, EntityType::class, $typeOptions['options']);
+                    $builder->add($name, EntityMultipleType::class, $typeOptions['options']);
+                } else {
+                    $builder->add($name, EntityType::class, $typeOptions['options']);
+                }
             }
         }
 

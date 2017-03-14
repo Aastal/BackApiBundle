@@ -25,6 +25,7 @@ form:
   submit: Valider
   cancel: Annuler
   choice: Selectionnez une valeur
+  choiced: Selectionné(s)
   success:
     create: Entitée créée
     update: Entitée modifiée

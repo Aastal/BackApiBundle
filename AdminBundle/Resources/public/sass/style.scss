@@ -244,20 +244,29 @@ h1 {
   border-top: 1px solid $primary-color;
 }
 
+.multiple-label {
+  margin-top: 15px;
+  font-weight: bolder;
+}
+
 .multiple {
-  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px 0;
   list-style: none;
+  border-top: 1px solid #ddd;
 
   li {
     line-height: 15px;
+    margin: 1%;
     vertical-align: middle;
 
-    label {
-      vertical-align: bottom;
-    }
-
-    input {
-      margin-right: 5px;
+    .btn {
+      &:hover {
+        color: #fff;
+        background-color: #B94A48;
+        border-color: #B94A48;
+      }
     }
   }
 }

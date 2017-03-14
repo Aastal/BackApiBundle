@@ -16,8 +16,8 @@ class TemplateDoc extends TemplateController
 {
     /**
      * @ApiDoc(
-     *  section="Templates",
-     *  description="Get all templates",
+     *  section="TemplateSection",
+     *  description="Get all Templates",
      *  statusCodes = {
      *      200 = "Returned when successful",
      *      403 = "geoks.user.notConnected",
@@ -36,8 +36,8 @@ class TemplateDoc extends TemplateController
 
     /**
      * @ApiDoc(
-     *  section="Templates",
-     *  description="Get a template",
+     *  section="TemplateSection",
+     *  description="Get a Template",
      *  statusCodes = {
      *      200 = "Returned when successful",
      *      403 = "geoks.user.notConnected",
@@ -56,8 +56,8 @@ class TemplateDoc extends TemplateController
 
     /**
      * @ApiDoc(
-     *  section="Templates",
-     *  description="Create a template",
+     *  section="TemplateSection",
+     *  description="Create a Template",
      *  statusCodes = {
      *      200 = "Returned when successful",
      *      403 = "geoks.user.notConnected",
@@ -77,8 +77,8 @@ class TemplateDoc extends TemplateController
 
     /**
      * @ApiDoc(
-     *  section="Templates",
-     *  description="Update a template",
+     *  section="TemplateSection",
+     *  description="Update a Template",
      *  statusCodes = {
      *      200 = "Returned when successful",
      *      403 = "geoks.user.notConnected",
@@ -99,8 +99,8 @@ class TemplateDoc extends TemplateController
 
     /**
      * @ApiDoc(
-     *  section="Templates",
-     *  description="Delete a template",
+     *  section="TemplateSection",
+     *  description="Delete a Template",
      *  statusCodes = {
      *      200 = "Returned when successful",
      *      403 = "geoks.user.notConnected",

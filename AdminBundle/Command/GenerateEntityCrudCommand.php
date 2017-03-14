@@ -97,7 +97,7 @@ class GenerateEntityCrudCommand extends ContainerAwareCommand
 
                 $namePluralize = $this->getContainer()->get('geoks.api.pluralization')->pluralize($name);
 
-                $content = str_replace("template", strtolower($namePluralize), $content);
+                $content = str_replace("template", lcfirst($namePluralize), $content);
 
                 file_put_contents($kernel->getRootDir() . '/../src/AdminBundle/Controller/ApiDocs/' . $name . 'Doc.php', $content);
 
@@ -119,12 +119,12 @@ class GenerateEntityCrudCommand extends ContainerAwareCommand
                 );
 
                 $fs->copy(
-                    $kernel->getRootDir() . '/../src/Geoks/AdminBundle/Templates/views/Template/form.html.twig',
+                    $kernel->getRootDir() . '/../src/Geoks/AdminBundle/Templates/views/Template/index.html.twig',
                     $kernel->getRootDir() . '/../src/AdminBundle/Resources/views/' . $name . '/index.html.twig'
                 );
 
                 $fs->copy(
-                    $kernel->getRootDir() . '/../src/Geoks/AdminBundle/Templates/views/Template/form.html.twig',
+                    $kernel->getRootDir() . '/../src/Geoks/AdminBundle/Templates/views/Template/show.html.twig',
                     $kernel->getRootDir() . '/../src/AdminBundle/Resources/views/' . $name . '/show.html.twig'
                 );
 
@@ -138,11 +138,11 @@ class GenerateEntityCrudCommand extends ContainerAwareCommand
                     );
 
                     $content = file_get_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php');
-                    $content = str_replace("Template", $name, $content);
-
                     $namePluralize = $this->getContainer()->get('geoks.api.pluralization')->pluralize($name);
 
-                    $content = str_replace("template", strtolower($namePluralize), $content);
+                    $content = str_replace("TemplateSection", $namePluralize, $content);
+                    $content = str_replace("Template", $name, $content);
+                    $content = str_replace("template", lcfirst($namePluralize), $content);
 
                     file_put_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php', $content);
 
@@ -165,11 +165,9 @@ class GenerateEntityCrudCommand extends ContainerAwareCommand
                     );
 
                     $content = file_get_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php');
+
                     $content = str_replace("Template", $name, $content);
-
-                    $namePluralize = $this->getContainer()->get('geoks.api.pluralization')->pluralize($name);
-
-                    $content = str_replace("template", strtolower($namePluralize), $content);
+                    $content = str_replace("template", lcfirst($namePluralize), $content);
 
                     file_put_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php', $content);
 
@@ -184,6 +182,8 @@ class GenerateEntityCrudCommand extends ContainerAwareCommand
 
                     file_put_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/' . $name . 'Controller.php', $content);
                 }
+
+                exec("php app/console generate:doctrine:entities AppBundle:" . $m->getReflectionClass()->getShortName());
             }
         }
     }
