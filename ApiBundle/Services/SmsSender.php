@@ -11,7 +11,7 @@ class SmsSender
     private $apiUrl;
     private $apiKey;
     private $logger;
-    private $activationCode;
+    private $text;
     private $num;
 
     public function __construct($apiUrl, $apiKey, $logger)
@@ -21,10 +21,10 @@ class SmsSender
         $this->logger = $logger;
     }
 
-    public function init($num, $activationCode)
+    public function init($num, $text)
     {
         $this->num = $num;
-        $this->activationCode = $activationCode;
+        $this->text = $text;
 
         return $this;
     }
@@ -49,7 +49,7 @@ class SmsSender
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array(
             'keyid' => $this->apiKey,
-            'sms' => '[Les Robins] Votre code d\'activation : ' . $this->activationCode,
+            'sms' => $this->text,
             'num' => $number
         )));
 
