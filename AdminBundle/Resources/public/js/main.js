@@ -97,7 +97,7 @@ function searchAjax(target, url, text, returnObj) {
         var text = e.params['args']['data']['text'];
 
         if (!$(target + "_" + id).length) {
-            $(document).find('.multiple').append(
+            $(target).parent().parent().find('.multiple').append(
                 "<li>" +
                 "<input type='checkbox' id=" + target.replace("#", "") + "_" + id + " name=" + target.replace("#", "") +"[] hidden='hidden' value='" + id +"' checked='checked'>" +
                 "<button role='button' class='btn btn-default btn-list-remove'>" + text + "</button>" +

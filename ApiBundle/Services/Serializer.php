@@ -146,7 +146,6 @@ class Serializer
                 )
             ];
 
-
             if ($this->entityReflection) {
                 foreach ($this->entityReflection->getProperties() as $reflectionProperty) {
                     if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\FilePath")) {
