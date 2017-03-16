@@ -13,6 +13,24 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class NotificationRepository extends EntityRepository
 {
     /**
+     * @param \DateTime $datetime
+     * @return array
+     */
+    public function getNotificationByDateTime($datetime)
+    {
+        $builder = $this->createQueryBuilder('n');
+
+        $query = $builder
+            ->where('n.created_at <= :dateMin')
+            ->setParameters([
+                'dateMin' => $datetime,
+            ])
+        ;
+
+        return $query->getQuery()->getResult();
+    }
+
+    /**
      * Get last hour notifications
      *
      * @param User $user
