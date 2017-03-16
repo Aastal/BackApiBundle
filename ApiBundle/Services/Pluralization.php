@@ -31,6 +31,7 @@ class Pluralization
                     $word = mb_substr($word, 0, -2);
                     $word = $word . 'en';
                     break;
+                case 'ss':
                 case 'us':
                 case 'sh':
                 case 'nx':

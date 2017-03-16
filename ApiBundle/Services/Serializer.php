@@ -2,6 +2,7 @@
 
 namespace Geoks\ApiBundle\Services;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -34,6 +35,11 @@ class Serializer
      * @var boolean
      */
     private $pluralize;
+
+    /**
+     * @var \ReflectionClass
+     */
+    private $entityReflection;
 
     /**
      * Serializer constructor.
@@ -93,13 +99,22 @@ class Serializer
     {
         if ($value) {
             if (is_object($value)) {
-                $name = strtolower((new \ReflectionClass($value))->getShortName());
+
+                $this->entityReflection = new \ReflectionClass($value);
+                $name = strtolower($this->entityReflection->getShortName());
+
             } elseif (is_array($value) && !is_array(reset($value)) && !is_string(reset($value))) {
+
                 if ($this->pluralize) {
-                    $name = $this->container->get('geoks.api.pluralization')->pluralize(strtolower((new \ReflectionClass(reset($value)))->getShortName()));
+                    $this->entityReflection = new \ReflectionClass(reset($value));
+                    $name = $this->entityReflection->getShortName();
+                    $name = strtolower($this->container->get('geoks.api.pluralization')->pluralize($name));
                 } else {
-                    $name = strtolower((new \ReflectionClass(reset($value)))->getShortName()) . "s";
+                    $this->entityReflection = new \ReflectionClass($value);
+                    $name = $this->entityReflection->getShortName();
+                    $name = strtolower($name . "s");
                 }
+
             } else {
                 $name = $this->key;
             }
@@ -121,13 +136,50 @@ class Serializer
      */
     private function getArrayValue($name, $value)
     {
+        $reader = new AnnotationReader();
+
         if (in_array($this->key, $this->groups) && is_string($this->key)) {
             $results = [
                 $name => $this->serializer->toArray(
                     $value, SerializationContext::create()->setGroups(array($this->key))
-                )];
+                )
+            ];
+
+            foreach ($this->entityReflection->getProperties() as $reflectionProperty) {
+                if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\FilePath")) {
+                    $path = $annotation->path;
+
+                    foreach (reset($results) as $key => $value) {
+                        $vichMappings = $this->container->getParameter('vich_uploader.mappings');
+
+                        if ($annotation->type == "vich" && isset($value["image_name"])) {
+                            $results[$name][$key]["image_name"] = $vichMappings[$path]["upload_destination"] . '/' . $value["image_name"];
+                        } elseif (isset($value["image_name"])) {
+                            $results[$name][$key]["image_name"] = $path . '/' . $value["image_name"];
+                        }
+
+                    }
+                }
+            }
         } elseif ($value instanceof \Traversable || is_object($value)) {
             $results = [$name => $this->serializer->toArray($value)];
+
+            foreach ($this->entityReflection->getProperties() as $reflectionProperty) {
+                if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\FilePath")) {
+                    $path = $annotation->path;
+
+                    foreach ($results as $key => $value) {
+                        $vichMappings = $this->container->getParameter('vich_uploader.mappings');
+
+                        if ($annotation->type == "vich" && isset($value["image_name"])) {
+                            $results[$name][$key]["image_name"] = $vichMappings[$path]["upload_destination"] . '/' . $value["image_name"];
+                        } elseif (isset($value["image_name"])) {
+                            $results[$name][$key]["image_name"] = $path . '/' . $value["image_name"];
+                        }
+
+                    }
+                }
+            }
         } else {
             $results = [$name => $value];
         }

@@ -10,8 +10,8 @@ Geoks\UserBundle\Entity\User:
         email:
             - Length:
                 min: 5
-                minMessage: "geoks.user.email.assert.tooShort"
                 max: 255
+                minMessage: "geoks.user.email.assert.tooShort"
                 maxMessage: "geoks.user.email.assert.tooLong"
             - NotNull:
                 message: "geoks.user.email.assert.notNull"
@@ -26,9 +26,18 @@ Geoks\UserBundle\Entity\User:
         plainPassword:
             - Length:
                 min: 4
+                max: 25
                 minMessage: "geoks.user.plainPassword.assert.tooShort"
-                max: 18
                 maxMessage: "geoks.user.plainPassword.assert.tooLong"
+            - NotNull:
+                message: "geoks.user.plainPassword.assert.notNull"
+                groups: [Registration, ResetPassword, ChangePassword]
+        password:
+            - Length:
+                min: 4
+                max: 25
+                minMessage: "geoks.user.password.assert.tooShort"
+                maxMessage: "geoks.user.password.assert.tooLong"
             - NotNull:
                 message: "geoks.user.plainPassword.assert.notNull"
                 groups: [Registration, ResetPassword, ChangePassword]
