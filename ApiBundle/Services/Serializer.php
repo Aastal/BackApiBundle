@@ -139,47 +139,44 @@ class Serializer
         $reader = new AnnotationReader();
 
         if (in_array($this->key, $this->groups) && is_string($this->key)) {
+
             $results = [
                 $name => $this->serializer->toArray(
                     $value, SerializationContext::create()->setGroups(array($this->key))
                 )
             ];
 
-            foreach ($this->entityReflection->getProperties() as $reflectionProperty) {
-                if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\FilePath")) {
-                    $path = $annotation->path;
 
-                    foreach (reset($results) as $key => $value) {
+            if ($this->entityReflection) {
+                foreach ($this->entityReflection->getProperties() as $reflectionProperty) {
+                    if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\FilePath")) {
+
+                        $path = $annotation->path;
                         $vichMappings = $this->container->getParameter('vich_uploader.mappings');
 
-                        if ($annotation->type == "vich" && isset($value["image_name"])) {
-                            $results[$name][$key]["image_name"] = $vichMappings[$path]["upload_destination"] . '/' . $value["image_name"];
-                        } elseif (isset($value["image_name"])) {
-                            $results[$name][$key]["image_name"] = $path . '/' . $value["image_name"];
+                        if (!is_object($value)) {
+                            foreach (reset($results) as $key => $value) {
+                                if ($annotation->type == "vich" && isset($value["image_name"])) {
+                                    $results[$name][$key]["image_name"] = $vichMappings[$path]["upload_destination"] . '/' . $value["image_name"];
+                                } elseif (isset($value["image_name"])) {
+                                    $results[$name][$key]["image_name"] = $path . '/' . $value["image_name"];
+                                }
+                            }
+                        } else {
+                            foreach ($results as $key => $value) {
+                                if ($annotation->type == "vich" && isset($value["image_name"])) {
+                                    $results[$key]["image_name"] = $vichMappings[$path]["upload_destination"] . '/' . $value["image_name"];
+                                } elseif (isset($value["image_name"])) {
+                                    $results[$key]["image_name"] = $path . '/' . $value["image_name"];
+                                }
+                            }
                         }
-
                     }
                 }
             }
+
         } elseif ($value instanceof \Traversable || is_object($value)) {
             $results = [$name => $this->serializer->toArray($value)];
-
-            foreach ($this->entityReflection->getProperties() as $reflectionProperty) {
-                if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\FilePath")) {
-                    $path = $annotation->path;
-
-                    foreach ($results as $key => $value) {
-                        $vichMappings = $this->container->getParameter('vich_uploader.mappings');
-
-                        if ($annotation->type == "vich" && isset($value["image_name"])) {
-                            $results[$name][$key]["image_name"] = $vichMappings[$path]["upload_destination"] . '/' . $value["image_name"];
-                        } elseif (isset($value["image_name"])) {
-                            $results[$name][$key]["image_name"] = $path . '/' . $value["image_name"];
-                        }
-
-                    }
-                }
-            }
         } else {
             $results = [$name => $value];
         }
