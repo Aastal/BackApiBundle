@@ -157,7 +157,7 @@ class Serializer
                         if (!is_object($value)) {
                             foreach (reset($results) as $key => $value) {
                                 if ($annotation->type == "vich" && isset($value["image_name"])) {
-                                    $results[$name][$key]["image_name"] = $vichMappings[$path]["upload_destination"] . '/' . $value["image_name"];
+                                    $results[$name][$key]["image_name"] = $vichMappings[$path]["uri_prefix"] . '/' . $value["image_name"];
                                 } elseif (isset($value["image_name"])) {
                                     $results[$name][$key]["image_name"] = $path . '/' . $value["image_name"];
                                 }
@@ -165,7 +165,7 @@ class Serializer
                         } else {
                             foreach ($results as $key => $value) {
                                 if ($annotation->type == "vich" && isset($value["image_name"])) {
-                                    $results[$key]["image_name"] = $vichMappings[$path]["upload_destination"] . '/' . $value["image_name"];
+                                    $results[$key]["image_name"] = $vichMappings[$path]["uri_prefix"] . '/' . $value["image_name"];
                                 } elseif (isset($value["image_name"])) {
                                     $results[$key]["image_name"] = $path . '/' . $value["image_name"];
                                 }
