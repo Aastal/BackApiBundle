@@ -38,7 +38,7 @@ class CreateForm extends AbstractType
         $rowAssos = $container->get('geoks_admin.entity_fields')->getFieldsAssociations($table);
 
         foreach ($rowArr as $name => $field) {
-            if ($field["type"] != 'array' && !in_array($name, $banList)) {
+            if ($field["type"] != 'array' && !in_array($name, $banList) && $name != "password") {
                 $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);
 
                 if ((isset($field["nullable"]) && $field["nullable"]) || $field["type"] == 'boolean') {

@@ -21,7 +21,7 @@ class FacebookGrantExtension implements GrantExtensionInterface
         $this->entityManager = $entityManager;
     }
 
-    /*
+    /**
      * {@inheritdoc}
      */
     public function checkGrantExtension(IOAuth2Client $client, array $inputData, array $authHeaders)

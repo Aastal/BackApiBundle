@@ -32,12 +32,3 @@ Geoks\UserBundle\Entity\User:
             - NotNull:
                 message: "geoks.user.plainPassword.assert.notNull"
                 groups: [Registration, ResetPassword, ChangePassword]
-        password:
-            - Length:
-                min: 4
-                max: 25
-                minMessage: "geoks.user.password.assert.tooShort"
-                maxMessage: "geoks.user.password.assert.tooLong"
-            - NotNull:
-                message: "geoks.user.plainPassword.assert.notNull"
-                groups: [Registration, ResetPassword, ChangePassword]

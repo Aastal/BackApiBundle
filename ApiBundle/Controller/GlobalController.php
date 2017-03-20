@@ -78,7 +78,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         // Entity Naming
         $this->entityRepository = $entityRepository;
 
-        if ($this->entityRepository) {
+        if ($this->getEntityRepository()) {
             $this->className = (new \ReflectionClass($entityRepository))->getShortName();
         }
 
@@ -106,7 +106,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository($this->entityRepository)->findAll();
+        $entities = $em->getRepository($this->getEntityRepository())->findAll();
 
         return $this->serializeResponse(['list' => $entities]);
     }
@@ -118,7 +118,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         }
 
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository($this->entityRepository)->find($id);
+        $entity = $em->getRepository($this->getEntityRepository())->find($id);
 
         if (!$entity) {
             return $this->serializeResponse("geoks.entity.notFound", Response::HTTP_NOT_FOUND);
@@ -134,7 +134,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         }
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository($this->entityRepository)->findBy(array('user' => $this->getUser()));
+        $entities = $em->getRepository($this->getEntityRepository())->findBy(array('user' => $this->getUser()));
 
         return $this->serializeResponse(['list' => $entities]);
     }
@@ -146,7 +146,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         }
 
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository($this->entityRepository)->findOneBy(array(
+        $entity = $em->getRepository($this->getEntityRepository())->findOneBy(array(
             'id' => $id,
             'user' => $this->getUser()
         ));
@@ -171,7 +171,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         }
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository($this->entityRepository)->findBy($criteria);
+        $entities = $em->getRepository($this->getEntityRepository())->findBy($criteria);
 
         return $this->serializeResponse(['list' => $entities]);
     }
@@ -185,7 +185,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         $criteria['id'] = $id;
 
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository($this->entityRepository)->findOneBy($criteria);
+        $entity = $em->getRepository($this->getEntityRepository())->findOneBy($criteria);
 
         if (!$entity) {
             return $this->serializeResponse("geoks.entity.notFound", Response::HTTP_NOT_FOUND);
@@ -201,7 +201,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         }
 
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository($this->entityRepository)->findOneBy($relation);
+        $entity = $em->getRepository($this->getEntityRepository())->findOneBy($relation);
 
         if (!$entity) {
             return $this->serializeResponse("geoks.entity.notFound", Response::HTTP_NOT_FOUND);
@@ -224,7 +224,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
                 'id' => "app." . lcfirst($this->className)
             ],
             'method' => 'POST',
-            'data_class' => $this->entityRepository,
+            'data_class' => $this->getEntityRepository(),
             'service_container' => $this->get('service_container')
         ]);
 
@@ -251,7 +251,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         }
 
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository($this->entityRepository)->find($id);
+        $entity = $em->getRepository($this->getEntityRepository())->find($id);
 
         if (!$entity) {
             return $this->serializeResponse('geoks.entity.notFound', Response::HTTP_NOT_FOUND);
@@ -259,7 +259,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
 
         $form = $this->createForm($this->getFormUpdate(), $entity, [
             'method' => $request->getMethod(),
-            'data_class' => $this->entityRepository,
+            'data_class' => $this->getEntityRepository(),
             'service_container' => $this->get('service_container'),
             'change_password' => false
         ]);
@@ -286,7 +286,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         }
 
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository($this->entityRepository)->find($id);
+        $entity = $em->getRepository($this->getEntityRepository())->find($id);
 
         if (!$entity) {
             return $this->serializeResponse("geoks.entity.notFound", Response::HTTP_NOT_FOUND);
