@@ -43,6 +43,7 @@ class Export
         $filenameWeb = '/export-' . strtolower($name) . '(' . $now->format('d-m-Y-H:i') . ').csv';
 
         $handle = fopen($rootRacine . $filenameWeb, 'w+');
+        fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
         fputcsv($handle, $fields, ";");
 
         foreach ($entities as $entity) {
@@ -51,17 +52,28 @@ class Export
             foreach ($fields as $f) {
                 $f = ucfirst(str_replace('_', "", $f));
 
-                $value = $entity->{'get' . ucfirst(str_replace(' ', "", $f))}();
+                if (method_exists($entity, 'get' . ucfirst(str_replace(' ', "", $f)))) {
+                    $value = $entity->{'get' . ucfirst(str_replace(' ', "", $f))}();
+                } else {
+                    $value = $entity->{'is' . ucfirst(str_replace(' ', "", $f))}();
+                }
 
-                if ($value instanceof \DateTime) {
+                if (is_bool($value)) {
+                    if ($value) {
+                        $values[] = 1;
+                    } else {
+                        $values[] = 0;
+                    }
+                } elseif ($value instanceof \DateTime) {
                     $values[] = $value->format('d/m/Y H:i:s');
                 } elseif (is_array($value)) {
                     $values[] = implode(',', $value);
+                } elseif ($value === NULL) {
+                    $values[] = $this->container->get('translator')->trans('geoks.data.empty');
                 } else {
                     $values[] = $value;
                 }
             }
-
             fputcsv($handle, $values, ";");
         }
 
