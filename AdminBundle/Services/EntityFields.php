@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class EntityFields
@@ -104,6 +105,15 @@ class EntityFields
                     'format' => 'dd/MM/yyyy HH:mm',
                     'attr' => [
                         'class' => 'control-animate datetimepicker'
+                    ]
+                ];
+                break;
+            case 'text':
+                $r['type'] = TextareaType::class;
+                $r['options'] = [
+                    'label' => $fieldName,
+                    'attr' => [
+                        'class' => 'control-animate'
                     ]
                 ];
                 break;

@@ -32,6 +32,11 @@ class Serializer
     private $groups;
 
     /**
+     * @var array
+     */
+    private $results;
+
+    /**
      * @var boolean
      */
     private $pluralize;
@@ -62,8 +67,6 @@ class Serializer
      */
     public function serializeData($data)
     {
-        $results = [];
-
         switch ($data)
         {
             case is_array($data):
@@ -72,23 +75,23 @@ class Serializer
 
                     if ($value instanceof ArrayCollection) {
                         $name = $this->getArrayName($value->getValues());
-                        $results += $this->getArrayValue($name, $value->getValues());
+                        $this->results += $this->getArrayValue($name, $value->getValues());
                     } else {
                         $name = $this->getArrayName($value);
-                        $results += $this->getArrayValue($name, $value);
+                        $this->results += $this->getArrayValue($name, $value);
                     }
                 }
                 break;
             case is_object($data):
                 $name = $this->getArrayName($data);
-                $results = $this->getArrayValue($name, $data);
+                $this->results = $this->getArrayValue($name, $data);
                 break;
             default:
-                $results = ['data' => $data];
+                $this->results = ['data' => $data];
                 break;
         }
 
-        return $results;
+        return $this->results;
     }
 
     /**
@@ -140,7 +143,7 @@ class Serializer
 
         if (in_array($this->key, $this->groups) && is_string($this->key)) {
 
-            $results = [
+            $this->results = [
                 $name => $this->serializer->toArray(
                     $value, SerializationContext::create()->setGroups(array($this->key))
                 )
@@ -153,33 +156,29 @@ class Serializer
                         $path = $annotation->path;
                         $vichMappings = $this->container->getParameter('vich_uploader.mappings');
 
-                        if (!is_object($value)) {
-                            foreach (reset($results) as $key => $value) {
-                                if ($annotation->type == "vich" && isset($value["image_name"])) {
-                                    $results[$name][$key]["image_name"] = $vichMappings[$path]["uri_prefix"] . '/' . $value["image_name"];
-                                } elseif (isset($value["image_name"])) {
-                                    $results[$name][$key]["image_name"] = $path . '/' . $value["image_name"];
-                                }
-                            }
-                        } else {
-                            foreach ($results as $key => $value) {
-                                if ($annotation->type == "vich" && isset($value["image_name"])) {
-                                    $results[$key]["image_name"] = $vichMappings[$path]["uri_prefix"] . '/' . $value["image_name"];
-                                } elseif (isset($value["image_name"])) {
-                                    $results[$key]["image_name"] = $path . '/' . $value["image_name"];
-                                }
-                            }
-                        }
+                        $this->displayArrayRecursively($this->results, $vichMappings, $path, null);
                     }
                 }
             }
-
         } elseif ($value instanceof \Traversable || is_object($value)) {
-            $results = [$name => $this->serializer->toArray($value)];
+            $this->results = [$name => $this->serializer->toArray($value)];
         } else {
-            $results = [$name => $value];
+            $this->results = [$name => $value];
         }
 
-        return $results;
+        return $this->results;
+    }
+
+    public function displayArrayRecursively(&$array, $vichMappings, $path, $keysString = '')
+    {
+        if (is_array($array)) {
+            foreach ($array as $key => &$value) {
+                if (is_string($key) && $key == "image_name") {
+                    $value = $vichMappings[$path]["uri_prefix"] . '/' . $value;
+                }
+
+                $this->displayArrayRecursively($value, $vichMappings, $path, $keysString . $key . '.');
+            }
+        }
     }
 }
