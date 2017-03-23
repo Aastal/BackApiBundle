@@ -32,11 +32,6 @@ class Serializer
     private $groups;
 
     /**
-     * @var array
-     */
-    private $results;
-
-    /**
      * @var boolean
      */
     private $pluralize;
@@ -67,6 +62,8 @@ class Serializer
      */
     public function serializeData($data)
     {
+        $results = [];
+
         switch ($data)
         {
             case is_array($data):
@@ -75,23 +72,23 @@ class Serializer
 
                     if ($value instanceof ArrayCollection) {
                         $name = $this->getArrayName($value->getValues());
-                        $this->results += $this->getArrayValue($name, $value->getValues());
+                        $results += $this->getArrayValue($name, $value->getValues());
                     } else {
                         $name = $this->getArrayName($value);
-                        $this->results += $this->getArrayValue($name, $value);
+                        $results += $this->getArrayValue($name, $value);
                     }
                 }
                 break;
             case is_object($data):
                 $name = $this->getArrayName($data);
-                $this->results = $this->getArrayValue($name, $data);
+                $results += $this->getArrayValue($name, $data);
                 break;
             default:
-                $this->results = ['data' => $data];
+                $results = ['data' => $data];
                 break;
         }
 
-        return $this->results;
+        return $results;
     }
 
     /**
@@ -143,7 +140,7 @@ class Serializer
 
         if (in_array($this->key, $this->groups) && is_string($this->key)) {
 
-            $this->results = [
+            $results = [
                 $name => $this->serializer->toArray(
                     $value, SerializationContext::create()->setGroups(array($this->key))
                 )
@@ -156,17 +153,17 @@ class Serializer
                         $path = $annotation->path;
                         $vichMappings = $this->container->getParameter('vich_uploader.mappings');
 
-                        $this->displayArrayRecursively($this->results, $vichMappings, $path, null);
+                        $this->displayArrayRecursively($results, $vichMappings, $path, null);
                     }
                 }
             }
         } elseif ($value instanceof \Traversable || is_object($value)) {
-            $this->results = [$name => $this->serializer->toArray($value)];
+            $results = [$name => $this->serializer->toArray($value)];
         } else {
-            $this->results = [$name => $value];
+            $results = [$name => $value];
         }
 
-        return $this->results;
+        return $results;
     }
 
     public function displayArrayRecursively(&$array, $vichMappings, $path, $keysString = '')
