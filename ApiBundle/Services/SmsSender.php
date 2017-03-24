@@ -5,13 +5,33 @@ namespace Geoks\ApiBundle\Services;
 use \libphonenumber\PhoneNumberUtil;
 use \libphonenumber\PhoneNumberFormat;
 use \libphonenumber\NumberParseException;
+use Monolog\Logger;
 
 class SmsSender
 {
+    /**
+     * @var string
+     */
     private $apiUrl;
+
+    /**
+     * @var string
+     */
     private $apiKey;
+
+    /**
+     * @var Logger
+     */
     private $logger;
+
+    /**
+     * @var string
+     */
     private $text;
+
+    /**
+     * @var string
+     */
     private $num;
 
     public function __construct($apiUrl, $apiKey, $logger)

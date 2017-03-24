@@ -4,6 +4,7 @@ namespace Geoks\ApiBundle\Services;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\Serializer\Serializer as JMSSerializer;
@@ -136,45 +137,99 @@ class Serializer
      */
     private function getArrayValue($name, $value)
     {
-        $reader = new AnnotationReader();
-
         if (in_array($this->key, $this->groups) && is_string($this->key)) {
-
             $results = [
                 $name => $this->serializer->toArray(
                     $value, SerializationContext::create()->setGroups(array($this->key))
                 )
             ];
-
-            if ($this->entityReflection) {
-                foreach ($this->entityReflection->getProperties() as $reflectionProperty) {
-                    if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\FilePath")) {
-
-                        $path = $annotation->path;
-                        $vichMappings = $this->container->getParameter('vich_uploader.mappings');
-
-                        $this->displayArrayRecursively($results, $vichMappings, $path, null);
-                    }
-                }
-            }
         } elseif ($value instanceof \Traversable || is_object($value)) {
             $results = [$name => $this->serializer->toArray($value)];
         } else {
             $results = [$name => $value];
         }
 
+        $this->arrayImagesPathsRecursively($results);
+
         return $results;
     }
 
-    public function displayArrayRecursively(&$array, $vichMappings, $path, $keysString = '')
+    public function arrayImagesPathsRecursively(&$array, $keysString = '')
     {
         if (is_array($array)) {
-            foreach ($array as $key => &$value) {
-                if (is_string($key) && $key == "image_name") {
-                    $value = $vichMappings[$path]["uri_prefix"] . '/' . $value;
+            $reflections = [];
+            $reader = new AnnotationReader();
+            $meta = $this->container->get('doctrine')->getManager()->getMetadataFactory()->getAllMetadata();
+
+            if (isset($this->entityReflection)) {
+                foreach ($this->entityReflection->getProperties() as $reflectionProperty) {
+                    if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\FilePath")) {
+                        $path = $annotation->path;
+                        $vichMappings = $this->container->getParameter('vich_uploader.mappings');
+                    }
                 }
 
-                $this->displayArrayRecursively($value, $vichMappings, $path, $keysString . $key . '.');
+                if (isset($vichMappings) && isset($path)) {
+                    foreach ($array as &$r) {
+                        if (is_array($r)) {
+                            foreach ($r as $k => &$v) {
+                                if (is_array($v) && array_key_exists("image_name", $v)) {
+                                    $v["image_name"] = explode("/", $v["image_name"]);
+                                    $v["image_name"] = end($v["image_name"]);
+                                    $v["image_name"] = $vichMappings[$path]["uri_prefix"] . '/' . $v["image_name"];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach ($meta as $m) {
+
+                /** @var ClassMetadata $m */
+                $pos = strpos($m->getName(), "FOS");
+                if ($pos === false) {
+                    $reflections[] = $m->getReflectionClass();
+                }
+            }
+            foreach ($array as $key => &$value) {
+
+                $arrayWords = explode("_", $key);
+
+                foreach ($arrayWords as $k => &$v) {
+                    $v = ucfirst($v);
+                }
+
+                $class = implode("", $arrayWords);
+
+                foreach ($reflections as $reflection) {
+                    /** @var \ReflectionClass $reflection */
+                    if ($reflection->getShortName() == $class) {
+                        /** @var \ReflectionClass $classReflection */
+                        $classReflection = $reflection;
+                    }
+                }
+
+                $path = null;
+                $vichMappings = null;
+
+                if (isset($classReflection)) {
+                    foreach ($classReflection->getProperties() as $reflectionProperty) {
+                        if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\FilePath")) {
+
+                            $path = $annotation->path;
+                            $vichMappings = $this->container->getParameter('vich_uploader.mappings');
+                        }
+                    }
+
+                    if (is_array($value) && array_key_exists("image_name", $value)) {
+                        $value["image_name"] = explode("/", $value["image_name"]);
+                        $value["image_name"] = end($value["image_name"]);
+                        $value["image_name"] = $vichMappings[$path]["uri_prefix"] . '/' . $value["image_name"];
+                    }
+                }
+
+                $this->arrayImagesPathsRecursively($value, $keysString . $key . '.');
             }
         }
     }
