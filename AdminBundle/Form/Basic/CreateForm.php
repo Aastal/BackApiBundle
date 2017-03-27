@@ -75,14 +75,15 @@ class CreateForm extends AbstractType
             }
         }
 
-        if ($this->entityName == "user") {
+        if (isset($rowArr["password"])) {
             $builder
                 ->add('plainPassword', PasswordType::class, [
-                    'label' => 'user.password',
+                    'label' => $this->entityName . '.password',
                     'attr' => [
                         'class' => 'control-animate'
                     ]
-                ]);
+                ])
+            ;
         }
     }
 
