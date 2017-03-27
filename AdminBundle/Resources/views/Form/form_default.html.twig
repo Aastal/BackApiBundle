@@ -4,6 +4,8 @@
 {{ form_start(form) }}
 
 <h1>{% if form.vars.attr.id is defined %}{{ form.vars.attr.id|trans }}{% endif %}</h1>
+<label id="user-id" hidden="hidden">{% if form.vars.data.id is defined %}{{ form.vars.data.id|trans }}{% endif %}</label>
+<label id="entity-name" hidden="hidden">{% if form.vars.attr.id is defined %}{{ namePluralize }}{% endif %}</label>
 <hr>
 
 <div class="form-error">
@@ -11,8 +13,6 @@
 </div>
 
 {% if form.plainPassword is defined and form.passwordConfirm is defined %}
-    <label id="user-id" hidden="hidden">{% if form.vars.data.id is defined %}{{ form.vars.data.id|trans }}{% endif %}</label>
-
     <div id="form-changePassword" class="box box-filter">
         <div class="box-body padding box-form">
             <h3>{{ form_label(form.password_title) }}</h3>

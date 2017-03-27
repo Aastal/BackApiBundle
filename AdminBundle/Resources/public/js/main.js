@@ -25,11 +25,12 @@ $('.collapse-link').on("click", function () {
 
 $(document).on('click', '#changePassword', function () {
     var submit = $(document).find('#submit');
-    var id = $('#user-id');
+    var id = $('#user-id').text();
+    var entityName = $('#entity-name').text();
     var globalTimeout = null;
 
     $.ajax({
-        url: Routing.generate('geoks_admin_users_update', {'id': id, 'changePassword': "true"}),
+        url: Routing.generate('geoks_admin_' + entityName + '_update', {'id': id, 'changePassword': "true"}),
         method: "GET",
 
         success: function (html) {
