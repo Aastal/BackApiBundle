@@ -15,15 +15,15 @@
         <field name="dateOfBirth" column="date_of_birth" type="datetime" nullable="true" />
 
         <!-- Text -->
-        <field name="firstname" column="firstname" type="text" length="255" />
-        <field name="lastname" column="lastname" type="text" length="255" />
-        <field name="gender" column="gender" type="text" length="255" nullable="true" />
-        <field name="facebookUid" column="facebook_uid" type="text" length="255" nullable="true" />
-        <field name="facebookName" column="facebook_name" type="text" length="255" nullable="true" />
-        <field name="facebookAccessToken" column="facebook_access_token" type="text" length="255" nullable="true" />
+        <field name="firstname" column="firstname" type="string" length="255" />
+        <field name="lastname" column="lastname" type="string" length="255" />
+        <field name="gender" column="gender" type="string" length="255" nullable="true" />
+        <field name="facebookUid" column="facebook_uid" type="string" length="255" nullable="true" />
+        <field name="facebookName" column="facebook_name" type="string" length="255" nullable="true" />
+        <field name="facebookAccessToken" column="facebook_access_token" type="string" length="255" nullable="true" />
         <field name="phone" length="13" column="phone" type="string" nullable="true" />
-        <field name="address" column="address" type="text" length="255" nullable="true" />
-        <field name="gcmToken" column="gcm_token" type="text" length="255" nullable="true" />
+        <field name="address" column="address" type="string" length="255" nullable="true" />
+        <field name="gcmToken" column="gcm_token" type="string" length="255" nullable="true" />
 
     </mapped-superclass>
 
