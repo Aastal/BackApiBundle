@@ -2,7 +2,7 @@
 
 namespace Geoks\ApiBundle\Utils;
 
-class StringManager
+class StringUtils
 {
     /**
      * @param string $delimiter
