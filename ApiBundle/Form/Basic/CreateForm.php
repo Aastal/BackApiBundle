@@ -2,6 +2,7 @@
 
 namespace Geoks\ApiBundle\Form\Basic;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -13,6 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class CreateForm extends AbstractType
 {
@@ -30,6 +32,8 @@ class CreateForm extends AbstractType
         $container = $options["service_container"];
         $table = $options["data_class"];
 
+        $reader = new AnnotationReader();
+        $reflection = new \ReflectionClass($table);
         $banList = $container->get('geoks_admin.entity_fields')->fieldsBanList();
 
         $this->entityName = strtolower($container->get('geoks_admin.entity_fields')->getEntityName($table));
@@ -47,6 +51,18 @@ class CreateForm extends AbstractType
                 }
 
                 $builder->add($name, $typeOptions['type'], $typeOptions['options']);
+            }
+        }
+
+        foreach ($reflection->getProperties() as $reflectionProperty) {
+            if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Vich\\UploaderBundle\\Mapping\\Annotation\\UploadableField")) {
+                $builder
+                    ->add($reflectionProperty->name, VichFileType::class, [
+                        'required' => false,
+                        'allow_delete' => false,
+                        'download_link' => false
+                    ])
+                ;
             }
         }
 

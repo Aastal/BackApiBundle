@@ -174,9 +174,9 @@ class Serializer
                         if (is_array($r)) {
                             foreach ($r as $k => &$v) {
                                 if (is_array($v) && array_key_exists("image_name", $v)) {
-                                    $v["image_name"] = explode("/", $v["image_name"]);
-                                    $v["image_name"] = end($v["image_name"]);
-                                    $v["image_name"] = $vichMappings[$path]["uri_prefix"] . '/' . $v["image_name"];
+                                    $v["image_name"] = $vichMappings[$path]["uri_prefix"] .
+                                        '/' .
+                                        $this->container->get('geoks.utils.string_manager')->getEndOfString("/", $v["image_name"]);
                                 }
                             }
                         }
@@ -192,6 +192,7 @@ class Serializer
                     $reflections[] = $m->getReflectionClass();
                 }
             }
+
             foreach ($array as $key => &$value) {
 
                 $arrayWords = explode("_", $key);
@@ -223,9 +224,9 @@ class Serializer
                     }
 
                     if (is_array($value) && array_key_exists("image_name", $value)) {
-                        $value["image_name"] = explode("/", $value["image_name"]);
-                        $value["image_name"] = end($value["image_name"]);
-                        $value["image_name"] = $vichMappings[$path]["uri_prefix"] . '/' . $value["image_name"];
+                        $value["image_name"] = $vichMappings[$path]["uri_prefix"] .
+                            '/' .
+                            $this->container->get('geoks.utils.string_manager')->getEndOfString("/", $value["image_name"]);
                     }
                 }
 
