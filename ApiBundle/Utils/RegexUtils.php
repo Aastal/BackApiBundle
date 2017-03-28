@@ -1,6 +1,6 @@
 <?php
 
-namespace Geoks\ApiBundle\Services;
+namespace Geoks\ApiBundle\Utils;
 
 class RegexUtils
 {
