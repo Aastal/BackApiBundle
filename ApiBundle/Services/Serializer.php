@@ -104,7 +104,7 @@ class Serializer
                 $this->entityReflection = new \ReflectionClass($value);
                 $name = strtolower($this->entityReflection->getShortName());
 
-            } elseif (is_array($value) && !is_array(reset($value)) && !is_string(reset($value))) {
+            } elseif (is_array($value) && !is_array(reset($value)) && !is_string(reset($value)) && !is_bool(reset($value))) {
 
                 if ($this->pluralize) {
                     $this->entityReflection = new \ReflectionClass(reset($value));
@@ -149,40 +149,52 @@ class Serializer
             $results = [$name => $value];
         }
 
+        $this->imageArrayKey($results);
         $this->arrayImagesPathsRecursively($results);
 
         return $results;
     }
 
-    public function arrayImagesPathsRecursively(&$array, $keysString = '')
+    private function imageArrayKey(&$array)
     {
-        if (is_array($array)) {
-            $reflections = [];
-            $reader = new AnnotationReader();
-            $meta = $this->container->get('doctrine')->getManager()->getMetadataFactory()->getAllMetadata();
+        $reader = new AnnotationReader();
 
-            if (isset($this->entityReflection)) {
-                foreach ($this->entityReflection->getProperties() as $reflectionProperty) {
-                    if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\FilePath")) {
-                        $path = $annotation->path;
-                        $vichMappings = $this->container->getParameter('vich_uploader.mappings');
-                    }
+        if (isset($this->entityReflection)) {
+            foreach ($this->entityReflection->getProperties() as $reflectionProperty) {
+                if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\FilePath")) {
+                    $path = $annotation->path;
+                    $vichMappings = $this->container->getParameter('vich_uploader.mappings');
                 }
+            }
 
-                if (isset($vichMappings) && isset($path)) {
-                    foreach ($array as &$r) {
-                        if (is_array($r)) {
-                            foreach ($r as $k => &$v) {
-                                if (is_array($v) && array_key_exists("image_name", $v)) {
-                                    $v["image_name"] = $vichMappings[$path]["uri_prefix"] .
-                                        '/' .
-                                        $this->container->get('geoks.utils.string_manager')->getEndOfString("/", $v["image_name"]);
-                                }
+            if (isset($vichMappings) && isset($path)) {
+                foreach ($array as &$r) {
+                    if (is_array($r) && array_key_exists("image_name", $r)) {
+                        $r["image_name"] = $vichMappings[$path]["uri_prefix"] .
+                            '/' .
+                            $this->container->get('geoks.utils.string_manager')->getEndOfString("/", $r["image_name"]);
+                    }
+
+                    if (is_array($r)) {
+                        foreach ($r as &$v) {
+                            if (is_array($v) && array_key_exists("image_name", $v)) {
+                                $v["image_name"] = $vichMappings[$path]["uri_prefix"] .
+                                    '/' .
+                                    $this->container->get('geoks.utils.string_manager')->getEndOfString("/", $v["image_name"]);
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    private function arrayImagesPathsRecursively(&$array, $keysString = '')
+    {
+        if (is_array($array)) {
+            $reflections = [];
+            $reader = new AnnotationReader();
+            $meta = $this->container->get('doctrine')->getManager()->getMetadataFactory()->getAllMetadata();
 
             foreach ($meta as $m) {
 
@@ -223,7 +235,7 @@ class Serializer
                         }
                     }
 
-                    if (is_array($value) && array_key_exists("image_name", $value)) {
+                    if (is_array($value) && array_key_exists("image_name", $value) && $path) {
                         $value["image_name"] = $vichMappings[$path]["uri_prefix"] .
                             '/' .
                             $this->container->get('geoks.utils.string_manager')->getEndOfString("/", $value["image_name"]);

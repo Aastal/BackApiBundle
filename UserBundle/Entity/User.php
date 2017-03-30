@@ -122,7 +122,7 @@ abstract class User extends BaseUser
 
     public function prePersist()
     {
-        $now = new \DateTime();
+        $now = new \DateTime('now');
 
         $this->created = $now;
         $this->updated = $now;
@@ -130,7 +130,7 @@ abstract class User extends BaseUser
 
     public function preUpdate()
     {
-        $now = new \DateTime();
+        $now = new \DateTime('now');
 
         $this->updated = $now;
     }

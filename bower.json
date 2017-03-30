@@ -19,6 +19,7 @@
     "jquery": "^1.9",
     "select2": "^4.0.3",
     "roboto-fontface": "^0.6.0",
-    "datetimepicker": "latest"
+    "datetimepicker": "latest",
+    "select2-bootstrap-theme": "^0.1.0-beta.9"
   }
 }

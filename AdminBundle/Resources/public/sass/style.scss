@@ -10,6 +10,10 @@ select:focus {
   outline: none;
 }
 
+.hidden {
+  display: none;
+}
+
 .glyphicon {
   font-size: 100%;
   margin-right: 2%;
@@ -244,28 +248,54 @@ h1 {
   border-top: 1px solid $primary-color;
 }
 
-.multiple-label {
-  margin-top: 15px;
-  font-weight: bolder;
+.label-multiple {
+  text-transform: uppercase;
+  background-color: $primary-color;
+  width: 100%;
+  padding: 7px 15px;
+  color: #fff;
 }
 
-.multiple {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 10px 0;
-  list-style: none;
-  border-top: 1px solid #ddd;
+.form-multiple {
+  position: relative;
+  margin-top: 5px;
+  padding: 10px 15px;
+  background-color: rgba(0, 0, 0, .07);
 
-  li {
-    line-height: 15px;
-    margin: 1%;
-    vertical-align: middle;
+  .header-multiple {
+    span {
+      position: absolute;
+      right: 5px;
+      top: 15px;
+    }
 
-    .btn {
-      &:hover {
-        color: #fff;
-        background-color: #B94A48;
-        border-color: #B94A48;
+    .selected-multiple {
+      border-bottom: 1px solid #000;
+      line-height: 20px;
+      font-weight: bolder;
+    }
+  }
+
+  .multiple {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 0;
+    list-style: none;
+
+    li {
+      line-height: 15px;
+      margin: 1%;
+      vertical-align: middle;
+
+      .btn {
+        border: none;
+        @include border-radius(0);
+
+        &:hover {
+          cursor: pointer;
+          color: #fff;
+          background-color: #B94A48;
+        }
       }
     }
   }
@@ -287,7 +317,7 @@ h1 {
 
 .checkbox-animate {
   -webkit-appearance: inherit;
-  border: 2px solid #000;
+  border: 1px solid #000;
   height: 20px;
   width: 20px;
   z-index: 888;
@@ -498,11 +528,14 @@ select.control-animate {
   margin-top: 20px;
   width: 100%;
 
-  @include border-radius(3px);
   @include box-shadow(0, 1px, 1px, rgba(0, 0, 0, 0.1));
 
   &.box-info {
     border-top-color: $primary-color;
+  }
+
+  &.box-simple {
+    border-top: none;
   }
 
   &.box-filter {
@@ -543,14 +576,26 @@ select.control-animate {
     }
 
     &.box-form {
+      .form-right {
+        background-color: $lite-color;
+        padding-bottom: 25px;
+      }
+
+      .form-bottom {
+        border-top: 1px solid $lite-color;
+        padding-top: 25px;
+      }
+
       h3 {
-        border-bottom: solid 1px #444;
-        padding-bottom: 10px;
+        margin-top: 30px;
+        color: $primary-color;
+        padding-bottom: 25px;
       }
 
       .box-footer {
         display: block;
         margin: auto;
+        padding-bottom: 25px;
         text-align: center;
       }
     }

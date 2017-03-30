@@ -8,9 +8,14 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -22,6 +27,11 @@ class CreateForm extends AbstractType
      * @var string
      */
     private $entityName;
+
+    /**
+     * @var string
+     */
+    private $reflectionPropertyName;
 
     /**
      * @param FormBuilderInterface $builder
@@ -56,11 +66,11 @@ class CreateForm extends AbstractType
 
         foreach ($reflection->getProperties() as $reflectionProperty) {
             if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Vich\\UploaderBundle\\Mapping\\Annotation\\UploadableField")) {
+                $this->reflectionPropertyName = $reflectionProperty->name;
+
                 $builder
-                    ->add($reflectionProperty->name, VichFileType::class, [
+                    ->add($this->reflectionPropertyName, FileType::class, [
                         'required' => false,
-                        'allow_delete' => false,
-                        'download_link' => false
                     ])
                 ;
             }

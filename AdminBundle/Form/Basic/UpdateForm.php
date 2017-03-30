@@ -105,6 +105,7 @@ class UpdateForm extends AbstractType
                     $typeOptions['options']['expanded'] = true;
                     $typeOptions['options']['multiple'] = true;
                     $typeOptions['options']['attr']['class'] = 'multiple';
+                    $typeOptions['options']['label_attr']['class'] = 'label-multiple';
 
                     $builder->add($name, EntityMultipleType::class, $typeOptions['options']);
                 } else {

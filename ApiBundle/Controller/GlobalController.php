@@ -279,6 +279,44 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         return $this->serializeResponse($form, Response::HTTP_BAD_REQUEST);
     }
 
+    public function updateMe(Request $request, $id, $customSetters = [])
+    {
+        if (!$this->getUser()) {
+            return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository($this->getEntityRepository())->findOneBy([
+            "id" => $id,
+            "user" => $this->getUser()->getId()
+        ]);
+
+        if (!$entity) {
+            return $this->serializeResponse('geoks.entity.notFound', Response::HTTP_NOT_FOUND);
+        }
+
+        $form = $this->createForm($this->getFormUpdate(), $entity, [
+            'method' => $request->getMethod(),
+            'data_class' => $this->getEntityRepository(),
+            'service_container' => $this->get('service_container'),
+            'change_password' => false
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            foreach ($customSetters as $key => $value) {
+                $entity->{'set' . $key}($value);
+            }
+
+            $em->flush();
+
+            return $this->serializeResponse(['details' => $entity]);
+        }
+
+        return $this->serializeResponse($form, Response::HTTP_BAD_REQUEST);
+    }
+
     public function delete($id)
     {
         if (!$this->getUser()) {
@@ -299,6 +337,6 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         $em->remove($entity);
         $em->flush();
 
-        return $this->serializeResponse("geoks.entity.deleted");
+        return $this->serializeResponse(["success" => "geoks.entity.deleted"]);
     }
 }

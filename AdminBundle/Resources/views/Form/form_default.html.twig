@@ -13,68 +13,112 @@
 </div>
 
 {% if form.plainPassword is defined and form.passwordConfirm is defined %}
-    <div id="form-changePassword" class="box box-filter">
-        <div class="box-body padding box-form">
-            <h3>{{ form_label(form.password_title) }}</h3>
-
-            {{ form_row(form.plainPassword) }}
-            {{ form_row(form.passwordConfirm) }}
-        </div>
-    </div>
-{% endif %}
-
-{% if form.changePassword is defined %}
-    <div id="form-changePassword" class="box box-filter">
-        <div class="box-body padding box-form">
-            <div class="form-group">
-                <div class="col-md-8">
-                    {{ form_row(form.changePassword) }}
-                </div>
+    <div id="form-changePassword">
+        <h3 align="center">{{ form_label(form.password_title) }}</h3>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-8">
+                {{ form_row(form.plainPassword) }}
+                {{ form_row(form.passwordConfirm) }}
             </div>
         </div>
     </div>
 {% endif %}
 
-<div class="box box-info">
-    <div class="box-body padding box-form">
+{% if form.changePassword is defined %}
+    <div id="form-changePassword">
+        <div class="form-group">
+            <div class="col-md-8">
+                {{ form_row(form.changePassword) }}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<div class="box box-simple">
+    <div class="box-body box-form">
         {% if singleForm is defined %}
             {{ form_row(child) }}
         {% else %}
             {% set notRequired = false %}
 
-            {% for child in form.children if (child.vars.required is defined and child.vars.required == false) %}
-                {% if child and notRequired == false %}
+            {% for child in form.children if (child.vars.required is defined and child.vars.required == false) and "multiple" not in child.vars.attr.class %}
+                {% if child %}
                     {% set notRequired = true %}
                 {% endif %}
             {% endfor %}
 
+            {% set i = 0 %}
+            {% for child in form.children if ("multiple" in child.vars.attr.class) %}
+                {% if (banFields is defined and child.vars.id not in banFields) or banFields is not defined %}
+                    {% set i = i + 1 %}
+                {% endif %}
+            {% endfor %}
+
             {% if notRequired %}
-                <div class="row">
-                    <div class="col-md-6 right-hr">
-                        <h3 align="center">{{ "form.required"|trans }}</h3>
+                <div class="col-md-6">
+                    <h3 align="center">{{ "form.required"|trans }}</h3>
 
-                        {% for child in form.children if (child.vars.required is defined and child.vars.required == true) %}
-                            {{ form_row(child) }}
-                        {% endfor %}
-                    </div>
-                    <div class="col-md-6">
-                        <h3 align="center">{{ "form.otherFields"|trans }}</h3>
+                    {% for child in form.children if (child.vars.required is defined and child.vars.required == true) and "multiple" not in child.vars.attr.class %}
+                        {{ form_row(child) }}
+                    {% endfor %}
+                </div>
+                <div class="col-md-6 form-right">
+                    <h3 align="center">{{ "form.otherFields"|trans }}</h3>
 
-                        {% for child in form.children if (child.vars.required is defined and child.vars.required == false) %}
-                            {{ form_row(child) }}
-                        {% endfor %}
-                    </div>
+                    {% for child in form.children if (child.vars.required is defined and child.vars.required == false) and "multiple" not in child.vars.attr.class %}
+                        {{ form_row(child) }}
+                    {% endfor %}
                 </div>
             {% else %}
-                {% for child in form.children %}
-                    {{ form_row(child) }}
-                {% endfor %}
+                <div class="col-md-offset-2 col-md-8">
+                    <h3 align="center">{{ "form.required"|trans }}</h3>
+                    {% for child in form.children if (child.vars.required is defined and child.vars.required == true) and "multiple" not in child.vars.attr.class %}
+                        {{ form_row(child) }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if i > 0 %}
+                <div class="col-md-12 form-bottom">
+                    <h3 align="center">{{ "form.manyFields"|trans }}</h3>
+                    <br>
+
+                    {% for child in form.children if ("multiple" in child.vars.attr.class) %}
+                        {% if (banFields is defined and child.vars.id not in banFields) or banFields is not defined %}
+                            {% if loop.first %}
+                                {% if i > 3 %}
+                                    <div class="col-md-4">
+                                {% else %}
+                                    <div class="col-md-offset-2 col-md-8">
+                                {% endif %}
+                            {% endif %}
+
+                            {{ form_row(child) }}
+
+                            {% if (loop.index)%3 == 0 %}
+                                </div>
+
+                                {% if i > 3 %}
+                                    <div class="col-md-4">
+                                {% else %}
+                                    <div class="col-md-offset-2 col-md-8">
+                                {% endif %}
+                            {% endif %}
+
+                            {% if loop.index == i %}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
             {% endif %}
         {% endif %}
-        <hr>
-        <div class="box-footer">
-            <button id="submit" class="btn btn-animate btn-blue {% if confirm is defined %}confirm-submit{% endif %}" type="submit">{{ "form.submit"|trans }}</button>
-            <a href="{{ path('geoks_admin_' ~ namePluralize ~ '_index') }}" class="btn btn-animate btn-warning">{{ "form.cancel"|trans }}</a>
+        <div class="col-md-12">
+            <hr>
+            <div class="box-footer">
+                <button id="submit" class="btn btn-animate btn-blue {% if confirm is defined %}confirm-submit{% endif %}" type="submit">{{ "form.submit"|trans }}</button>
+                <a href="{{ path('geoks_admin_' ~ namePluralize ~ '_index') }}" class="btn btn-animate btn-warning">{{ "form.cancel"|trans }}</a>
+            </div>
         </div>
     </div>
 </div>

@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -27,6 +28,11 @@ class UpdateForm extends AbstractType
      * @var string
      */
     private $entityName;
+
+    /**
+     * @var string
+     */
+    private $reflectionPropertyName;
 
     /**
      * @var boolean
@@ -74,11 +80,11 @@ class UpdateForm extends AbstractType
 
         foreach ($reflection->getProperties() as $reflectionProperty) {
             if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Vich\\UploaderBundle\\Mapping\\Annotation\\UploadableField")) {
+                $this->reflectionPropertyName = $reflectionProperty->name;
+
                 $builder
-                    ->add($reflectionProperty->name, VichFileType::class, [
+                    ->add($this->reflectionPropertyName, FileType::class, [
                         'required' => false,
-                        'allow_delete' => false,
-                        'download_link' => false
                     ])
                 ;
             }

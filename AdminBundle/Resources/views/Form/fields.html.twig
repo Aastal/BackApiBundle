@@ -7,6 +7,13 @@
                     {{ form_widget(form) }}
                     {{ form_errors(form) }}
                 </div>
+            {% elseif 'multiple' in attr.class %}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    {{ form_label(form) }}
+                </div>
+
+                {{ form_widget(form) }}
+                {{ form_errors(form) }}
             {% else %}
                 {% if form.parent.vars.attr.class is defined and 'form-horizontal' in form.parent.vars.attr %}
                     <label class="col-lg-4 col-md-4 col-sm-2 col-xs-6 control-label">
@@ -104,6 +111,11 @@
 
 {% block entity_multiple_widget %}
     {% spaceless %}
+        {% set i = 0 %}
+        {% for child in form if child.vars.checked == 1 %}
+            {% set i = i + 1 %}
+        {% endfor %}
+
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <select title="{{ form.vars.label|trans({}, translation_domain) }}" name="{{ form.vars.name }}" id="{{ form.vars.id }}" class="control-animate">
                 <option value></option>
@@ -114,21 +126,25 @@
         </div>
 
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label class="multiple-label">{{ "form.choiced"|trans }}</label>
+            <div class="form-multiple">
+                <div class="header-multiple">
+                    <label class="selected-multiple">{{ "form.choiced"|trans }} :</label>
+                    <span class="glyphicon glyphicon-chevron-{% if i <= 10 or i == 0 %}up{% else %}down{% endif %} btn-list-display"></span>
+                </div>
 
-            <ul class="multiple">
-                {% for child in form if child.vars.checked == 1 %}
-                    <li>
-                        {{ form_widget(child, { 'attr': { 'hidden': 'hidden' } }) }}
-                        <button role="button" class="btn btn-default btn-list-remove">{{ child.vars.label|trans({}, translation_domain) }}</button>
-                    </li>
-                {% endfor %}
-            </ul>
+                <ul class="multiple" {% if i > 10 %}style="display: none;"{% endif %}>
+                    {% for child in form if child.vars.checked == 1 %}
+                        <li>
+                            {{ form_widget(child, { 'attr': { 'hidden': 'hidden' } }) }}
+                            <button role="button" class="btn btn-default btn-list-remove">{{ child.vars.label|trans({}, translation_domain) }}</button>
+                        </li>
+                    {% endfor %}
+                </ul>
 
-            {{ form_errors(form) }}
+                {{ form_errors(form) }}
+            </div>
         </div>
     {% endspaceless %}
-
 {% endblock entity_multiple_widget %}
 
 {% block vich_file_widget %}

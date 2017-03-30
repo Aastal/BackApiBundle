@@ -22,10 +22,13 @@ form:
   filter: Filtres
   required: Champs requis
   otherFields: Autres champs
+  manyFields: Relations multiples
   submit: Valider
   cancel: Annuler
   choice: Selectionnez une valeur
   choiced: Selectionné(s)
+  display_list: Afficher la liste
+  hide_list: Cacher la liste
   success:
     create: Entitée créée
     update: Entitée modifiée

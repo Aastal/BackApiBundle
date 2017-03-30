@@ -146,9 +146,9 @@ class AppMailer
         if ($this->container->has('app.mailer')) {
             $normalizer = $this->container->get('app.mailer')->getNormalizer($entity, $name);
 
-             if ($normalizer !== null) {
-                 return $normalizer;
-             }
+            if ($normalizer !== null) {
+                return $normalizer;
+            }
         }
 
         switch($name)

@@ -11,6 +11,18 @@ $('.datetimepicker').datetimepicker({
     lang: '{{ locale }}'
 });
 
+$(document).on('click', '.btn-list-display', function () {
+    $(this).parent().parent().find('.multiple').toggle('slide');
+
+    if ($(this).hasClass('glyphicon-chevron-down')) {
+        $(this).removeClass('glyphicon-chevron-down');
+        $(this).addClass('glyphicon-chevron-up');
+    } else {
+        $(this).removeClass('glyphicon-chevron-up');
+        $(this).addClass('glyphicon-chevron-down');
+    }
+});
+
 $('.collapse-link').on("click", function () {
     var chevron = $(this).find('span');
 
@@ -144,6 +156,12 @@ function searchAjax(target, url, text, returnObj) {
             cache: false
         },
         minimumInputLength: 1
+    });
+
+    select2.select2({
+        theme: "bootstrap",
+        placeholder: 'Rechercher...',
+        width: '100%'
     });
 
     select2.on("select2:selecting", function(e) {

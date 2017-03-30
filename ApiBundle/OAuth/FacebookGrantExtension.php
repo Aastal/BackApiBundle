@@ -58,11 +58,15 @@ class FacebookGrantExtension implements GrantExtensionInterface
             $user = $this->entityManager->getRepository($userRepository)->findOneByFacebookUid($me->getId());
 
             if ($user) {
+                if (!$user->getFacebookUid()) {
+                    $user->setFacebookUid($me->getId());
+                }
+
                 if (!$user->getFacebookName()) {
                     $user->setFacebookName($me->getName());
-
-                    $this->entityManager->flush();
                 }
+
+                $this->entityManager->flush();
 
                 return $user;
             }

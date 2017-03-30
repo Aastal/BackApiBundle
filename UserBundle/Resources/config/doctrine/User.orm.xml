@@ -7,11 +7,18 @@
 
     <mapped-superclass name="Geoks\UserBundle\Entity\User" table="users">
 
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="prePersist"/>
+            <lifecycle-callback type="postPersist" method="preUpdate"/>
+        </lifecycle-callbacks>
+
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
 
         <!-- Datetime -->
+        <field name="created" type="datetime" column="created" nullable="false"/>
+        <field name="updated" type="datetime" column="updated" nullable="false"/>
         <field name="dateOfBirth" column="date_of_birth" type="datetime" nullable="true" />
 
         <!-- Text -->
