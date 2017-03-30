@@ -17,8 +17,8 @@
         </id>
 
         <!-- Datetime -->
-        <field name="created" type="datetime" column="created" nullable="false"/>
-        <field name="updated" type="datetime" column="updated" nullable="false"/>
+        <field name="created" type="datetime" column="created" nullable="true"/>
+        <field name="updated" type="datetime" column="updated" nullable="true"/>
         <field name="dateOfBirth" column="date_of_birth" type="datetime" nullable="true" />
 
         <!-- Text -->
