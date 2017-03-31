@@ -2,7 +2,6 @@
 
 body {
   font-family: "Roboto Regular", sans-serif;
-  background-color: $background-color;
 }
 
 input:focus,
@@ -338,8 +337,8 @@ h1 {
     position: absolute;
     top: rem(-1.5);
     left: 1.7rem;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.7rem;
+    height: 1.7rem;
     background: #fff;
     cursor: pointer;
   }
