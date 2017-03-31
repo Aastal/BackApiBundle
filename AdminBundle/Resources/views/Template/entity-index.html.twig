@@ -61,7 +61,7 @@
                                                 {% elseif field == 'true' %}
                                                     {{ "app.yes"|trans }}
                                                 {% else %}
-                                                    {{ field }}
+                                                    {{ field|trans({}, name|lower) }}
                                                 {% endif %}
                                             {% else %}
                                                 <label class="label label-default">{{ "app.noData"|trans }}</label>
