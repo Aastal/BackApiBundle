@@ -199,8 +199,10 @@ class Serializer
             foreach ($meta as $m) {
 
                 /** @var ClassMetadata $m */
-                $pos = strpos($m->getName(), "FOS");
-                if ($pos === false) {
+                $pos = strpos($m->getName(), "FOS\\UserBundle\\Model\\User");
+                $pos2 = strpos($m->getName(), "Geoks\\UserBundle\\Entity\\User");
+
+                if ($pos === false && $pos2 === false) {
                     $reflections[] = $m->getReflectionClass();
                 }
             }

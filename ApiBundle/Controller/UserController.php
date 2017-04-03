@@ -3,6 +3,7 @@
 namespace Geoks\ApiBundle\Controller;
 
 use Geoks\ApiBundle\Form\Security\ChangePasswordForm;
+use Geoks\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -197,14 +198,19 @@ abstract class UserController extends ApiController
         return $this->serializeResponse($form, Response::HTTP_BAD_REQUEST);
     }
 
-    public function delete($id)
+    public function delete($id = null)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository($this->userRepository)->find($id);
+
+        if (!$id) {
+            $user = $em->getRepository($this->userRepository)->find($this->getUser()->getId());
+        } else {
+            $user = $em->getRepository($this->userRepository)->find($id);
+        }
 
         if (!$user) {
             return $this->serializeResponse("geoks.user.notFound", Response::HTTP_NOT_FOUND);
@@ -220,6 +226,37 @@ abstract class UserController extends ApiController
         $em->flush();
 
         return $this->serializeResponse("geoks.user.deleted");
+    }
+
+    public function disabledAction($id = null)
+    {
+        if (!$this->getUser()) {
+            return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        if (!$id) {
+            /** @var User $user */
+            $user = $em->getRepository($this->userRepository)->find($this->getUser()->getId());
+        } else {
+            $user = $em->getRepository($this->userRepository)->find($id);
+        }
+
+        if (!$user) {
+            return $this->serializeResponse("geoks.user.notFound", Response::HTTP_NOT_FOUND);
+        }
+
+        if ($this->getUser() != $user) {
+            if (!$this->isGranted('ROLE_ADMIN')) {
+                return $this->serializeResponse("geoks.user.forbidden", Response::HTTP_FORBIDDEN);
+            }
+        }
+
+        $user->setEnabled(false);
+        $em->flush();
+
+        return $this->serializeResponse("geoks.user.disabled");
     }
 
     public function changeUserPasswordAction(Request $request)
