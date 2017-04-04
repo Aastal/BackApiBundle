@@ -93,6 +93,38 @@ class Serializer
     }
 
     /**
+     * @param $data
+     * @return array
+     */
+    public function simpleSerializeData($data)
+    {
+        $results = [];
+
+        switch ($data)
+        {
+            case is_array($data):
+                foreach ($data as $key => $value) {
+                    $this->key = $key;
+
+                    if ($value instanceof ArrayCollection) {
+                        $results += $this->getArrayValue($key, $value->getValues());
+                    } else {
+                        $results += $this->getArrayValue($key, $value);
+                    }
+                }
+                break;
+            case is_object($data):
+                $results += $this->getArrayValue(key($data), $data);
+                break;
+            default:
+                $results = ['data' => $data];
+                break;
+        }
+
+        return $results;
+    }
+
+    /**
      * @param $value
      * @return string
      */
