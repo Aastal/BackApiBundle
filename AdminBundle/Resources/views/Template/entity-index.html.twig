@@ -36,45 +36,47 @@
                             </thead>
                             <tbody>
                             {% for entity in entities %}
-                                <tr>
-                                    {% for field in fields %}
-                                        <td>
-                                            {% if '.' in field %}
-                                                {% set field = field|split('.') %}
+                                {% if (entity.roles is defined and 'ROLE_SUPER_ADMIN' not in entity.roles) or entity.roles is not defined %}
+                                    <tr>
+                                        {% for field in fields %}
+                                            <td>
+                                                {% if '.' in field %}
+                                                    {% set field = field|split('.') %}
 
-                                                {% set fieldName = class(field[0])|lower %}
-                                                {% set fieldEntity = attribute(entity, fieldName) %}
+                                                    {% set fieldName = class(field[0])|lower %}
+                                                    {% set fieldEntity = attribute(entity, fieldName) %}
 
-                                                {% set field = field[1]|replace({'_': ""}) %}
-                                            {% else  %}
-                                                {% set fieldEntity = entity %}
-                                                {% set field = field|replace({'_': ""}) %}
-                                            {% endif %}
-
-                                            {% if attribute(fieldEntity, field) is defined and attribute(fieldEntity, field) %}
-                                                {% set field = attribute(fieldEntity, field) %}
-
-                                                {% if field is iterable %}
-                                                    {{ field|length }}
-                                                {% elseif field.timestamp is defined %}
-                                                    {{ field|date('d/m/Y H:i:s') }}
-                                                {% elseif field == 'true' %}
-                                                    {{ "app.yes"|trans }}
-                                                {% else %}
-                                                    {{ field|trans({}, name|lower) }}
+                                                    {% set field = field[1]|replace({'_': ""}) %}
+                                                {% else  %}
+                                                    {% set fieldEntity = entity %}
+                                                    {% set field = field|replace({'_': ""}) %}
                                                 {% endif %}
-                                            {% else %}
-                                                <label class="label label-default">{{ "app.noData"|trans }}</label>
-                                            {% endif %}
-                                        </td>
-                                    {% endfor %}
 
-                                    <td>
-                                        <a class="btn btn-animate btn-info" href="{{ path('geoks_admin_' ~ namePluralize ~ '_show', {'id': entity.id}) }}">Voir</a>
-                                        <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_update', {'id': entity.id}) }}">Modifier</a>
-                                        <a class="btn btn-animate btn-danger" href="{{ path('geoks_admin_' ~ namePluralize ~ '_delete', {'id': entity.id}) }}">Supprimer</a>
-                                    </td>
-                                </tr>
+                                                {% if attribute(fieldEntity, field) is defined and attribute(fieldEntity, field) %}
+                                                    {% set field = attribute(fieldEntity, field) %}
+
+                                                    {% if field is iterable %}
+                                                        {{ field|length }}
+                                                    {% elseif field.timestamp is defined %}
+                                                        {{ field|date('d/m/Y H:i:s') }}
+                                                    {% elseif field == 'true' %}
+                                                        {{ "app.yes"|trans }}
+                                                    {% else %}
+                                                        {{ field|trans({}, name|lower) }}
+                                                    {% endif %}
+                                                {% else %}
+                                                    <label class="label label-default">{{ "app.noData"|trans }}</label>
+                                                {% endif %}
+                                            </td>
+                                        {% endfor %}
+
+                                        <td>
+                                            <a class="btn btn-animate btn-info" href="{{ path('geoks_admin_' ~ namePluralize ~ '_show', {'id': entity.id}) }}">Voir</a>
+                                            <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_update', {'id': entity.id}) }}">Modifier</a>
+                                            <a class="btn btn-animate btn-danger" href="{{ path('geoks_admin_' ~ namePluralize ~ '_delete', {'id': entity.id}) }}">Supprimer</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
                             {% endfor %}
                             </tbody>
                         {% else %}
