@@ -62,7 +62,7 @@ class EntityUserProvider extends BaseClass
             ));
         } catch (\Exception $exception)
         {
-            $this->container->get('monolog.logger_prototype')->addAlert('No Client Table');
+            $this->container->get('monolog.logger.doctrine')->error('No Client Table');
         }
 
         $this->session = $session;
