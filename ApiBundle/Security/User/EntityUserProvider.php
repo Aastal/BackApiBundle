@@ -54,9 +54,16 @@ class EntityUserProvider extends BaseClass
         parent::__construct($userManager, $class, $properties);
 
         $this->container = $container;
-        $this->client = $this->em->getRepository('GeoksApiBundle:Client')->findOneBy(array(
-            'secret' => $this->container->getParameter('api_client_secret')
-        ));
+
+        try
+        {
+            $this->client = $this->em->getRepository('GeoksApiBundle:Client')->findOneBy(array(
+                'secret' => $this->container->getParameter('api_client_secret')
+            ));
+        } catch (\Exception $exception)
+        {
+            $this->container->get('monolog.logger_prototype')->addAlert('No Client Table');
+        }
 
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
