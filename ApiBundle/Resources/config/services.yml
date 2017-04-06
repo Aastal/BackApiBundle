@@ -5,6 +5,12 @@ parameters:
     stripe.public.key: null
     stripe.private.key: null
 
+    amazon.s3.version: null
+    amazon.s3.region: null
+    amazon.s3.key: null
+    amazon.s3.secret: null
+    amazon.s3.bucket: null
+
 services:
     geoks.utils.string_manager:
         class: Geoks\ApiBundle\Utils\StringUtils
@@ -58,3 +64,24 @@ services:
     geoks.api.stripe:
         class: Geoks\ApiBundle\Services\StripePayment
         arguments: [ "%stripe.private.key%", "%stripe.public.key%" ]
+
+    geoks.aws_s3.client:
+        class: Aws\S3\S3Client
+        factory: [Aws\S3\S3Client, 'factory']
+        arguments:
+            -
+              version: "%amazon.s3.version%"
+              region: "%amazon.s3.region%"
+              credentials: "@geoks.aws_s3.credentials"
+
+    geoks.aws_s3.credentials:
+        class: Aws\Credentials\Credentials
+        arguments: ["%amazon.s3.key%", "%amazon.s3.secret%"]
+
+    geoks.imagine.cache.resolver.amazon_s3:
+        class: Liip\ImagineBundle\Imagine\Cache\Resolver\AwsS3Resolver
+        arguments:
+            - "@geoks.aws_s3.client"
+            - "%amazon.s3.bucket%"
+        tags:
+            - { name: "liip_imagine.cache.resolver", resolver: "amazon_s3" }
