@@ -111,7 +111,7 @@ class Serializer
                     $name = $this->entityReflection->getShortName();
                     $name = strtolower($this->container->get('geoks.api.pluralization')->pluralize($name));
                 } else {
-                    $this->entityReflection = new \ReflectionClass($value);
+                    $this->entityReflection = new \ReflectionClass(reset($value));
                     $name = $this->entityReflection->getShortName();
                     $name = strtolower($name . "s");
                 }
