@@ -6,6 +6,10 @@ app:
   logout: Se déconnecter
   user: Utilisateur
   users: Utilisateurs
+  question: Question
+  questions: Questions
+  comment: Commentaire
+  comments: Commentaires
   index: Accueil
   export: Exporter
   last_users: Derniers utilisateurs

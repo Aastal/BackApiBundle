@@ -85,3 +85,8 @@ services:
             - "%amazon.s3.bucket%"
         tags:
             - { name: "liip_imagine.cache.resolver", resolver: "amazon_s3" }
+
+    geoks.entity_pre_persist:
+        class: Geoks\ApiBundle\EventListener\Base64HandleSubscriber
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }

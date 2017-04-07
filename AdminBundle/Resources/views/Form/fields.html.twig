@@ -19,20 +19,24 @@
                     <label class="col-lg-4 col-md-4 col-sm-2 col-xs-6 control-label">
                         {{ form_label(form) }}
                     </label>
+
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
                         {{ form_widget(form) }}
                         <span class="highlight"></span>
                         <span class="bar"></span>
+
                         {{ form_errors(form) }}
                     </div>
                 {% else %}
                     <label class="col-lg-6 col-md-6 col-sm-6 col-xs-6 control-label">
                         {{ form_label(form) }}
                     </label>
+
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
                         {{ form_widget(form) }}
                         <span class="highlight"></span>
                         <span class="bar"></span>
+
                         {{ form_errors(form) }}
                     </div>
                 {% endif %}
@@ -84,11 +88,13 @@
 {% block form_errors %}
     {% spaceless %}
         {% if errors|length > 0 %}
-            <ul>
-                {% for error in errors %}
-                    <li>{{ error.cause.propertyPath }} : {{ error.message|trans }}</li>
-                {% endfor %}
-            </ul>
+            <div class="form-error">
+                <ul>
+                    {% for error in errors %}
+                        <li>{{ error.cause.propertyPath }} : {{ error.message|trans }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
     {% endspaceless %}
 {% endblock form_errors %}
