@@ -31,7 +31,7 @@ class CreateForm extends AbstractType
     /**
      * @var string
      */
-    private $reflectionPropertyName;
+    private $field;
 
     /**
      * @param FormBuilderInterface $builder
@@ -54,23 +54,34 @@ class CreateForm extends AbstractType
             if ($field["type"] != 'array' && !in_array($name, $banList)) {
                 $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);
 
-                if ((isset($field["nullable"]) && $field["nullable"]) && $field["type"] != 'datetime' || $field["type"] == 'boolean') {
+                if ((isset($field["nullable"]) && $field["nullable"])) {
                     $typeOptions['options']['required'] = false;
                 } else {
                     $typeOptions['options']['required'] = true;
                 }
 
                 $builder->add($name, $typeOptions['type'], $typeOptions['options']);
+
+                if ($field["type"] == 'boolean') {
+                    $this->field = $field;
+
+                    $builder
+                        ->get($name)
+                        ->addEventListener(FormEvents::SUBMIT, function(FormEvent $event) {
+                            if ($this->field['options']['default']) {
+                                $event->setData($this->field['options']['default']);
+                            }
+                        }
+                    );
+                }
             }
         }
 
         foreach ($reflection->getProperties() as $reflectionProperty) {
             if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Vich\\UploaderBundle\\Mapping\\Annotation\\UploadableField")) {
-                $this->reflectionPropertyName = $reflectionProperty->name;
-
                 $builder
-                    ->add($this->reflectionPropertyName, FileType::class, [
-                        'required' => false,
+                    ->add($reflectionProperty->name, FileType::class, [
+                        'required' => false
                     ])
                 ;
             }

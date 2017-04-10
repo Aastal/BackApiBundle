@@ -90,7 +90,7 @@ class EntityFields
                 $r['type'] = CheckboxType::class;
                 $r['options'] = [
                     'label' => $fieldName,
-                    'required' => false,
+                    'required' => true,
                     'attr' => [
                         'class' => 'checkbox-animate'
                     ]
@@ -102,6 +102,7 @@ class EntityFields
                 $r['options'] = [
                     'label' => $fieldName,
                     'widget' => 'single_text',
+                    'required' => false,
                     'format' => 'dd/MM/yyyy HH:mm',
                     'attr' => [
                         'class' => 'control-animate datetimepicker'
