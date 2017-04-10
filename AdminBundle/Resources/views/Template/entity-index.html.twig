@@ -61,6 +61,8 @@
                                                         {{ field|date('d/m/Y H:i:s') }}
                                                     {% elseif field == 'true' %}
                                                         {{ "app.yes"|trans }}
+                                                    {% elseif field == 'false' %}
+                                                        {{ "app.no"|trans }}
                                                     {% else %}
                                                         {{ field|trans({}, name|lower) }}
                                                     {% endif %}

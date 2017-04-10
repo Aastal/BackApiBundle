@@ -1,6 +1,7 @@
 app:
   yes: Oui
   no: Non
+  noCare: Peu importe
   noData: Aucune donnée
   login: Se connecter
   logout: Se déconnecter

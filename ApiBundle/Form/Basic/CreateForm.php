@@ -72,18 +72,20 @@ class CreateForm extends AbstractType
                                 $event->setData($this->field['options']['default']);
                             }
                         }
-                    );
+                        );
                 }
             }
         }
 
-        foreach ($reflection->getProperties() as $reflectionProperty) {
-            if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Vich\\UploaderBundle\\Mapping\\Annotation\\UploadableField")) {
-                $builder
-                    ->add($reflectionProperty->name, FileType::class, [
-                        'required' => false
-                    ])
-                ;
+        if ($reader->getClassAnnotation($reflection, "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
+            foreach ($reflection->getProperties() as $reflectionProperty) {
+                if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Vich\\UploaderBundle\\Mapping\\Annotation\\UploadableField")) {
+                    $builder
+                        ->add($reflectionProperty->name, FileType::class, [
+                            'required' => false
+                        ])
+                    ;
+                }
             }
         }
 
