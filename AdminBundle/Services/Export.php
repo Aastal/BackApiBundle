@@ -2,6 +2,7 @@
 
 namespace Geoks\AdminBundle\Services;
 
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -64,16 +65,23 @@ class Export
                     } else {
                         $values[] = 0;
                     }
+                } elseif (!$value) {
+                    $values[] = $this->container->get('translator')->trans('geoks.data.empty');
                 } elseif ($value instanceof \DateTime) {
                     $values[] = $value->format('d/m/Y H:i:s');
                 } elseif (is_array($value)) {
                     $values[] = implode(',', $value);
-                } elseif ($value === NULL) {
-                    $values[] = $this->container->get('translator')->trans('geoks.data.empty');
+                } elseif ($value instanceof PersistentCollection) {
+                    if (isset($value->toArray()[0])) {
+                        $values[] = implode(",", $value->toArray());
+                    } else {
+                        $values[] = $this->container->get('translator')->trans('geoks.data.empty');
+                    }
                 } else {
-                    $values[] = $value;
+                    $values[] = (string) $value;
                 }
             }
+
             fputcsv($handle, $values, ";");
         }
 
