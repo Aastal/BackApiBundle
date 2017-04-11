@@ -249,7 +249,7 @@ abstract class SecurityController extends ApiController
 
                 $em->flush();
 
-                return $this->serializeResponse($user);
+                return $this->serializeResponse(["details" => $user]);
             }
 
             return $this->serializeResponse($form, Response::HTTP_BAD_REQUEST);
