@@ -14,6 +14,7 @@ app:
   index: Accueil
   export: Exporter
   last_users: Derniers utilisateurs
+  admin-panel: Admin Panel
   fields:
     id: ID
   show:

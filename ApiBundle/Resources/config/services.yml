@@ -90,3 +90,9 @@ services:
         class: Geoks\ApiBundle\EventListener\Base64HandleSubscriber
         tags:
             - { name: doctrine.event_subscriber, connection: default }
+
+    geoks.entity_subscriber:
+        class: Geoks\ApiBundle\EventListener\EntitySubscriber
+        arguments: ["@service_container"]
+        tags:
+            - { name: jms_serializer.event_subscriber }
