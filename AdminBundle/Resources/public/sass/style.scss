@@ -22,6 +22,31 @@ select:focus {
   }
 }
 
+#loader {
+  display: none;
+  margin: 30px auto;
+}
+
+#loader-container {
+  display: none;
+  background-color: rgba(0, 0, 0, .3);
+  z-index: 9999;
+}
+
+.loader-all {
+  position: fixed;
+  display: block;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+
+  #loader {
+    margin: 20% auto;
+  }
+}
+
 h5,
 h4,
 h3,
