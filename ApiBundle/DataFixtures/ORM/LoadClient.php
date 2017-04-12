@@ -27,48 +27,44 @@ class LoadClient extends AbstractFixture implements OrderedFixtureInterface , Co
     public function load(ObjectManager $manager)
     {
         $name = $this->container->getParameter('geoks_admin.app_name');
-        $client = $manager->getRepository('GeoksApiBundle:Client')->findOneBy(['name' => $name]);
 
-        if (!$client) {
+        $redirect = $this->container->getParameter('base_url');
+        $grants = ["password", "refresh_token", $this->container->getParameter('facebook_grant_type')];
+        $root = $this->container->getParameter('kernel.root_dir');
 
-            $redirect = $this->container->getParameter('base_url');
-            $grants = ["password", "refresh_token", $this->container->getParameter('facebook_grant_type')];
-            $root = $this->container->getParameter('kernel.root_dir');
+        $parameters = [$root . '/config/parameters.yml', $root . '/config/parameters.yml.dist'];
 
-            $parameters = [$root . '/config/parameters.yml', $root . '/config/parameters.yml.dist', $root . '/config/parameters.aws.yml'];
+        $clientManager = $this->container->get('fos_oauth_server.client_manager.default');
 
-            $clientManager = $this->container->get('fos_oauth_server.client_manager.default');
+        $client = $clientManager->createClient();
 
-            $client = $clientManager->createClient();
+        $client->setName($name);
+        $client->setRedirectUris([$redirect]);
+        $client->setAllowedGrantTypes($grants);
 
-            $client->setName($name);
-            $client->setRedirectUris([$redirect]);
-            $client->setAllowedGrantTypes($grants);
+        $manager->persist($client);
+        $manager->flush();
 
-            $manager->persist($client);
-            $manager->flush();
+        $dumper = new Dumper();
+        $yaml = new Parser();
 
-            $dumper = new Dumper();
-            $yaml = new Parser();
+        foreach ($parameters as $parameter) {
+            $array = $yaml->parse(file_get_contents($parameter));
 
-            foreach ($parameters as $parameter) {
-                $array = $yaml->parse(file_get_contents($parameter));
+            foreach ($array as &$a) {
+                foreach ($a as $key => &$value) {
+                    if ($key == "api_client_id") {
+                        $value = $client->getPublicId();
+                    }
 
-                foreach ($array as &$a) {
-                    foreach ($a as $key => &$value) {
-                        if ($key == "api_client_id") {
-                            $value = $client->getPublicId();
-                        }
-
-                        if ($key == "api_client_secret") {
-                            $value = $client->getSecret();
-                        }
+                    if ($key == "api_client_secret") {
+                        $value = $client->getSecret();
                     }
                 }
-
-                $data = $dumper->dump($array, 4);
-                file_put_contents($parameter, $data);
             }
+
+            $data = $dumper->dump($array, 4);
+            file_put_contents($parameter, $data);
         }
     }
 
