@@ -61,10 +61,15 @@ class EntityFields
         $rows = $cm->getAssociationNames();
 
         foreach ($rows as $row) {
-            $findDatas = $this->em->getRepository($cm->getAssociationTargetClass($row))->findAll();
+            $targetClass = $cm->getAssociationTargetClass($row);
+            $reflection = new \ReflectionClass($targetClass);
 
-            if (count($findDatas) > 0) {
-                $rowAssos[$row] = $cm->getAssociationMapping($row);
+            if (!$reflection->isAbstract()) {
+                $findDatas = $this->em->getRepository($targetClass)->findAll();
+
+                if (count($findDatas) > 0) {
+                    $rowAssos[$row] = $cm->getAssociationMapping($row);
+                }
             }
         }
 

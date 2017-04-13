@@ -162,7 +162,7 @@ abstract class SecurityController extends ApiController
 
             if (!$user) {
                 return $this->serializeResponse([
-                    "user" => false
+                    "success" => false
                 ]);
             }
 

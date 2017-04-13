@@ -60,16 +60,18 @@ class EntitySubscriber implements EventSubscriberInterface
             if ($reader->getClassAnnotation($classReflection, "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
                 foreach ($classReflection->getProperties() as $reflectionProperty) {
                     if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\FilePath")) {
-
                         $value = $entity->{'get' . $reflectionProperty->name}();
-                        $path = $annotation->path;
-                        $vichMappings = $this->container->getParameter('vich_uploader.mappings');
 
-                        $entity->{'set' . $reflectionProperty->name}(
-                            $vichMappings[$path]["uri_prefix"] .
-                            '/' .
-                            $this->container->get('geoks.utils.string_manager')->getEndOfString("/", $value)
-                        );
+                        if ($value) {
+                            $path = $annotation->path;
+                            $vichMappings = $this->container->getParameter('vich_uploader.mappings');
+
+                            $entity->{'set' . $reflectionProperty->name}(
+                                $vichMappings[$path]["uri_prefix"] .
+                                '/' .
+                                $this->container->get('geoks.utils.string_manager')->getEndOfString("/", $value)
+                            );
+                        }
                     }
                 }
             }
