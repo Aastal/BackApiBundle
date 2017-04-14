@@ -68,11 +68,10 @@ class CreateForm extends AbstractType
                     $builder
                         ->get($name)
                         ->addEventListener(FormEvents::SUBMIT, function(FormEvent $event) {
-                            if ($this->field['options']['default']) {
+                            if (isset($this->field['options']['default'])) {
                                 $event->setData($this->field['options']['default']);
                             }
-                        }
-                        );
+                        });
                 }
             }
         }
