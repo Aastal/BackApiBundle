@@ -1,20 +1,32 @@
 app:
   yes: Oui
   no: Non
+  noCare: Peu importe
   noData: Aucune donnée
   login: Se connecter
   logout: Se déconnecter
   user: Utilisateur
   users: Utilisateurs
+  question: Question
+  questions: Questions
+  comment: Commentaire
+  comments: Commentaires
   index: Accueil
   export: Exporter
   last_users: Derniers utilisateurs
+  admin-panel: Admin Panel
+  return_admin_page: Retourner à la page d'administration
+  entities_list: Liste des entitées
   fields:
     id: ID
   show:
     attributes: Liste des attributs
     associations: Liste des relations
     return: Revenir à l'index
+
+admin:
+  properties: Propriétées
+  properties_groups: Groupes de sérialisation
 
 form:
   search: Rechercher
@@ -50,3 +62,5 @@ user:
 
 Previous: Précédent
 Next: Suivant
+
+geoks.data.empty: x

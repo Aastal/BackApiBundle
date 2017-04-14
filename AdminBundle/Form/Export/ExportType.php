@@ -3,8 +3,10 @@
 namespace Geoks\AdminBundle\Form\Export;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -29,6 +31,9 @@ class ExportType extends AbstractType
         $container = $options["service_container"];
         $table = $options["class"];
 
+        /** @var Translator $translator */
+        $translator = $container->get('translator');
+
         $banList = $container->get('geoks_admin.entity_fields')->fieldsBanList();
 
         $this->entityName = strtolower($container->get('geoks_admin.entity_fields')->getEntityName($table));
@@ -47,8 +52,21 @@ class ExportType extends AbstractType
             if ($field["type"] != 'array' && !in_array($name, $banList)) {
                 $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);
 
-                $builder
-                    ->add($name, $typeOptions['type'], $typeOptions['options']);
+                if ($field["type"] == 'boolean') {
+                    $typeOptions['type'] = ChoiceType::class;
+
+                    $typeOptions['options']['attr'] = [
+                        'class' => 'control-animate'
+                    ];
+
+                    $typeOptions['options']['choices'] = [
+                        null => $translator->trans("app.noCare"),
+                        1 => $translator->trans("app.yes"),
+                        0 => $translator->trans("app.no")
+                    ];
+                }
+
+                $builder->add($name, $typeOptions['type'], $typeOptions['options']);
             }
         }
 

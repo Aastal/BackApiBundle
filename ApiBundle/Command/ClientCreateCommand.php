@@ -30,11 +30,14 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $clientManager = $this->getContainer()->get('fos_oauth_server.client_manager.default');
+
         $client = $clientManager->createClient();
         $client->setName($input->getArgument('name'));
         $client->setRedirectUris($input->getOption('redirect-uri'));
         $client->setAllowedGrantTypes($input->getOption('grant-type'));
+
         $clientManager->updateClient($client);
+
         $output->writeln(sprintf('Added a new client with name <info>%s</info>, public id <info>%s</info> and secret key <info>%s</info>.', $client->getName(), $client->getPublicId(), $client->getSecret()));
     }
 }

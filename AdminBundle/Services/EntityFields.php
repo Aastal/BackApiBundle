@@ -61,10 +61,15 @@ class EntityFields
         $rows = $cm->getAssociationNames();
 
         foreach ($rows as $row) {
-            $findDatas = $this->em->getRepository($cm->getAssociationTargetClass($row))->findAll();
+            $targetClass = $cm->getAssociationTargetClass($row);
+            $reflection = new \ReflectionClass($targetClass);
 
-            if (count($findDatas) > 0) {
-                $rowAssos[$row] = $cm->getAssociationMapping($row);
+            if (!$reflection->isAbstract()) {
+                $findDatas = $this->em->getRepository($targetClass)->findAll();
+
+                if (count($findDatas) > 0) {
+                    $rowAssos[$row] = $cm->getAssociationMapping($row);
+                }
             }
         }
 
@@ -90,7 +95,7 @@ class EntityFields
                 $r['type'] = CheckboxType::class;
                 $r['options'] = [
                     'label' => $fieldName,
-                    'required' => false,
+                    'required' => true,
                     'attr' => [
                         'class' => 'checkbox-animate'
                     ]
@@ -102,6 +107,7 @@ class EntityFields
                 $r['options'] = [
                     'label' => $fieldName,
                     'widget' => 'single_text',
+                    'required' => false,
                     'format' => 'dd/MM/yyyy HH:mm',
                     'attr' => [
                         'class' => 'control-animate datetimepicker'

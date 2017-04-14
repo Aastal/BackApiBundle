@@ -7,9 +7,11 @@ use Doctrine\ORM\EntityManager;
 use Geoks\AdminBundle\Form\Custom\EntityMultipleType;
 use Geoks\AdminBundle\Form\Custom\HrType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -44,6 +46,9 @@ class UpdateForm extends AbstractType
         $container = $options["service_container"];
         $table = $options["data_class"];
 
+        /** @var Translator $translator */
+        $translator = $container->get('translator');
+
         $reader = new AnnotationReader();
         $reflection = new \ReflectionClass($table);
         $banList = $container->get('geoks_admin.entity_fields')->fieldsBanList();
@@ -69,23 +74,39 @@ class UpdateForm extends AbstractType
                     $typeOptions['options']['required'] = true;
                 }
 
+                if ($reader->getClassAnnotation($reflection, "Geoks\\AdminBundle\\Annotation\\HasChoiceField")) {
+                    foreach ($reflection->getProperties() as $reflectionProperty) {
+                        if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\AdminBundle\\Annotation\\ChoiceList")) {
+                            if ($name == $reflectionProperty->name) {
+                                $typeOptions['type'] = ChoiceType::class;
+
+                                foreach ($annotation->choices as $choice) {
+                                    $typeOptions['options']['choices'][$choice] = $translator->trans($choice);
+                                }
+                            }
+                        }
+                    }
+                }
+
                 $builder->add($name, $typeOptions['type'], $typeOptions['options']);
             }
         }
 
-        foreach ($reflection->getProperties() as $reflectionProperty) {
-            if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Vich\\UploaderBundle\\Mapping\\Annotation\\UploadableField")) {
-                $builder
-                    ->add($reflectionProperty->name, VichFileType::class, [
-                        'label' => $this->entityName . '.' . $reflectionProperty->name,
-                        'required' => false,
-                        'allow_delete' => true,
-                        'download_link' => true,
-                        'attr' => [
-                            'class' => 'control-animate'
-                        ]
-                    ])
-                ;
+        if ($reader->getClassAnnotation($reflection, "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
+            foreach ($reflection->getProperties() as $reflectionProperty) {
+                if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Vich\\UploaderBundle\\Mapping\\Annotation\\UploadableField")) {
+                    $builder
+                        ->add($reflectionProperty->name, VichFileType::class, [
+                            'label' => $this->entityName . '.' . $reflectionProperty->name,
+                            'required' => false,
+                            'allow_delete' => true,
+                            'download_link' => true,
+                            'attr' => [
+                                'class' => 'control-animate'
+                            ]
+                        ])
+                    ;
+                }
             }
         }
 

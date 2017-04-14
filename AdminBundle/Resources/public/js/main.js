@@ -1,3 +1,8 @@
+$(".scroll").click(function(event) {
+    event.preventDefault();
+    $('html,body').animate({scrollTop: $(this.hash).offset().top - 100}, 800);
+});
+
 $('.btn-danger').on('click', function () {
     return confirm("Voulez-vous vraiment supprimer ?");
 });
@@ -182,3 +187,36 @@ function searchAjax(target, url, text, returnObj) {
         $(this).parent().remove();
     });
 }
+
+var loader = $("#loader");
+var container = $("#box-data");
+
+$(document).on('click', 'ul.pagination li a', function (e) {
+    e.preventDefault();
+
+    var url = $(this).attr("href");
+
+    container.html(loader.css('display', 'block'));
+
+    $.ajax({
+        url: url,
+        method: "GET",
+
+        success: function (html) {
+            $("#loader").hide();
+            window.history.pushState(container.html(), "", url);
+
+            container.html($(html).find("#box-data"));
+            $("body").append(loader);
+            $("#pagination").html($(html).find("#pagination"));
+
+        }
+    });
+});
+
+window.addEventListener('popstate', function() {
+    loader.css('display', 'block');
+    $("#loader-container").css('display', 'block').addClass('loader-all');
+
+    window.location.reload();
+});

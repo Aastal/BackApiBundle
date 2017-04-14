@@ -78,15 +78,17 @@ class UpdateForm extends AbstractType
             }
         }
 
-        foreach ($reflection->getProperties() as $reflectionProperty) {
-            if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Vich\\UploaderBundle\\Mapping\\Annotation\\UploadableField")) {
-                $this->reflectionPropertyName = $reflectionProperty->name;
+        if ($reader->getClassAnnotation($reflection, "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
+            foreach ($reflection->getProperties() as $reflectionProperty) {
+                if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Vich\\UploaderBundle\\Mapping\\Annotation\\UploadableField")) {
+                    $this->reflectionPropertyName = $reflectionProperty->name;
 
-                $builder
-                    ->add($this->reflectionPropertyName, FileType::class, [
-                        'required' => false,
-                    ])
-                ;
+                    $builder
+                        ->add($this->reflectionPropertyName, FileType::class, [
+                            'required' => false,
+                        ])
+                    ;
+                }
             }
         }
 

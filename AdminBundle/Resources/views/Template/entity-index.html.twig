@@ -4,18 +4,21 @@
 <div class="row">
     {{ include('GeoksAdminBundle:Form:filter.html.twig', {'form' : filter_form}) }}
 </div>
+
 <div class="resultNb">
     <span class="badge">{{ numberOfResults }} résultats</span>
 </div>
+
 <hr>
 <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_create') }}">Ajouter</a>
+
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="box box-info">
             <div class="box-header">
                 <h3 class="box-title">{{ ('app.' ~ namePluralize)|trans }}</h3>
             </div>
-            <div class="box-body">
+            <div id="box-data" class="box-body">
                 <div class="table-responsive">
                     <table class="table no-margin">
                         {% if entities|length %}
@@ -61,6 +64,8 @@
                                                         {{ field|date('d/m/Y H:i:s') }}
                                                     {% elseif field == 'true' %}
                                                         {{ "app.yes"|trans }}
+                                                    {% elseif field == 'false' %}
+                                                        {{ "app.no"|trans }}
                                                     {% else %}
                                                         {{ field|trans({}, name|lower) }}
                                                     {% endif %}
@@ -89,8 +94,9 @@
         </div>
     </div>
 </div>
+
 <div class="row">
-    <div class="col-md-12 text-center">
+    <div id="pagination" class="col-md-12 text-center">
         {{ knp_pagination_render(entities) }}
     </div>
 </div>
