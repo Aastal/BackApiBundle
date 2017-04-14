@@ -23,16 +23,15 @@ class StripePayment
 
     /**
      * @param string $email
-     * @param array $card
+     * @param integer $token
      * @return null|string
      */
-    public function saveCard($email, $card)
+    public function saveCard($email, $token)
     {
         try {
-            $token = Token::create(['card' => $card]);
             $user = Customer::create(array(
                 "email" => $email,
-                "source" => $token,
+                "source" => $token
             ));
 
             $user = $user->id;
