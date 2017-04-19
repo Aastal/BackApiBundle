@@ -150,6 +150,8 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
     public function indexAction(Request $request)
     {
+        $namePluralize = $this->get("geoks.api.pluralization")->pluralize(lcfirst($this->className));
+        $router = $this->container->get('router');
         $payload = $this->sortEntities($request);
 
         if (isset($payload['export'])) {
@@ -165,7 +167,9 @@ abstract class AdminController extends Controller implements AdminControllerInte
             return $response;
         }
 
-        $payload['import_form'] = $this->__importForm()->createView();
+        if (null !== $router->getRouteCollection()->get('geoks_admin_' . $namePluralize . '_import')) {
+            $payload['import_form'] = $this->__importForm()->createView();
+        }
 
         return $this->render($this->getAdminBundle() . ':' . $this->className . ':index.html.twig', $payload);
     }

@@ -27,6 +27,7 @@ class AdminExtension extends \Twig_Extension
         return array(
             'class' => new \Twig_SimpleFunction('class', array($this, 'getClass')),
             'property_type' => new \Twig_SimpleFunction('property_type', array($this, 'getPropertyType')),
+            'routeExists' => new \Twig_SimpleFunction('route_exists', array($this, 'routeExists')),
             'jms_groups_properties' => new \Twig_SimpleFunction('jms_groups_properties', array($this, 'getJmsGroupsProperties')),
             'get_entity' => new \Twig_SimpleFunction('get_entity', array($this, 'getEntity')),
             'name_pluralize' => new \Twig_SimpleFunction('name_pluralize', array($this, 'getNamePluralize')),
@@ -117,5 +118,12 @@ class AdminExtension extends \Twig_Extension
     public function getFieldsAssociations($table)
     {
         return $this->container->get('geoks_admin.entity_fields')->getFieldsAssociations($table);
+    }
+
+    public function routeExists($name)
+    {
+        $router = $this->container->get('router');
+
+        return (null === $router->getRouteCollection()->get($name)) ? false : true;
     }
 }

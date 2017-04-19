@@ -11,9 +11,12 @@
 
 <hr>
 <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_create') }}">Ajouter</a>
-<button type="button" class="btn btn-animate btn-light-blue"  data-toggle="modal" data-target="#import-data">Importer</button>
 
-{{ include('GeoksAdminBundle:Form:import.html.twig', {'form' : import_form}) }}
+{% if route_exists('geoks_admin_' ~ namePluralize ~ '_import') %}
+    <button type="button" class="btn btn-animate btn-light-blue"  data-toggle="modal" data-target="#import-data">Importer</button>
+
+    {{ include('GeoksAdminBundle:Form:import.html.twig', {'form' : import_form}) }}
+{% endif %}
 
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
