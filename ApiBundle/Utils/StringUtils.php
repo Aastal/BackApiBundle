@@ -17,7 +17,7 @@ class StringUtils
         return $string;
     }
 
-    function fromCamelCase($input)
+    public function fromCamelCase($input)
     {
         preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
         $ret = $matches[0];
@@ -27,5 +27,34 @@ class StringUtils
         }
 
         return implode('_', $ret);
+    }
+
+    public function validateDate($date)
+    {
+        $d = \DateTime::createFromFormat('d/m/Y HH:ii:ss', $date);
+
+        if ($d && $d->format('d/m/Y HH:ii:ss') === $date) {
+            return $d;
+        }
+
+        $d = \DateTime::createFromFormat('d-m-Y HH:ii:ss', $date);
+
+        if ($d && $d->format('d/m/Y HH:ii:ss') === $date) {
+            return $d;
+        }
+
+        $d = \DateTime::createFromFormat('d/m/Y', $date);
+
+        if ($d && $d->format('d/m/Y') === $date) {
+            return $d;
+        }
+
+        $d = \DateTime::createFromFormat('d-m-Y', $date);
+
+        if ($d && $d->format('d/m/Y') === $date) {
+            return $d;
+        }
+
+        return false;
     }
 }

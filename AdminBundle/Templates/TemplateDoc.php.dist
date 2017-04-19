@@ -76,6 +76,17 @@ class TemplateDoc extends TemplateController
         return parent::deleteAction($id);
     }
 
+    /**
+     * @Route("/import", name="geoks_admin_template_import", options={"expose"=true})
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function importAction(Request $request)
+    {
+        return parent::importAction($request);
+    }
+
     /** AJAX */
 
     /**

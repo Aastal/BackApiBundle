@@ -4,6 +4,7 @@ namespace Geoks\AdminBundle\Controller;
 
 use Geoks\AdminBundle\Controller\Interfaces\AdminControllerInterface;
 use Geoks\AdminBundle\Form\Export\ExportType;
+use Geoks\AdminBundle\Form\Import\ImportType;
 use Geoks\ApiBundle\Controller\Traits\ApiResponseTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -163,6 +164,8 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
             return $response;
         }
+
+        $payload['import_form'] = $this->__importForm()->createView();
 
         return $this->render($this->getAdminBundle() . ':' . $this->className . ':index.html.twig', $payload);
     }
@@ -335,6 +338,24 @@ abstract class AdminController extends Controller implements AdminControllerInte
         return $this->redirect($this->generateUrl('geoks_admin_' . $namePluralize . '_index'));
     }
 
+    public function importAction(Request $request)
+    {
+        $namePluralize = $this->get("geoks.api.pluralization")->pluralize(lcfirst($this->className));
+
+        $form = $this->__importForm();
+        $form->handleRequest($request);
+
+        $result = $this->container->get('geoks_admin.import')->importFromCsv($form->get('import_csv')->getData(), $this->getEntityRepository(), $form->get('type')->getData());
+
+        if ($result["success"] === true) {
+            $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'import');
+        } else {
+            $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'empty_or_wrong_value');
+        }
+
+        return $this->redirect($this->generateUrl('geoks_admin_' . $namePluralize . '_index'));
+    }
+
     public function searchAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
@@ -346,6 +367,24 @@ abstract class AdminController extends Controller implements AdminControllerInte
         } else {
             throw new \Exception('Ajax only');
         }
+    }
+
+    private function __importForm()
+    {
+        $namePluralize = $this->get("geoks.api.pluralization")->pluralize(lcfirst($this->className));
+
+        $form = $this->createForm(ImportType::class, null, [
+            'action' => $this->generateUrl('geoks_admin_' . $namePluralize . '_import'),
+            'attr' => [
+                'id' => "admin.import." . lcfirst($this->className),
+                'class' => "form-horizontal"
+            ],
+            'method' => 'POST',
+            'class' => $this->entityRepository,
+            'translation_domain' => strtolower($this->className)
+        ]);
+
+        return $form;
     }
 
     protected function sortEntities($request)

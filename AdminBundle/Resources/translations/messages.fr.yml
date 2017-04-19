@@ -27,6 +27,7 @@ app:
 admin:
   properties: Propriétées
   properties_groups: Groupes de sérialisation
+  import: Importer des données
 
 form:
   search: Rechercher
@@ -45,10 +46,13 @@ form:
     create: Entitée créée
     update: Entitée modifiée
     delete: Entitée supprimé
+    import: Import réussi
   fail:
     create: Erreur lors de la création de l'entitée
     update: Erreur lors de la modification de l'entitée
     delete: Problème lors de la suppréssion
+    import: Erreur lors de l'import
+    empty_or_wrong_value: "Erreur lors de l'import : une valeur est vide ou mal formatée"
     user:
       disabled: Votre compte est désactivé
       notFound: Utilisateur introuvable

@@ -58,3 +58,7 @@ services:
 
     geoks_admin.contries_phone:
         class: Geoks\AdminBundle\Services\CountriesPhone
+
+    geoks_admin.import:
+        class: Geoks\AdminBundle\Services\Import
+        arguments: [ "@service_container" ]
