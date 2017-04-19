@@ -42,7 +42,7 @@ class Base64HandleSubscriber implements EventSubscriber
 
                         $property = $entity->{'get' . $reflectionProperty->name}();
 
-                        if (base64_encode(base64_decode($property, true)) === $property) {
+                        if ((base64_encode(base64_decode($property, true)) === $property) && $property != "test" && $property != "true") {
                             $entity->{'set' . $reflectionProperty->name}(base64_decode($property));
                         }
                     }
