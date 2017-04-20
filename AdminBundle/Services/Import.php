@@ -114,45 +114,11 @@ class Import
             $currentEntities = $this->em->getRepository($this->class)->findAll();
             $currentEntities = new ArrayCollection($currentEntities);
 
-            /*
-            $reflection = new \ReflectionClass($this->class);
-            $properties = $reflection->getProperties();
-
-            foreach ($entities as $entity) {
-                $total = 0;
-                $points = 0;
-
-                foreach ($properties as $property) {
-                    $total++;
-
-                    $isEqual = $currentEntities->filter(function($entry) use ($entity, $property) {
-                        if (!$entry->{'get' . ucfirst($property->name)}() || $entry->{'get' . ucfirst($property->name)}() == $entity->{'get' . ucfirst($property->name)}()) {
-
-                            return true;
-                        }
-
-                        return null;
-                    });
-
-                    if ($property->name == 'id' || $property->name == 'created' || $property->name == 'updated') {
-                        $total--;
-                    }
-
-                    if ($isEqual->count() > 0 && ($property->name != 'id' && $property->name != 'created' && $property->name != 'updated')) {
-                        $points++;
-                    }
-                }
-
-                if ((($points - $total) / $total)*100 >= -20) {
-
-                    $this->em->persist($entity);
-                }
-            }*/
-
             foreach ($currentEntities as $currentEntity) {
                 $this->em->remove($currentEntity);
-                $this->em->flush();
             }
+
+            $this->em->flush();
         }
 
         foreach ($entities as $entity) {
