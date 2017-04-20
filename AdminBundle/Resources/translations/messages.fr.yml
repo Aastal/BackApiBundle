@@ -34,6 +34,7 @@ form:
   empty_filter: Vider les filtres
   filter: Filtres
   required: Champs requis
+  fields: Champs
   otherFields: Autres champs
   manyFields: Relations multiples
   submit: Valider

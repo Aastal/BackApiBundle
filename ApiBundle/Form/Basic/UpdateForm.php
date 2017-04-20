@@ -97,6 +97,7 @@ class UpdateForm extends AbstractType
                 $typeOptions['options'] = [
                     'label' => $this->entityName . "." . $name,
                     'class' => $class['targetEntity'],
+                    'required' => false,
                     'attr' => [
                         'class' => 'control-animate'
                     ]

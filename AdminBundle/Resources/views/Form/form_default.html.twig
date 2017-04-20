@@ -39,22 +39,33 @@
         {% if singleForm is defined %}
             {{ form_row(child) }}
         {% else %}
+            {% set i = 0 %}
+            {% set b = 0 %}
+
             {% set notRequired = false %}
+            {% set required = false %}
 
             {% for child in form.children if (child.vars.required is defined and child.vars.required == false) and (child.vars.attr.class is defined and "multiple" not in child.vars.attr.class) %}
                 {% if child %}
                     {% set notRequired = true %}
+                    {% set b = b + 1 %}
                 {% endif %}
             {% endfor %}
 
-            {% set i = 0 %}
+            {% for child in form.children if (child.vars.required is defined and child.vars.required == true) and (child.vars.attr.class is defined and "multiple" not in child.vars.attr.class) %}
+                {% if child %}
+                    {% set required = true %}
+                    {% set b = b + 1 %}
+                {% endif %}
+            {% endfor %}
+
             {% for child in form.children if (child.vars.attr.class is defined and "multiple" in child.vars.attr.class) %}
                 {% if (banFields is defined and child.vars.id not in banFields) or banFields is not defined %}
                     {% set i = i + 1 %}
                 {% endif %}
             {% endfor %}
 
-            {% if notRequired %}
+            {% if notRequired and required %}
                 <div class="col-md-6">
                     <h3 align="center">{{ "form.required"|trans }}</h3>
 
@@ -69,9 +80,42 @@
                         {{ form_row(child) }}
                     {% endfor %}
                 </div>
+            {% elseif notRequired %}
+                <div class="col-md-12">
+                    <h3 align="center">{{ "form.fields"|trans }}</h3>
+
+                    {% for child in form.children if (child.vars.required is defined and child.vars.required == false) and (child.vars.attr.class is defined and "multiple" not in child.vars.attr.class or child.vars.attr.class is not defined) %}
+                        {% if loop.first %}
+                            {% if b > 3 %}
+                                <div class="col-md-6">
+                            {% else %}
+                                <div class="col-md-offset-2 col-md-8">
+                            {% endif %}
+                        {% endif %}
+
+                        {{ form_row(child) }}
+
+                        {% if (loop.index)%2 == 0 %}
+                            </div>
+
+                            {% if b > 3 %}
+                                <div class="col-md-6">
+                            {% else %}
+                                <div class="col-md-offset-2 col-md-8">
+                            {% endif %}
+                        {% endif %}
+
+                        {% if loop.index == b %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
             {% else %}
-                <div class="col-md-offset-2 col-md-8">
+                {% set b = 0 %}
+
+                <div class="col-md-12">
                     <h3 align="center">{{ "form.required"|trans }}</h3>
+
                     {% for child in form.children if (child.vars.required is defined and child.vars.required == true) and (child.vars.attr.class is defined and "multiple" not in child.vars.attr.class or child.vars.attr.class is not defined) %}
                         {{ form_row(child) }}
                     {% endfor %}
@@ -113,6 +157,7 @@
                 </div>
             {% endif %}
         {% endif %}
+
         <div class="col-md-12">
             <hr>
             <div class="box-footer">
