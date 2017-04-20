@@ -116,13 +116,17 @@ class UpdateForm extends AbstractType
                 $typeOptions['options'] = [
                     'label' => $this->entityName . "." . $name,
                     'class' => $class['targetEntity'],
+                    'required' => false,
                     'attr' => [
                         'class' => 'control-animate'
                     ]
                 ];
 
+                if ($annotation = $reader->getPropertyAnnotation($reflection->getProperty($name), "Symfony\\Component\\Validator\\Constraints\\NotNull")) {
+                    $typeOptions['options']['required'] = true;
+                }
+
                 if ($class["type"] == 4 || $class["type"] == 8) {
-                    $typeOptions['options']['required'] = false;
                     $typeOptions['options']['expanded'] = true;
                     $typeOptions['options']['multiple'] = true;
                     $typeOptions['options']['attr']['class'] = 'multiple';
