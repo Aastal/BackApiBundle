@@ -91,11 +91,11 @@ class Import
     private function __parseCsv($file)
     {
         $header = null;
-        $data = array();
+        $data = [];
 
         if (($handle = fopen($file, 'r')) !== false) {
             while (($row = fgetcsv($handle, null, ";")) !== false) {
-                if(!$header) {
+                if (!$header) {
                     $header = $row;
                 } else {
                     $data[] = array_combine($header, $row);
@@ -110,6 +110,10 @@ class Import
 
     private function __insertByType($entities, $type)
     {
+        $fieldsAssociations = $this->container->get('geoks_admin.entity_fields')->getFieldsAssociations($this->class);
+        $fieldsAssociations = new ArrayCollection($fieldsAssociations);
+
+
         if ($type == 'replace') {
             $currentEntities = $this->em->getRepository($this->class)->findAll();
             $currentEntities = new ArrayCollection($currentEntities);
@@ -123,6 +127,42 @@ class Import
 
         foreach ($entities as $entity) {
             $this->em->persist($entity);
+
+            $fieldsAssociations->filter(function ($entry) use ($entity) {
+
+                if (method_exists($entity, 'get' . ucfirst($entry["fieldName"]))) {
+                    $getter = $entity->{'get' . ucfirst($entry["fieldName"])}();
+
+                    if (method_exists($entity, 'set' . ucfirst($entry["fieldName"]))) {
+                        if (is_string($getter)) {
+                            if (strpos($getter, ",")) {
+                                $array = explode(",", $getter);
+                                $collection = new ArrayCollection();
+
+                                foreach ($array as $item) {
+                                    if ($assoc = $this->em->getRepository($entry["targetEntity"])->find($item)) {
+                                        $collection->add($assoc);
+                                    }
+                                }
+
+                                $entity->{'set' . ucfirst($entry["fieldName"])}($collection);
+                            } else {
+                                if ($assoc = $this->em->getRepository($entry["targetEntity"])->find($getter)) {
+                                    $rc = new \ReflectionClass($this->class);
+
+                                    if ($docs = $rc->getMethod('set' . ucfirst($entry["fieldName"]))->getDocComment()) {
+                                        if (strpos($docs, "@param Collection") || strpos($docs, "@param ArrayCollection")) {
+                                            $assoc = new ArrayCollection([$assoc]);
+                                        }
+                                    }
+
+                                    $entity->{'set' . ucfirst($entry["fieldName"])}($assoc);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         $this->em->flush();
