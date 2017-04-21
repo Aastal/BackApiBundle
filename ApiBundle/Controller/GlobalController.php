@@ -244,6 +244,21 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         return $this->serializeResponse($form, Response::HTTP_BAD_REQUEST);
     }
 
+    public function import(Request $request)
+    {
+        if (!$this->getUser()) {
+            return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
+        }
+
+        $result = $this->container->get('geoks_admin.import')->importFromCsv($request->files->get('import'), $this->getEntityRepository(), $request->get('type'));
+
+        if ($result["success"] === true) {
+            return $this->serializeResponse(["success" => true]);
+        }
+
+        return $this->serializeResponse(["success" => false], Response::HTTP_BAD_REQUEST);
+    }
+
     public function update(Request $request, $id, $customSetters = [])
     {
         if (!$this->getUser()) {

@@ -56,11 +56,21 @@ class Import
         $entities = [];
         $this->class = $class;
 
+        $reader = new AnnotationReader();
+        $reflection = new \ReflectionClass($this->class);
+
         $data = $this->__parseCsv($file);
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
 
         $normalizer = new ObjectNormalizer($classMetadataFactory);
         $serializer = new Serializer(array($normalizer));
+
+        $fields = [];
+        foreach ($reflection->getProperties() as $reflectionProperty) {
+            if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\AdminBundle\\Annotation\\ImportField")) {
+                $fields[$annotation->name] = $reflectionProperty->name;
+            }
+        }
 
         if (array_key_exists("0", $data)) {
             foreach ($data as $item) {
@@ -74,6 +84,11 @@ class Import
                         ];
                     } elseif ($this->container->get('geoks.utils.string_manager')->validateDate($value)) {
                         $value = $this->container->get('geoks.utils.string_manager')->validateDate($value);
+                    }
+
+                    if (!empty($fields) && array_key_exists($key, $fields)) {
+                        $item[$fields[$key]] = $value;
+                        unset($item[$key]);
                     }
                 }
 
@@ -98,6 +113,10 @@ class Import
                 if (!$header) {
                     $header = $row;
                 } else {
+                    foreach ($header as &$h) {
+                        $h = trim($h);
+                    }
+
                     $data[] = array_combine($header, $row);
                 }
             }
@@ -112,7 +131,6 @@ class Import
     {
         $fieldsAssociations = $this->container->get('geoks_admin.entity_fields')->getFieldsAssociations($this->class);
         $fieldsAssociations = new ArrayCollection($fieldsAssociations);
-
 
         if ($type == 'replace') {
             $currentEntities = $this->em->getRepository($this->class)->findAll();
