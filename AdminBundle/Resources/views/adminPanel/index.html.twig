@@ -5,90 +5,92 @@
 
     <hr>
     <div class="row">
-        {% for r in reflections %}
+        {% for key, e in entities %}
             <div class="col-md-2">
-                {% set name = class(r.name) %}
-
-                <a class="scroll" href="#{{ name }}">{{ name }}</a>
+                <a class="scroll" href="#{{ key }}">{{ key }}</a>
             </div>
         {% endfor %}
     </div>
     <hr>
 
     <div class="row">
-        {% for r in reflections %}
-            {% set name = class(r.name) %}
-            {% set propertieNames = [] %}
-            {% set propertieGroups = jms_groups_properties(r) %}
+        {% for key, e in entities %}
+            {% if e.groups is not empty or e.properties is not empty %}
+                <div class="col-md-offset-2 col-md-8">
+                    <div class="panel-group" id="{{ key }}" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="heading{{ key }}">
+                                <h4 class="panel-title">
+                                    {{ key }}
+                                </h4>
+                            </div>
+                            <div id="{{ key }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading{{ key }}">
+                                <div class="panel-body">
+                                    <h3>{{ "admin.properties"|trans }}</h3>
+                                    <br>
 
-            {% for value in r.properties %}
-                {% set propertyAnnotation = property_type(value) %}
+                                    <div class="row">
+                                        {% set i = 0 %}
 
-                {% for p in propertyAnnotation %}
-                    {% if p.type is defined %}
-                        {% set propertieNames = propertieNames|merge({(value.name): p.type}) %}
-                    {% elseif p.mapping is defined %}
-                        {% set propertieNames = propertieNames|merge({(value.name): p.mapping}) %}
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
+                                        {% for value in e.properties %}
+                                            {% for v in value if (v.name is defined and v.name) and (v.type is defined and v.type) %}
+                                                {% set i = i + 1 %}
 
-            <div class="col-md-offset-2 col-md-8">
-                <div class="panel-group" id="{{ name }}" role="tablist" aria-multiselectable="true">
-                    <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="heading{{ name }}">
-                            <h4 class="panel-title">
-                                {{ name }}
-                            </h4>
-                        </div>
-                        <div id="{{ name }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading{{ name }}">
-                            <div class="panel-body">
-                                <h5>{{ "admin.properties"|trans }}</h5>
-                                <br>
+                                                <div class="col-md-3">
+                                                    <strong><u>{{ v.name }}</u></strong><br> {{ v.type }}
+                                                </div>
 
-                                <div class="row">
-                                    {% for key, value in propertieNames %}
-                                        <div class="col-md-3">
-                                            <strong><u>{{ key }}</u></strong>
-                                            {% if value %}
-                                                <br>{{ value }}
-                                            {% endif %}
-                                        </div>
-
-                                        {% if (loop.index%4) == 0 %}
-                                            <div class="col-md-12">
-                                                <hr>
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-
-                                <br>
-                                <h5>{{ "admin.properties_groups"|trans }}</h5>
-                                <br>
-
-                                <div class="row">
-                                    {% for key, value in propertieGroups %}
-                                        <div class="col-md-4">
-                                            {% if (loop.index%4) == 0 %}
-                                                <hr>
-                                            {% endif %}
-
-                                            <strong><u>{{ key }}</u></strong>
-                                            <br>
-
-                                            {% for v in value %}
-                                                {{ v }}
-                                                <br>
+                                                {% if (i%4) == 0 %}
+                                                    <div class="col-md-12">
+                                                        <hr>
+                                                    </div>
+                                                {% endif %}
                                             {% endfor %}
-                                        </div>
-                                    {% endfor %}
+                                        {% endfor %}
+                                    </div>
+
+                                    <br>
+                                    <h3>{{ "admin.properties_groups"|trans }}</h3>
+                                    <br>
+
+                                    <div class="row">
+                                        {% for key, value in e.groups %}
+                                            <div class="col-md-6">
+                                                <h4>{{ key }}</h4>
+
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>{{ "admin.property_name"|trans }}</th>
+                                                        <th>{{ "admin.property_type"|trans }}</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for prop in value %}
+                                                    {% if prop.name %}
+                                                    <tr>
+                                                        <td>{{ prop.name }}</td>
+                                                        <td>{{ prop.type }}</td>
+                                                    </tr>
+                                                    </tbody>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                </table>
+                                            </div>
+
+                                            {% if (loop.index%2) == 0 %}
+                                                <div class="col-md-12">
+                                                    <hr>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
         {% endfor %}
     </div>
 {% endblock %}

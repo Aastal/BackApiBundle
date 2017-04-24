@@ -62,6 +62,8 @@ abstract class User extends BaseUser
 
     /**
      * @var string
+     *
+     * @Assert\Choice(choices = {"male", "female"}, message = "Choose a valid gender.")
      */
     protected $gender;
 

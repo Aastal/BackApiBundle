@@ -27,6 +27,8 @@ app:
 admin:
   properties: Propriétées
   properties_groups: Groupes de sérialisation
+  property_name: Nom
+  property_type: Type
   import: Importer des données
 
 form:
