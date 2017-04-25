@@ -93,8 +93,10 @@ abstract class AdminPanelController extends Controller
                         $type = " (" . $annotationAssociation->targetEntity . ")";
                     } elseif ($annotationAssociation = $reader->getPropertyAnnotation($association, "Doctrine\\ORM\\Mapping\\ManyToMany")) {
                         $type = " (" . $annotationAssociation->targetEntity . ")";
-                    } else {
+                    } elseif ($annotationAssociation = $reader->getPropertyAnnotation($association, "Doctrine\\ORM\\Mapping\\ManyToOne")) {
                         $type = " (" . $annotationAssociation->targetEntity . ")";
+                    } else {
+                        $type = null;
                     }
 
                     $groups[$group][] = [
