@@ -31,15 +31,15 @@ class StringUtils
 
     public function validateDate($date)
     {
-        $d = \DateTime::createFromFormat('d/m/Y HH:ii:ss', $date);
+        $d = \DateTime::createFromFormat('d/m/Y H:i:s', $date);
 
-        if ($d && $d->format('d/m/Y HH:ii:ss') === $date) {
+        if ($d && $d->format('d/m/Y H:i:s') === $date) {
             return $d;
         }
 
-        $d = \DateTime::createFromFormat('d-m-Y HH:ii:ss', $date);
+        $d = \DateTime::createFromFormat('d-m-Y H:i:s', $date);
 
-        if ($d && $d->format('d/m/Y HH:ii:ss') === $date) {
+        if ($d && $d->format('d/m/Y H:i:s') === $date) {
             return $d;
         }
 
@@ -52,6 +52,12 @@ class StringUtils
         $d = \DateTime::createFromFormat('d-m-Y', $date);
 
         if ($d && $d->format('d/m/Y') === $date) {
+            return $d;
+        }
+
+        $d = \DateTime::createFromFormat('Y-m-d H:i:s', $date);
+
+        if ($d && $d->format('Y-m-d H:i:s') === $date) {
             return $d;
         }
 
