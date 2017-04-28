@@ -69,7 +69,11 @@ class CreateForm extends AbstractType
                     }
                 }
 
-                $builder->add($name, $typeOptions['type'], $typeOptions['options']);
+                if ($name == 'roles' && $container->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_SUPER_ADMIN")) {
+                    $builder->add($name, $typeOptions['type'], $typeOptions['options']);
+                } elseif ($name != 'roles') {
+                    $builder->add($name, $typeOptions['type'], $typeOptions['options']);
+                }
             }
         }
 
