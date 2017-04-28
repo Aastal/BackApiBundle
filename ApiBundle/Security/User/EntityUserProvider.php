@@ -82,7 +82,7 @@ class EntityUserProvider extends BaseClass
 
         if (!$this->accessToken || $this->accessToken->hasExpired()) {
             $expire = new \DateTime(
-                '+ ' .
+                'now + ' .
                 $this->container->getParameter('fos_oauth_server.server.options')['access_token_lifetime'] .
                 ' seconds'
             );
@@ -95,6 +95,11 @@ class EntityUserProvider extends BaseClass
             $accessToken->setScope('api');
 
             $this->em->persist($accessToken);
+
+            if ($this->accessToken) {
+                $this->em->remove($this->accessToken);
+            }
+
             $this->accessToken = $accessToken;
         }
 

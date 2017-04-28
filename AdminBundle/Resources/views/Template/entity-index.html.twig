@@ -45,7 +45,7 @@
                             </thead>
                             <tbody>
                             {% for entity in entities %}
-                                {% if (entity.roles is defined and 'ROLE_SUPER_ADMIN' not in entity.roles) or entity.roles is not defined %}
+                                {% if (entity.roles is defined and 'ROLE_SUPER_ADMIN' not in entity.roles) or entity.roles is not defined or 'ROLE_SUPER_ADMIN' in app.user.roles %}
                                     <tr>
                                         {% for field in fields %}
                                             <td>
