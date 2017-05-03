@@ -238,5 +238,6 @@ class Import
         }
 
         $this->em->flush();
+        $this->em->clear();
     }
 }
