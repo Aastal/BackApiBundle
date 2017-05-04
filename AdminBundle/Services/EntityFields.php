@@ -2,9 +2,11 @@
 
 namespace Geoks\AdminBundle\Services;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -76,6 +78,37 @@ class EntityFields
         return $rowAssos;
     }
 
+    /**
+     * @param \ReflectionClass $reflection
+     * @param string $property
+     * @param string $annotation
+     * @param string|null $parentAnnotation
+     * @param array|null $result
+     * @return array
+     */
+    public function checkAnnotation($reflection, $property, $annotation, $parentAnnotation = null, $result = null)
+    {
+        $reader = new AnnotationReader();
+
+        if ($parentAnnotation) {
+            if ($reader->getClassAnnotation($reflection, $parentAnnotation)) {
+                if ($reflection->hasProperty($property) && $result = $reader->getPropertyAnnotation($reflection->getProperty($property), $annotation)) {
+                    return $result;
+                }
+            }
+        } else {
+            if ($reflection->hasProperty($property) && $result = $reader->getPropertyAnnotation($reflection->getProperty($property), $annotation)) {
+                return $result;
+            }
+        }
+
+        if ($reflection->getParentClass()) {
+            $result = $this->checkAnnotation($reflection->getParentClass(), $property, $annotation, $parentAnnotation, $result);
+        }
+
+        return $result;
+    }
+
     public function switchType($entityName, $name, $type)
     {
         $r = [];
@@ -120,6 +153,18 @@ class EntityFields
                     'label' => $fieldName,
                     'attr' => [
                         'class' => 'control-animate'
+                    ]
+                ];
+                break;
+            case 'array':
+                $r['type'] = ChoiceType::class;
+                $r['options'] = [
+                    'label' => $fieldName,
+                    'choices' => null,
+                    'expanded' => true,
+                    'multiple' => true,
+                    'attr' => [
+                        'class' => 'control-animate choices-list'
                     ]
                 ];
                 break;

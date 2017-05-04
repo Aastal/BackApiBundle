@@ -254,7 +254,7 @@ h1 {
   }
 }
 
-.time-disponibilities{
+.time-disponibilities {
   height: 200px;
   overflow-x: hidden;
   border: 1px solid #ccc;
@@ -270,6 +270,20 @@ h1 {
  */
 .form-hr {
   border-top: 1px solid $primary-color;
+}
+
+.choices-list {
+  list-style: none;
+  padding: 1px !important;
+
+  li {
+    margin-bottom: 5px;
+
+    input {
+      margin: 0 10px 0 0;
+      vertical-align: middle;
+    }
+  }
 }
 
 .label-multiple {

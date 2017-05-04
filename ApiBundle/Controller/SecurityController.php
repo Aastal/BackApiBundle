@@ -282,7 +282,7 @@ abstract class SecurityController extends ApiController
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
-            $user->addRole('ROLE_DEFAULT');
+            $user->addRole('ROLE_USER');
             $user->setEnabled(true);
 
             $em->persist($user);

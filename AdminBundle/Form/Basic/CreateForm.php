@@ -47,7 +47,8 @@ class CreateForm extends AbstractType
         $rowAssos = $container->get('geoks_admin.entity_fields')->getFieldsAssociations($table);
 
         foreach ($rowArr as $name => $field) {
-            if ($field["type"] != 'array' && !in_array($name, $banList) && $name != "password") {
+            if (isset($field["type"]) && !in_array($name, $banList)) {
+
                 $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);
 
                 if ((isset($field["nullable"]) && $field["nullable"]) || $field["type"] == 'boolean') {
@@ -56,21 +57,23 @@ class CreateForm extends AbstractType
                     $typeOptions['options']['required'] = true;
                 }
 
-                if ($reader->getClassAnnotation($reflection, "Geoks\\AdminBundle\\Annotation\\HasChoiceField")) {
-                    foreach ($reflection->getProperties() as $reflectionProperty) {
-                        if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\AdminBundle\\Annotation\\ChoiceList")) {
-                            if ($name == $reflectionProperty->name) {
-                                $typeOptions['type'] = ChoiceType::class;
+                if ($annotation = $container->get('geoks_admin.entity_fields')->checkAnnotation($reflection, $name, "Geoks\\AdminBundle\\Annotation\\ChoiceList", "Geoks\\AdminBundle\\Annotation\\HasChoiceField")) {
+                    $reflectionProperty = $reflection->getProperty($name);
 
-                                foreach ($annotation->choices as $choice) {
-                                    $typeOptions['options']['choices'][$choice] = $translator->trans($choice);
-                                }
-                            }
+                    if ($name == $reflectionProperty->name) {
+                        $typeOptions['options']['choices'] = [];
+
+                        foreach ($annotation->choices as $choice) {
+                            $typeOptions['options']['choices'] += [$choice => $translator->trans($choice)];
                         }
                     }
                 }
 
-                $builder->add($name, $typeOptions['type'], $typeOptions['options']);
+                if ($name == 'roles' && $container->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_SUPER_ADMIN")) {
+                    $builder->add($name, $typeOptions['type'], $typeOptions['options']);
+                } elseif ($name != 'roles') {
+                    $builder->add($name, $typeOptions['type'], $typeOptions['options']);
+                }
             }
         }
 

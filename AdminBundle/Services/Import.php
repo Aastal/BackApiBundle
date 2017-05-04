@@ -51,7 +51,22 @@ class Import
      *
      * @return array
      */
-    public function importFromCsv($file, $class, $type = null)
+    public function importFromCsv($file, $class, $type = null, $dedupeField = null)
+    {
+        $data = $this->parseCsv($file);
+        $response = $this->importData($data, $class, $type, $dedupeField);
+
+        return $response;
+    }
+
+    /**
+     * @param $data
+     * @param $class
+     * @param $type
+     * @param $dedupeField
+     * @return array
+     */
+    public function importData($data, $class, $type = null, $dedupeField = null)
     {
         $entities = [];
         $this->class = $class;
@@ -59,7 +74,6 @@ class Import
         $reader = new AnnotationReader();
         $reflection = new \ReflectionClass($this->class);
 
-        $data = $this->__parseCsv($file);
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
 
         $normalizer = new ObjectNormalizer($classMetadataFactory);
@@ -74,21 +88,28 @@ class Import
 
         if (array_key_exists("0", $data)) {
             foreach ($data as $item) {
-
                 foreach ($item as $key => &$value) {
-                    if (!$value) {
+                    if ($value) {
+                        if (!is_object($value) && $this->container->get('geoks.utils.string_manager')->validateDate($value)) {
+                            $value = $this->container->get('geoks.utils.string_manager')->validateDate($value);
+                        }
 
-                        return [
-                            "success" => false,
-                            "error" => "empty_or_wrong_value"
-                        ];
-                    } elseif ($this->container->get('geoks.utils.string_manager')->validateDate($value)) {
-                        $value = $this->container->get('geoks.utils.string_manager')->validateDate($value);
-                    }
+                        if (!empty($fields) && array_key_exists($key, $fields)) {
+                            $item[$fields[$key]] = $value;
+                            unset($item[$key]);
+                        }
+                    } else {
+                        $rc = new \ReflectionClass($this->class);
 
-                    if (!empty($fields) && array_key_exists($key, $fields)) {
-                        $item[$fields[$key]] = $value;
-                        unset($item[$key]);
+                        if (!empty($fields) && array_key_exists($key, $fields)) {
+                            if ($rc->hasMethod('set' . ucfirst($fields[$key]))) {
+                                if ($docs = $rc->getMethod('set' . ucfirst($fields[$key]))->getDocComment()) {
+                                    if (strpos($docs, "@param datetime") || strpos($docs, "@param \\DateTime")) {
+                                        $value = new \DateTime(null);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -98,12 +119,12 @@ class Import
             $entities[] = $serializer->denormalize($data, $this->class);
         }
 
-        $this->__insertByType($entities, $type);
+        $this->__insertByType($entities, $type, $dedupeField);
 
         return ["success" => true];
     }
 
-    private function __parseCsv($file)
+    public function parseCsv($file)
     {
         $header = null;
         $data = [];
@@ -127,7 +148,7 @@ class Import
         return $data;
     }
 
-    private function __insertByType($entities, $type)
+    private function __insertByType($entities, $type, $dedupeField)
     {
         $fieldsAssociations = $this->container->get('geoks_admin.entity_fields')->getFieldsAssociations($this->class);
         $fieldsAssociations = new ArrayCollection($fieldsAssociations);
@@ -144,6 +165,39 @@ class Import
         }
 
         foreach ($entities as $entity) {
+
+            if ($dedupeField) {
+                if (is_array($dedupeField)) {
+
+                    $fields = [];
+                    foreach ($dedupeField as $d) {
+                        $value = $entity->{"get" . ucfirst($d)}();
+
+                        if (is_object($value)) {
+                            $value = $value->getId();
+                        }
+
+                        $fields += [
+                            $d => $value
+                        ];
+                    }
+
+                    $oldEntity = $this->em->getRepository($this->class)->findOneBy($fields);
+                } else {
+                    $value = $entity->{"get" . ucfirst($dedupeField)}();
+
+                    if (is_object($value)) {
+                        $value = $value->getId();
+                    }
+
+                    $oldEntity = $this->em->getRepository($this->class)->findOneBy([$dedupeField => $value]);
+                }
+
+                if ($oldEntity) {
+                    $this->em->remove($oldEntity);
+                }
+            }
+
             $this->em->persist($entity);
 
             $fieldsAssociations->filter(function ($entry) use ($entity) {
@@ -184,5 +238,6 @@ class Import
         }
 
         $this->em->flush();
+        $this->em->clear();
     }
 }

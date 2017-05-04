@@ -3,6 +3,7 @@
 namespace Geoks\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Geoks\AdminBundle\Annotation\ChoiceList;
 use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -11,12 +12,14 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\MaxDepth;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
+use Geoks\AdminBundle\Annotation\HasChoiceField;
 
 /**
  * Class User
  * @package Geoks\UserBundle\Entity
  *
  * @ExclusionPolicy("all")
+ * @HasChoiceField
  */
 abstract class User extends BaseUser
 {
@@ -107,6 +110,13 @@ abstract class User extends BaseUser
      * @var string
      */
     protected $facebookAccessToken;
+
+    /**
+     * @var array
+     *
+     * @ChoiceList(choices = {"ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
+     */
+    protected $roles;
 
     public function __construct()
     {
