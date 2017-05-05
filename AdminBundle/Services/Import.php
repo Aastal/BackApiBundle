@@ -2,6 +2,7 @@
 
 namespace Geoks\AdminBundle\Services;
 
+use AppBundle\Entity\Category;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Types\DateTimeType;
@@ -160,8 +161,6 @@ class Import
             foreach ($currentEntities as $currentEntity) {
                 $this->em->remove($currentEntity);
             }
-
-            $this->em->flush();
         }
 
         foreach ($entities as $entity) {
@@ -193,7 +192,7 @@ class Import
                     $oldEntity = $this->em->getRepository($this->class)->findOneBy([$dedupeField => $value]);
                 }
 
-                if ($oldEntity) {
+                if (isset($oldEntity)) {
                     $this->em->remove($oldEntity);
                 }
             }
@@ -235,9 +234,23 @@ class Import
                     }
                 }
             });
+
+            $this->manageException($entity);
         }
 
         $this->em->flush();
         $this->em->clear();
+    }
+
+    private function manageException($entity)
+    {
+        if ($this->container->hasParameter('geoks_admin.import')) {
+            foreach ($this->container->getParameter('geoks_admin.import.directories') as $dir) {
+                foreach ($dir['exceptions'] as $exception) {
+                    $exceptionClass = new $dir['service']($this->container);
+                    $exceptionClass->{"manage" . ucfirst($exception)}($entity, $this->class);
+                }
+            }
+        }
     }
 }

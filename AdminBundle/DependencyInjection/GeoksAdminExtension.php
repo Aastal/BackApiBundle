@@ -31,6 +31,13 @@ class GeoksAdminExtension extends Extension
             $container->setParameter('geoks_admin.ban_fields', null);
         }
 
+        if (isset($config['import'])) {
+            $container->setParameter('geoks_admin.import', $config['import']);
+            $container->setParameter('geoks_admin.import.directories', $config['import']['directories']);
+        } else {
+            $container->setParameter('geoks_admin.import', null);
+        }
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }

@@ -33,6 +33,22 @@ class Configuration implements ConfigurationInterface
                         ->prototype('variable')
                     ->end()
                 ->end()
+                ->arrayNode('import')
+                    ->children()
+                        ->arrayNode('directories')
+                            ->prototype('array')
+                                ->children()
+                                    ->scalarNode('service')->isRequired()->end()
+                                    ->arrayNode('exceptions')
+                                        ->useAttributeAsKey('params')
+                                            ->prototype('variable')
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;
