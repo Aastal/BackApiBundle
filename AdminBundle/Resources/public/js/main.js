@@ -3,11 +3,11 @@ $(".scroll").click(function(event) {
     $('html,body').animate({scrollTop: $(this.hash).offset().top - 100}, 800);
 });
 
-$('.btn-danger').on('click', function () {
+$(document).on('click', '.btn-danger', function () {
     return confirm("Voulez-vous vraiment supprimer ?");
 });
 
-$('.confirm-submit').on('click', function () {
+$(document).on('click', '.confirm-submit', function () {
     return confirm("Voulez-vous vraiment envoyer ?");
 });
 
