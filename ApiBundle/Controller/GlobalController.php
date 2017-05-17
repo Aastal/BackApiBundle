@@ -177,17 +177,19 @@ abstract class GlobalController extends ApiController implements GlobalControlle
     }
 
     /**
+     * @param Request $request
      * @param array $criteria
      * @param array $order
-     * @param integer $page
      * @param integer $limit
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getAllByCriteriaOrderAndPagination(array $criteria = [], array $order = ["id" => "DESC"], $page = 1, $limit = 10)
+    public function getAllByCriteriaOrderAndPagination(Request $request, array $criteria = [], array $order = ["id" => "DESC"], $limit = 10)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
         }
+
+        $page = $request->get('page', 1);
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository($this->getEntityRepository())->findBy($criteria, $order, $limit, ($page - 1) * $limit);
