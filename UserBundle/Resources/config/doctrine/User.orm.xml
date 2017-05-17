@@ -19,7 +19,7 @@
         <!-- Datetime -->
         <field name="created" type="datetime" column="created" nullable="true"/>
         <field name="updated" type="datetime" column="updated" nullable="true"/>
-        <field name="dateOfBirth" column="date_of_birth" type="datetime" nullable="true" />
+        <field name="dateOfBirth" column="date_of_birth" type="date" nullable="true" />
 
         <!-- Text -->
         <field name="firstname" column="firstname" type="string" length="255" />
@@ -28,7 +28,7 @@
         <field name="facebookUid" column="facebook_uid" type="string" length="255" nullable="true" />
         <field name="facebookName" column="facebook_name" type="string" length="255" nullable="true" />
         <field name="facebookAccessToken" column="facebook_access_token" type="string" length="255" nullable="true" />
-        <field name="phone" length="13" column="phone" type="string" nullable="true" />
+        <field name="phone" length="13" column="phone" type="phone_number" nullable="true" />
         <field name="address" column="address" type="string" length="255" nullable="true" />
         <field name="gcmToken" column="gcm_token" type="string" length="255" nullable="true" />
 

@@ -80,6 +80,7 @@ class UpdateForm extends AbstractType
                     $reflectionProperty = $reflection->getProperty($name);
 
                     if ($name == $reflectionProperty->name) {
+                        $typeOptions['type'] = ChoiceType::class;
                         $typeOptions['options']['choices'] = [];
 
                         foreach ($annotation->choices as $choice) {
