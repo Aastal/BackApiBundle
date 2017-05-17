@@ -4,6 +4,8 @@ namespace Geoks\AdminBundle\Services;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManager;
+use libphonenumber\PhoneNumberFormat;
+use Misd\PhoneNumberBundle\Form\Type\PhoneNumberType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -163,6 +165,17 @@ class EntityFields
                     'choices' => null,
                     'expanded' => true,
                     'multiple' => true,
+                    'attr' => [
+                        'class' => 'control-animate choices-list'
+                    ]
+                ];
+                break;
+            case 'phone_number':
+                $r['type'] = PhoneNumberType::class;
+                $r['options'] = [
+                    'label' => $fieldName,
+                    'default_region' => 'FR',
+                    'format' => PhoneNumberFormat::INTERNATIONAL,
                     'attr' => [
                         'class' => 'control-animate choices-list'
                     ]
