@@ -220,3 +220,21 @@ window.addEventListener('popstate', function() {
 
     window.location.reload();
 });
+
+function uploadCheck(input){
+    var url = input.value;
+    var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+    var placeholder = document.getElementById(input.id + '-placeholder');
+
+    if (input.files && input.files[0]&& (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            placeholder.setAttribute('src',  e.target.result);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    } else{
+        placeholder.setAttribute('src', "");
+    }
+}
