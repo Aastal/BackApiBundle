@@ -67,6 +67,9 @@ abstract class User extends BaseUser
      * @var string
      *
      * @Assert\Choice(choices = {"male", "female"}, message = "Choose a valid gender.")
+     *
+     * @Expose
+     * @Groups({"details"})
      */
     protected $gender;
 
