@@ -283,7 +283,11 @@ abstract class UserController extends ApiController
         $form = $this->createForm(ChangePasswordForm::class);
         $form->handleRequest($request);
 
-        if (!$this->checkUserPassword($user, $form->get('current_password')->getData())) {
+        if (!$form->get('current_password')->getData() && !$form->get('currentPassword')->getData()) {
+            return $this->serializeResponse($this->get('translator')->trans('geoks.user.no_password'), Response::HTTP_BAD_REQUEST);
+        }
+
+        if (!($this->checkUserPassword($user, $form->get('current_password')->getData()) || $this->checkUserPassword($user, $form->get('currentPassword')->getData()))) {
             return $this->serializeResponse($this->get('translator')->trans('geoks.user.password.wrong'), Response::HTTP_BAD_REQUEST);
         }
 

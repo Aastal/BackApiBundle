@@ -5,6 +5,8 @@ namespace Geoks\ApiBundle\Form\Security;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\AbstractType;
 
@@ -16,7 +18,12 @@ class ChangePasswordForm extends AbstractType
             ->add('current_password', PasswordType::class, [
                 'label' => 'current password',
                 'mapped' => false,
-                'required' => true
+                'required' => false
+            ])
+            ->add('currentPassword', PasswordType::class, [
+                'label' => 'current password',
+                'mapped' => false,
+                'required' => false
             ])
             ->add('new', RepeatedType::class, [
                 'type' => 'password',
@@ -34,7 +41,7 @@ class ChangePasswordForm extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => null,
             'intention'  => 'resetting',
-            'csrf_protection'   => false
+            'csrf_protection' => false
         ));
     }
 
