@@ -5,6 +5,7 @@ namespace Geoks\ApiBundle\Services;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\ORM\PersistentCollection;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\Serializer\Serializer as JMSSerializer;
@@ -131,23 +132,14 @@ class Serializer
     private function getArrayName($value)
     {
         if ($value) {
-            if (is_object($value)) {
+            if (is_object($value) && !$value instanceof PersistentCollection) {
 
                 $this->entityReflection = new \ReflectionClass($value);
                 $name = strtolower($this->entityReflection->getShortName());
-
+            } elseif ($value instanceof PersistentCollection) {
+                $name = $this->getEntityName($value->getMapping()["targetEntity"]);
             } elseif (is_array($value) && !is_array(reset($value)) && !is_string(reset($value)) && !is_bool(reset($value))) {
-
-                if ($this->pluralize) {
-                    $this->entityReflection = new \ReflectionClass(reset($value));
-                    $name = $this->entityReflection->getShortName();
-                    $name = strtolower($this->container->get('geoks.api.pluralization')->pluralize($name));
-                } else {
-                    $this->entityReflection = new \ReflectionClass(reset($value));
-                    $name = $this->entityReflection->getShortName();
-                    $name = strtolower($name . "s");
-                }
-
+                $name = $this->getEntityName(reset($value));
             } else {
                 $name = $this->key;
             }
@@ -182,5 +174,20 @@ class Serializer
         }
 
         return $results;
+    }
+
+    private function getEntityName($value)
+    {
+        if ($this->pluralize) {
+            $this->entityReflection = new \ReflectionClass($value);
+            $name = $this->entityReflection->getShortName();
+            $name = strtolower($this->container->get('geoks.api.pluralization')->pluralize($name));
+        } else {
+            $this->entityReflection = new \ReflectionClass($value);
+            $name = $this->entityReflection->getShortName();
+            $name = strtolower($name . "s");
+        }
+
+        return $name;
     }
 }
