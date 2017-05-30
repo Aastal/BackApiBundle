@@ -1,9 +1,6 @@
 <?php
 namespace Geoks\ApiBundle\EventListener;
 
-use AppBundle\Entity\Comment;
-use AppBundle\Entity\Lock;
-use AppBundle\Entity\User;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Util\ClassUtils;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
