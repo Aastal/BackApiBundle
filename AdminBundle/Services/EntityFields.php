@@ -117,6 +117,16 @@ class EntityFields
         $fieldName = $entityName . "." . $name;
 
         switch ($type) {
+            case 'phone_number':
+                $r['type'] = PhoneNumberType::class;
+                $r['options'] = [
+                    'default_region' => 'FR',
+                    'format' => PhoneNumberFormat::INTERNATIONAL,
+                    'attr' => [
+                        'class' => 'control-animate'
+                    ]
+                ];
+                break;
             case 'integer':
                 $r['type'] = IntegerType::class;
                 $r['options'] = [
