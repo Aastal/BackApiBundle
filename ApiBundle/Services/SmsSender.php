@@ -60,7 +60,7 @@ class SmsSender
             $this->logger->error($e);
         }
 
-        $number = $phoneUtil->format($number, PhoneNumberFormat::NATIONAL);
+        $number = $phoneUtil->format($number, PhoneNumberFormat::INTERNATIONAL);
         $number = str_replace(' ', '', $number);
 
         $ch = curl_init();
