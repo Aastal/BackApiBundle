@@ -15,6 +15,9 @@ services:
     geoks.utils.string_manager:
         class: Geoks\ApiBundle\Utils\StringUtils
 
+    geoks.utils.calc:
+        class: Geoks\ApiBundle\Utils\CalcUtil
+
     geoks.utils.regex:
         class: Geoks\ApiBundle\Utils\RegexUtils
 
@@ -88,6 +91,11 @@ services:
 
     geoks.entity_pre_persist:
         class: Geoks\ApiBundle\EventListener\Base64HandleSubscriber
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
+    geoks.image_subscriber:
+        class: Geoks\ApiBundle\EventListener\ImageSubscriber
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 

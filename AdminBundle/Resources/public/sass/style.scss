@@ -399,7 +399,7 @@ h1 {
 .control-animate {
   display: block;
   max-width: 100%;
-  width: 85%;
+  width: 100%;
   padding: 5px;
   border: none;
   border-bottom: solid 1px #757575;
@@ -414,7 +414,6 @@ select.control-animate {
 .bar {
   position: relative;
   display: block;
-  width: 85%;
 }
 
 .bar:before, .bar:after {

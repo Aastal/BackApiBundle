@@ -52,8 +52,20 @@ class Export
 
             foreach ($fields as $f) {
                 $f = ucfirst(str_replace('_', "", $f));
+                $id = null;
+                $arrayString = null;
 
-                if (method_exists($entity, 'get' . ucfirst(str_replace(' ', "", $f)))) {
+                if (strpos($f, '.')) {
+                    $arrayString = explode(".", $f);
+
+                    if (strpos($f, '.id')) {
+                        $id = end($arrayString);
+                    }
+                }
+
+                if (isset($arrayString) && method_exists($entity, 'get' . ucfirst(str_replace(' ', "", $arrayString[0])))) {
+                    $value = $entity->{'get' . ucfirst(str_replace(' ', "", $arrayString[0]))}();
+                } elseif (method_exists($entity, 'get' . ucfirst(str_replace(' ', "", $f)))) {
                     $value = $entity->{'get' . ucfirst(str_replace(' ', "", $f))}();
                 } else {
                     $value = $entity->{'is' . ucfirst(str_replace(' ', "", $f))}();
@@ -72,8 +84,15 @@ class Export
                 } elseif (is_array($value)) {
                     $values[] = implode(',', $value);
                 } elseif ($value instanceof PersistentCollection) {
-                    if (isset($value->toArray()[0])) {
+                    if (isset($value->toArray()[0]) && !$id) {
                         $values[] = implode(",", $value->toArray());
+                    } elseif (isset($value->toArray()[0]) && $id) {
+
+                        foreach ($value->toArray() as $v) {
+                            $values[$f][] = $v->getId();
+                        }
+
+                        $values[$f] = implode(",", $values[$f]);
                     } else {
                         $values[] = $this->container->get('translator')->trans('geoks.data.empty');
                     }
