@@ -365,7 +365,6 @@ h1 {
     transition: all .3s ease-in-out;
     content: "";
     position: absolute;
-    left: 2rem;
     z-index: 1;
     width: 2rem;
     height: 2rem;
@@ -374,8 +373,6 @@ h1 {
   &:after {
     content: "";
     position: absolute;
-    top: rem(-1.5);
-    left: 1.7rem;
     width: 1.7rem;
     height: 1.7rem;
     background: #fff;
