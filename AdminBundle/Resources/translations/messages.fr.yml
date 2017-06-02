@@ -9,6 +9,8 @@ app:
   users: Utilisateurs
   question: Question
   questions: Questions
+  idea: Idée
+  ideas: Idées
   comment: Commentaire
   comments: Commentaires
   index: Accueil

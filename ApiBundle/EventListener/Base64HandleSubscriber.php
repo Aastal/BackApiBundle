@@ -4,7 +4,9 @@ namespace Geoks\ApiBundle\EventListener;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Geoks\ApiBundle\Entity\Image;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\File;
 
 class Base64HandleSubscriber implements EventSubscriber
 {

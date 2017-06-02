@@ -244,7 +244,7 @@ class Import
 
     private function manageException($entity)
     {
-        if ($this->container->hasParameter('geoks_admin.import')) {
+        if ($this->container->hasParameter('geoks_admin.import.directories')) {
             foreach ($this->container->getParameter('geoks_admin.import.directories') as $dir) {
                 foreach ($dir['exceptions'] as $exception) {
                     $exceptionClass = new $dir['service']($this->container);
