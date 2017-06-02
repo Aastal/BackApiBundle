@@ -2,6 +2,7 @@
 
 namespace Geoks\ApiBundle\Services;
 
+use \libphonenumber\PhoneNumber;
 use \libphonenumber\PhoneNumberUtil;
 use \libphonenumber\PhoneNumberFormat;
 use \libphonenumber\NumberParseException;
@@ -30,7 +31,7 @@ class SmsSender
     private $text;
 
     /**
-     * @var string
+     * @var PhoneNumber
      */
     private $num;
 
@@ -53,14 +54,7 @@ class SmsSender
     {
         $phoneUtil = PhoneNumberUtil::getInstance();
 
-        try {
-            $number = $phoneUtil->parse($this->num, "CH");
-        } catch (NumberParseException $e) {
-            $number = null;
-            $this->logger->error($e);
-        }
-
-        $number = $phoneUtil->format($number, PhoneNumberFormat::NATIONAL);
+        $number = $phoneUtil->format($this->num, PhoneNumberFormat::INTERNATIONAL);
         $number = str_replace(' ', '', $number);
 
         $ch = curl_init();

@@ -4,6 +4,7 @@ namespace Geoks\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Geoks\AdminBundle\Annotation\ChoiceList;
+use libphonenumber\PhoneNumber;
 use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -79,7 +80,7 @@ abstract class User extends BaseUser
     protected $dateOfBirth;
 
     /**
-     * @var integer
+     * @var PhoneNumber
      */
     protected $phone;
 
@@ -320,7 +321,7 @@ abstract class User extends BaseUser
     }
 
     /**
-     * @return int
+     * @return PhoneNumber
      */
     public function getPhone()
     {
