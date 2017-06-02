@@ -15,7 +15,9 @@ app:
   comments: Commentaires
   index: Accueil
   export: Exporter
+  delete: Supprimer
   add: Ajouter
+  exit: Quitter
   action_group: Actions Groupées
   last_users: Derniers utilisateurs
   admin-panel: Admin Panel
