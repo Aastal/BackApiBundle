@@ -10,16 +10,18 @@
 </div>
 
 <hr>
-<a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_create') }}">Ajouter</a>
+<a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_create') }}">{{ "app.add"|trans }}</a>
 
 {% if route_exists('geoks_admin_' ~ namePluralize ~ '_import') %}
-    <button type="button" class="btn btn-animate btn-light-blue"  data-toggle="modal" data-target="#import-data">Importer</button>
+    <button type="button" class="btn btn-animate btn-light-blue"  data-toggle="modal" data-target="#import-data">{{ "admin.import"|trans }}</button>
 
     {{ include('GeoksAdminBundle:Form:import.html.twig', {'form' : import_form}) }}
 {% endif %}
 
+<a class="btn btn-animate btn-blue">{{ "app.action_group"|trans }}</a>
+
 <div class="row">
-    <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="col-md-14 col-sm-14 col-xs-14">
         <div class="box box-info">
             <div class="box-header">
                 <h3 class="box-title">{{ ('app.' ~ namePluralize)|lower|trans }}</h3>
@@ -28,8 +30,11 @@
                 <div class="table-responsive">
                     <table class="table no-margin">
                         {% if entities|length %}
+
                             <thead>
+
                             <tr>
+                                <td>-</td>
                                 {% for field in fields %}
                                     <th{% if entities.isSorted('a.' ~ field) %} class="sorted"{% endif %}>
                                         {% if entities[0] is not null and attribute(entities[0], field) is defined %}
@@ -47,6 +52,7 @@
                             {% for entity in entities %}
                                 {% if (entity.roles is defined and 'ROLE_SUPER_ADMIN' not in entity.roles) or entity.roles is not defined or 'ROLE_SUPER_ADMIN' in app.user.roles %}
                                     <tr>
+                                        <td id="container1"><div><input type="checkbox" class="checkbox-animate"></div></td>
                                         {% for field in fields %}
                                             <td>
                                                 {% if '.' in field %}

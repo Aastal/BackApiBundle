@@ -13,6 +13,8 @@ app:
   comments: Commentaires
   index: Accueil
   export: Exporter
+  add: Ajouter
+  action_group: Actions Groupées
   last_users: Derniers utilisateurs
   admin-panel: Admin Panel
   return_admin_page: Retourner à la page d'administration

@@ -373,7 +373,7 @@ h1 {
 
   &:after {
     content: "";
-    position: absolute;
+    position: relative;
     top: rem(-1.5);
     left: 1.7rem;
     width: 1.7rem;
