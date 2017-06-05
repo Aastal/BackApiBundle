@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 abstract class AdminController extends Controller implements AdminControllerInterface
 {
@@ -451,4 +452,28 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
         return $payload;
     }
+
+    /**
+     *
+     * @Route("/entities-remove", name="delete_entities", options={"expose"=true})
+     *
+     */
+    public function multipleDeleteAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $em = $this->getDoctrine()->getManager();
+
+            foreach ($request->get("ids") as $id) {
+                $entity = $em->getRepository($this->getEntityRepository())->find($id);
+                $em->remove($entity);
+            }
+
+            $em->flush();
+
+            return new JsonResponse(["success"=>true]);
+        } else {
+            throw new \Exception('Ajax only');
+        }
+    }
 }
+

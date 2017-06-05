@@ -238,3 +238,24 @@ function uploadCheck(input){
         placeholder.setAttribute('src', "");
     }
 }
+
+function multipleDelete() {
+
+    var ids = [];
+
+    $("input[name='list-checkbox-delete[]']").each(function() {
+        if ($(this).prop('checked')) {
+            ids.push($(this).val());
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        url: Routing.generate('delete_entities'),
+        data: { ids : ids },
+
+        success: function() {
+            window.location.reload();
+        }
+    });
+}
