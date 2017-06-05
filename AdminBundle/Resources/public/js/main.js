@@ -238,3 +238,45 @@ function uploadCheck(input) {
         placeholder.setAttribute('src', "");
     }
 }
+
+function multipleDelete() {
+    var ids = [];
+    var entityName = $('#entity-name').text();
+
+    $("input[name='list-checkbox[]']").each(function() {
+        if ($(this).prop('checked')) {
+            ids.push($(this).val());
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        url: Routing.generate('delete_' + entityName + '_entities'),
+        data: { ids : ids },
+
+        success: function() {
+           window.location.reload();
+        }
+    });
+}
+
+function multipleExport() {
+    var datas = [];
+    var entityName = $('#entity-name').text();
+
+    $("input[name='list-checkbox[]']").each(function() {
+        if ($(this).prop('checked')) {
+            datas.push($(this).val());
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        url: Routing.generate('export_' + entityName + '_entities'),
+        data: { datas: datas },
+
+        success: function (response) {
+            window.location = window.location.origin + "/exports/" + response.success;
+        }
+    });
+}

@@ -99,4 +99,15 @@ class TemplateDoc extends TemplateController
     {
         return parent::searchAction($request);
     }
+
+    /**
+     * @Route("/entities-remove", name="delete_entities", options={"expose"=true})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function multipleDeleteAction(Request $request)
+    {
+        return parent::multipleDeleteAction($request);
+    }
 }
