@@ -221,7 +221,7 @@ window.addEventListener('popstate', function() {
     window.location.reload();
 });
 
-function uploadCheck(input){
+function uploadCheck(input) {
     var url = input.value;
     var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
     var placeholder = document.getElementById(input.id + '-placeholder');

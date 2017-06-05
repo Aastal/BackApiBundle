@@ -15,6 +15,9 @@ services:
     geoks.utils.string_manager:
         class: Geoks\ApiBundle\Utils\StringUtils
 
+    geoks.utils.image:
+        class: Geoks\ApiBundle\Utils\ImageUtil
+
     geoks.utils.calc:
         class: Geoks\ApiBundle\Utils\CalcUtil
 
