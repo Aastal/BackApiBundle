@@ -241,6 +241,7 @@ function uploadCheck(input){
 
 function multipleDelete() {
     var ids = [];
+    var entityName = $('#entity-name').text();
 
     $("input[name='list-checkbox[]']").each(function() {
         if ($(this).prop('checked')) {
@@ -250,7 +251,7 @@ function multipleDelete() {
 
     $.ajax({
         type: "POST",
-        url: Routing.generate('delete_entities'),
+        url: Routing.generate('delete_' + entityName + '_entities'),
         data: { ids : ids },
 
         success: function() {
@@ -261,6 +262,7 @@ function multipleDelete() {
 
 function multipleExport() {
     var datas = [];
+    var entityName = $('#entity-name').text();
 
     $("input[name='list-checkbox[]']").each(function() {
         if ($(this).prop('checked')) {
@@ -270,7 +272,7 @@ function multipleExport() {
 
     $.ajax({
         type: "POST",
-        url: Routing.generate('export_entities'),
+        url: Routing.generate('export_' + entityName + '_entities'),
         data: { datas: datas },
 
         success: function (response) {

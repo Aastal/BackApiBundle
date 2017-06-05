@@ -471,13 +471,9 @@ abstract class AdminController extends Controller implements AdminControllerInte
         }
     }
 
-    /**
-     * @Route("/entities-export", name="export_entities", options={"expose"=true})
-     */
     public function dataExportAction(Request $request)
     {
         $entities = [];
-
         $em = $this->getDoctrine()->getManager();
 
         foreach ($request->get("datas") as $id) {

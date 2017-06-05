@@ -1,6 +1,8 @@
 {% set name = filter_form.vars.attr.id|replace({'app.': ""}) %}
 {% set namePluralize = name_pluralize(name) %}
 
+<label id="entity-name" hidden="hidden">{{ namePluralize }}</label>
+
 <div class="row">
     {{ include('GeoksAdminBundle:Form:filter.html.twig', {'form' : filter_form}) }}
 </div>
@@ -52,9 +54,7 @@
                 <div class="table-responsive">
                     <table class="table no-margin">
                         {% if entities|length %}
-
                             <thead>
-
                             <tr>
                                 <td>-</td>
                                 {% for field in fields %}
