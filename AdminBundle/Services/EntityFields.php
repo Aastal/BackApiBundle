@@ -180,17 +180,6 @@ class EntityFields
                     ]
                 ];
                 break;
-            case 'phone_number':
-                $r['type'] = PhoneNumberType::class;
-                $r['options'] = [
-                    'label' => $fieldName,
-                    'default_region' => 'FR',
-                    'format' => PhoneNumberFormat::INTERNATIONAL,
-                    'attr' => [
-                        'class' => 'control-animate choices-list'
-                    ]
-                ];
-                break;
             default:
                 $r['type'] = TextType::class;
                 $r['options'] = [

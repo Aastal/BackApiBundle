@@ -240,7 +240,6 @@ function uploadCheck(input){
 }
 
 function multipleDelete() {
-
     var ids = [];
 
     $("input[name='list-checkbox[]']").each(function() {
@@ -255,13 +254,12 @@ function multipleDelete() {
         data: { ids : ids },
 
         success: function() {
-            window.location.reload();
+           window.location.reload();
         }
     });
 }
 
 function multipleExport() {
-
     var datas = [];
 
     $("input[name='list-checkbox[]']").each(function() {
@@ -273,9 +271,9 @@ function multipleExport() {
     $.ajax({
         type: "POST",
         url: Routing.generate('export_entities'),
-        data: {datas: datas},
+        data: { datas: datas },
 
-        success: function(response) {
+        success: function (response) {
             window.location = window.location.origin + "/exports/" + response.success;
         }
     });

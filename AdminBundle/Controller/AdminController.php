@@ -453,34 +453,26 @@ abstract class AdminController extends Controller implements AdminControllerInte
         return $payload;
     }
 
-    /**
-     *
-     * @Route("/entities-remove", name="delete_entities", options={"expose"=true})
-     *
-     */
     public function multipleDeleteAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
             $em = $this->getDoctrine()->getManager();
 
             foreach ($request->get("ids") as $id) {
-                $entity = $em->getRepository($this->getEntityRepository())->find($id);
+                $entity = $em->getRepository($this->entityRepository)->find($id);
                 $em->remove($entity);
             }
 
             $em->flush();
 
-            return new JsonResponse(["success"=>true]);
+            return new JsonResponse(["success" => true]);
         } else {
             throw new \Exception('Ajax only');
         }
     }
 
-
     /**
-     *
      * @Route("/entities-export", name="export_entities", options={"expose"=true})
-     *
      */
     public function dataExportAction(Request $request)
     {
@@ -489,7 +481,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $em = $this->getDoctrine()->getManager();
 
         foreach ($request->get("datas") as $id) {
-            $entities[] = $em->getRepository($this->getEntityRepository())->find($id);
+            $entities[] = $em->getRepository($this->entityRepository)->find($id);
         }
 
         $dumper = $this->get('geoks_admin.export');
@@ -501,7 +493,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $response->headers->set('Content-Type', $dumper->getContentType());
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $filenameWeb));
 
-        return new JsonResponse(["success"=>$filenameWeb]);
+        return new JsonResponse(["success" => $filenameWeb]);
 
     }
 }
