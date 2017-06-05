@@ -243,7 +243,7 @@ function multipleDelete() {
 
     var ids = [];
 
-    $("input[name='list-checkbox-delete[]']").each(function() {
+    $("input[name='list-checkbox[]']").each(function() {
         if ($(this).prop('checked')) {
             ids.push($(this).val());
         }
@@ -256,6 +256,27 @@ function multipleDelete() {
 
         success: function() {
             window.location.reload();
+        }
+    });
+}
+
+function multipleExport() {
+
+    var datas = [];
+
+    $("input[name='list-checkbox[]']").each(function() {
+        if ($(this).prop('checked')) {
+            datas.push($(this).val());
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        url: Routing.generate('export_entities'),
+        data: {datas: datas},
+
+        success: function(response) {
+            window.location = window.location.origin + "/exports/" + response.success;
         }
     });
 }

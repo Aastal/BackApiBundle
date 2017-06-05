@@ -475,5 +475,34 @@ abstract class AdminController extends Controller implements AdminControllerInte
             throw new \Exception('Ajax only');
         }
     }
+
+
+    /**
+     *
+     * @Route("/entities-export", name="export_entities", options={"expose"=true})
+     *
+     */
+    public function dataExportAction(Request $request)
+    {
+        $entities = [];
+
+        $em = $this->getDoctrine()->getManager();
+
+        foreach ($request->get("datas") as $id) {
+            $entities[] = $em->getRepository($this->getEntityRepository())->find($id);
+        }
+
+        $dumper = $this->get('geoks_admin.export');
+        $now = new \DateTime();
+
+        $response = new Response($dumper->export($entities, $this->fieldsExport));
+        $filenameWeb = 'export-' . strtolower($this->className) . '(' . $now->format('d-m-Y-H:i') . ').csv';
+
+        $response->headers->set('Content-Type', $dumper->getContentType());
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $filenameWeb));
+
+        return new JsonResponse(["success"=>$filenameWeb]);
+
+    }
 }
 
