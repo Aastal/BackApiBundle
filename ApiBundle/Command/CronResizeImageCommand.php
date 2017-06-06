@@ -65,7 +65,9 @@ class CronResizeImageCommand extends CronTaskCommand
 
                                 // Resize the file, depend of the project config
                                 foreach ($sizes as $key => $size) {
-                                    if (!$fsaws->has($target . "/thumb_" . $key . "_" . $stringManager->getEndOfString("/", $file))) {
+                                    $filename = $stringManager->getEndOfString("_", $file);
+
+                                    if (!$fsaws->has($target . "/thumb_" . $key . "_" . $stringManager->getEndOfString("/", $filename))) {
 
                                         $system->mkdir($root . "/../web/assets/$target");
                                         $newFile = $fsaws->get($file);
@@ -81,12 +83,16 @@ class CronResizeImageCommand extends CronTaskCommand
                                         $output->writeln($newFile->getFilename());
                                         $system->remove($root . "/../web/assets/$target/" . $stringManager->getEndOfString("/", $file));
                                         $system->remove($root . "/../web/assets/$target/" . $newFile->getFilename());
+                                    } else {
+                                        $output->write("=");
                                     }
                                 }
                             }
                         }
                     }
                 }
+
+                $output->writeln($meta->getName());
             }
         }
     }
