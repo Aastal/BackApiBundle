@@ -226,7 +226,7 @@ function uploadCheck(input) {
     var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
     var placeholder = document.getElementById(input.id + '-placeholder');
 
-    if (input.files && input.files[0]&& (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
+    if (input.files && input.files[0] && (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
         var reader = new FileReader();
 
         reader.onload = function (e) {
@@ -238,6 +238,21 @@ function uploadCheck(input) {
         placeholder.setAttribute('src', "");
     }
 }
+
+$(document).on('change', '#geoks_import_type', function () {
+
+    if (this.value == "replace") {
+        $(".warning").show();
+        $('.btn-blue').attr('disabled', 'disabled');
+    } else {
+        $(".warning").hide();
+        $('.btn-blue').removeAttr('disabled');
+    }
+});
+
+$(document).check('#check-import', function () {
+    $('.btn-blue').removeAttr('disabled');
+});
 
 function multipleDelete() {
     var ids = [];
@@ -255,7 +270,7 @@ function multipleDelete() {
         data: { ids : ids },
 
         success: function() {
-           window.location.reload();
+            window.location.reload();
         }
     });
 }

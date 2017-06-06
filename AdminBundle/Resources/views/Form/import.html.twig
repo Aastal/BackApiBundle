@@ -10,9 +10,23 @@
 
             <div class="modal-body text-center">
                 {{ form_start(form) }}
+                {% form_theme form 'GeoksAdminBundle:Form:fields.html.twig' %}
 
                 {{ form_row(form.type) }}
                 {{ form_row(form.import_csv) }}
+
+                <div class="warning">
+                    <div class="form-group">
+                        <p>
+                            Attention : Cette action entrainera <b>la suppression de l'intégralité de la table</b>.
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <input id="check-import" type="checkbox" class="checkbox-animate">
+                        <label class="control-label" for="check-import">Êtes-vous sûr ?</label>
+                    </div>
+                </div>
 
                 <hr>
                 <button type="submit" class="btn btn-animate btn-blue">Valider</button>

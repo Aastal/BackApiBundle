@@ -60,7 +60,9 @@ h1 {
   }
 }
 
-/* Hide for mobile, show later */
+/*
+ * Hide for mobile, show later
+ */
 .sidebar {
   display: none;
 }
@@ -634,6 +636,18 @@ select.control-animate {
         text-align: center;
       }
     }
+  }
+}
+
+.warning {
+  display: none;
+
+  p {
+    color: #F44336;
+  }
+
+  label {
+    margin-bottom: 5px;
   }
 }
 

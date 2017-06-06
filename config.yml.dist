@@ -194,11 +194,7 @@ liip_imagine:
                 wrapper: gaufrette://filesystem_aws_s3_images/
     filter_sets:
         resize_thumb:
-            filters:
-                medium:
-                    size: [500, 500]
-                small:
-                    size: [200, 200]
+            filters: ~
 
     resolvers:
        cache_resolver_aws_s3:

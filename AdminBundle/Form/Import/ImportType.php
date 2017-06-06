@@ -21,8 +21,6 @@ class ImportType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $table = $options["class"];
-
         $builder
             ->add('type', ChoiceType::class, [
                 'label' => "Type d'import",
