@@ -180,3 +180,41 @@ knp_snappy:
         enabled:    true
         binary:     xvfb-run wkhtmltopdf
         options:    []
+
+vich_uploader:
+    db_driver: orm
+    storage: gaufrette
+
+    mappings: ~
+
+liip_imagine:
+    loaders:
+        loader_aws_s3_images:
+            stream:
+                wrapper: gaufrette://filesystem_aws_s3_images/
+    filter_sets:
+        resize_thumb:
+            filters:
+                medium:
+                    size: [500, 500]
+                small:
+                    size: [200, 200]
+
+    resolvers:
+       cache_resolver_aws_s3:
+          aws_s3:
+              client_config:
+                  credentials:
+                      key:    "%amazon.s3.key%"
+                      secret: "%amazon.s3.secret%"
+                  version: "%amazon.s3.version%"
+                  region: "%amazon.s3.region%"
+              bucket: "%amazon.s3.bucket%"
+              get_options:
+                  Scheme: 'https'
+              put_options:
+                  CacheControl: 'max-age=86400'
+
+knp_gaufrette:
+    adapters: ~
+    stream_wrapper: ~

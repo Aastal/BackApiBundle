@@ -26,6 +26,7 @@ class CronResizeImageCommand extends CronTaskCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // If thumb config is defined
         if ($sizes = $this->getContainer()->getParameter('liip_imagine.filter_sets')["resize_thumb"]["filters"]) {
 
             $stringManager = $this->getContainer()->get('geoks.utils.string_manager');
@@ -39,25 +40,15 @@ class CronResizeImageCommand extends CronTaskCommand
 
             $vichMappings = $this->getContainer()->getParameter('vich_uploader.mappings');
 
-            $config = array(
-                'credentials' => [
-                    'key' => $this->getContainer()->getParameter('amazon.s3.key'),
-                    'secret' => $this->getContainer()->getParameter('amazon.s3.secret')
-                ],
-                'region' => $this->getContainer()->getParameter('amazon.s3.region'),
-                'version' => $this->getContainer()->getParameter('amazon.s3.version')
-            );
+            $fsaws = $this->getContainer()->get('geoks.api.aws')->getS3Instance();
 
-            $service = new S3Client($config);
-            $service->registerStreamWrapper();
-
-            $client = new AwsS3($service, $this->getContainer()->getParameter('amazon.s3.bucket'));
-            $fsaws = new \Gaufrette\Filesystem($client);
-
+            // Search in all the entities
             foreach ($metas as $meta) {
+
                 /** @var ClassMetadata $meta */
                 $classReflection = $meta->getReflectionClass();
 
+                // Check if the entity can upload a file
                 if ($reader->getClassAnnotation($classReflection, "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
 
                     $find = false;
@@ -71,6 +62,8 @@ class CronResizeImageCommand extends CronTaskCommand
                             $files = $fsaws->listKeys($target);
 
                             foreach ($files as $file) {
+
+                                // Resize the file, depend of the project config
                                 foreach ($sizes as $key => $size) {
                                     if (!$fsaws->has($target . "/thumb_" . $key . "_" . $stringManager->getEndOfString("/", $file))) {
 

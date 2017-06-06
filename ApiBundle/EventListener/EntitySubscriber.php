@@ -1,11 +1,16 @@
 <?php
 namespace Geoks\ApiBundle\EventListener;
 
+use Aws\S3\S3Client;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Util\ClassUtils;
+use Gaufrette\Adapter\AwsS3;
+use Gaufrette\Filesystem;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\File;
 
 class EntitySubscriber implements EventSubscriberInterface
 {
@@ -31,7 +36,7 @@ class EntitySubscriber implements EventSubscriberInterface
             array(
                 'event' => 'serializer.pre_serialize',
                 'method' => 'onPreSerialize'
-            ),
+            )
         );
     }
 
@@ -54,23 +59,41 @@ class EntitySubscriber implements EventSubscriberInterface
         if ($classReflection) {
             $reader = new AnnotationReader();
 
+            // Check if the entity can upload a file
             if ($reader->getClassAnnotation($classReflection, "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
+
                 foreach ($classReflection->getProperties() as $reflectionProperty) {
                     if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\FilePath")) {
+
                         $value = $entity->{'get' . $reflectionProperty->name}();
+                        $stringManager = $this->container->get('geoks.utils.string_manager');
 
                         if ($value) {
                             $path = $annotation->path;
                             $vichMappings = $this->container->getParameter('vich_uploader.mappings');
 
+                            // Check if the project use resize files and map them
+                            if ($sizes = $this->container->getParameter('liip_imagine.filter_sets')["resize_thumb"]["filters"]) {
+
+                                $arraySize = [];
+                                foreach ($sizes as $key => $size) {
+                                    $arraySize += [$key => $vichMappings[$path]["uri_prefix"] . "/thumb_" . $key . "_" . $stringManager->getEndOfString("/", $value)];
+                                }
+
+                                if (method_exists($entity, 'setImageThumbs') && $arraySize) {
+                                    $entity->setImageThumbs($arraySize);
+                                }
+                            }
+
                             $entity->{'set' . $reflectionProperty->name}(
                                 $vichMappings[$path]["uri_prefix"] .
                                 '/' .
-                                $this->container->get('geoks.utils.string_manager')->getEndOfString("/", $value)
+                                $stringManager->getEndOfString("/", $value)
                             );
                         }
                     }
                 }
+
             }
         }
     }
