@@ -240,18 +240,25 @@ function uploadCheck(input) {
 }
 
 $(document).on('change', '#geoks_import_type', function () {
+    var warning = $(".warning");
 
     if (this.value == "replace") {
-        $(".warning").show();
-        $('.btn-blue').attr('disabled', 'disabled');
+        warning.show();
+        warning.parent().find('.btn-blue').attr('disabled', 'disabled');
     } else {
-        $(".warning").hide();
-        $('.btn-blue').removeAttr('disabled');
+        warning.hide();
+        warning.parent().find('.btn-blue').removeAttr('disabled');
     }
 });
 
-$(document).check('#check-import', function () {
-    $('.btn-blue').removeAttr('disabled');
+$(document).on('change', '#check-import', function () {
+    var warning = $(".warning");
+
+    if (this.checked) {
+        warning.parent().find('.btn-blue').removeAttr('disabled');
+    } else {
+        warning.parent().find('.btn-blue').attr('disabled', 'disabled');
+    }
 });
 
 function multipleDelete() {
