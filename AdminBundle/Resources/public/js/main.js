@@ -234,7 +234,7 @@ function uploadCheck(input) {
         };
 
         reader.readAsDataURL(input.files[0]);
-    } else{
+    } else {
         placeholder.setAttribute('src', "");
     }
 }
