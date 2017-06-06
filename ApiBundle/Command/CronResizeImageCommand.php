@@ -45,6 +45,8 @@ class CronResizeImageCommand extends CronTaskCommand
             // Search in all the entities
             foreach ($metas as $meta) {
 
+                $output->writeln($meta->getName());
+
                 /** @var ClassMetadata $meta */
                 $classReflection = $meta->getReflectionClass();
 
@@ -53,6 +55,7 @@ class CronResizeImageCommand extends CronTaskCommand
 
                     $find = false;
                     foreach ($classReflection->getProperties() as $reflectionProperty) {
+
                         if (!$find && $annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\FilePath")) {
 
                             $find = true;
@@ -77,12 +80,17 @@ class CronResizeImageCommand extends CronTaskCommand
                                         $system->copy($newFile, $root . "/../web/assets/$target" . "/thumb_" . $key . "_" . $newFile->getFilename());
                                         $newFile = new File($root . "/../web/assets/$target" . "/thumb_" . $key . "_" . $newFile->getFilename());
 
-                                        $imgUtil->resizeImage($newFile, $size["size"][0], $size["size"][1]);
-                                        $fsaws->write($target . "/" . $newFile->getFilename(), file_get_contents($newFile));
+                                        $resize = $imgUtil->resizeImage($newFile, $size["size"][0], $size["size"][1]);
 
-                                        $output->writeln($newFile->getFilename());
-                                        $system->remove($root . "/../web/assets/$target/" . $stringManager->getEndOfString("/", $file));
-                                        $system->remove($root . "/../web/assets/$target/" . $newFile->getFilename());
+                                        if ($resize) {
+                                            $fsaws->write($target . "/" . $newFile->getFilename(), file_get_contents($newFile));
+
+                                            $output->writeln($newFile->getFilename());
+                                            $system->remove($root . "/../web/assets/$target/" . $stringManager->getEndOfString("/", $file));
+                                            $system->remove($root . "/../web/assets/$target/" . $newFile->getFilename());
+                                        } else {
+                                            $output->write("error image : " . $newFile->getFilename());
+                                        }
                                     } else {
                                         $output->write("=");
                                     }
@@ -91,8 +99,6 @@ class CronResizeImageCommand extends CronTaskCommand
                         }
                     }
                 }
-
-                $output->writeln($meta->getName());
             }
         }
     }
