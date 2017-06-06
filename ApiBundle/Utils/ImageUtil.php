@@ -8,7 +8,7 @@ class ImageUtil
 {
     public function resizeImage(File $image, $width, $height)
     {
-        if (list($width_orig, $height_orig) = getimagesize($image->getRealPath())) {
+        if (list($width_orig, $height_orig) = @getimagesize($image->getRealPath())) {
 
             $ratio_orig = $width_orig / $height_orig;
 
