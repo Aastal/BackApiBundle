@@ -97,11 +97,6 @@ services:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 
-    geoks.image_subscriber:
-        class: Geoks\ApiBundle\EventListener\ImageSubscriber
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
     geoks.entity_subscriber:
         class: Geoks\ApiBundle\EventListener\EntitySubscriber
         arguments: ["@service_container"]

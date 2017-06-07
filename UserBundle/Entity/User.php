@@ -143,6 +143,14 @@ abstract class User extends BaseUser
      */
     protected $imageName;
 
+    /**
+     * @var array
+     *
+     * @Expose
+     * @Groups({"details", "list"})
+     */
+    protected $imageThumbs;
+
     public function __construct()
     {
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
@@ -427,5 +435,21 @@ abstract class User extends BaseUser
     public function setImageName($imageName)
     {
         $this->imageName = $imageName;
+    }
+
+    /**
+     * @return array
+     */
+    public function getImageThumbs()
+    {
+        return $this->imageThumbs;
+    }
+
+    /**
+     * @param array $imageThumbs
+     */
+    public function setImageThumbs($imageThumbs)
+    {
+        $this->imageThumbs = $imageThumbs;
     }
 }

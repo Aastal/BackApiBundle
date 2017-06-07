@@ -11,10 +11,6 @@ use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ImportType extends AbstractType
 {
-    /**
-     * @var string
-     */
-    private $entityName;
 
     /**
      * @param FormBuilderInterface $builder
@@ -40,9 +36,10 @@ class ImportType extends AbstractType
                 ]
             ])
             ->add('images', VichImageType::class, [
-                'label' => "Importer les images de l'import",
-                "required" => false,
+                'label' => "Images liées à l'import",
+                'required' => false,
                 'attr' => [
+                    'multiple' => true,
                     'class' => 'control-animate'
                 ]
             ])
