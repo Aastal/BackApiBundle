@@ -4,6 +4,7 @@ namespace Geoks\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Geoks\AdminBundle\Annotation\ChoiceList;
+use Geoks\ApiBundle\EventListener;
 use libphonenumber\PhoneNumber;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -15,9 +16,11 @@ use JMS\Serializer\Annotation\MaxDepth;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use Geoks\AdminBundle\Annotation\HasChoiceField;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Geoks\ApiBundle\Annotation\FilePath;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Geoks\ApiBundle\Annotation\FilePath;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Geoks\AdminBundle\Annotation\ImportField;
+use Misd\PhoneNumberBundle\Validator\Constraints\PhoneNumber as AssertPhoneNumber;
 
 /**
  * Class User
@@ -126,6 +129,7 @@ abstract class User extends BaseUser
      * @ChoiceList(choices = {"ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
      */
     protected $roles;
+
 
     /**
      * @var File
