@@ -90,7 +90,7 @@ class Import
         return $this->images;
     }
 
-    public function addImage(UploadedFile $image)
+    public function addImage($image)
     {
         if (!$this->images->contains($image)) {
             $this->images->add($image);
@@ -99,7 +99,7 @@ class Import
         return $this;
     }
 
-    public function removeImage(UploadedFile $image)
+    public function removeImage($image)
     {
         $this->images->remove($image);
 

@@ -97,9 +97,9 @@ class Import
             if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\AdminBundle\\Annotation\\ImportField")) {
 
                 if ((isset($annotation->type) && isset($annotation->name)) && $annotation->type == "file") {
-                    $fields[$annotation->name] = $reflectionProperty->name;
-                } else {
-                    $fields[$annotation->name] = $reflectionProperty->name;
+                    $fields[$annotation->name] = [$reflectionProperty->name => "file"];
+                } elseif (isset($annotation->name)) {
+                    $fields[$annotation->name] = [$reflectionProperty->name => "string"];
                 }
             }
         }
@@ -108,23 +108,26 @@ class Import
             foreach ($data as $item) {
 
                 foreach ($item as $key => &$value) {
+
                     if ($value) {
                         if (!is_object($value) && $this->container->get('geoks.utils.string_manager')->validateDate($value)) {
                             $value = $this->container->get('geoks.utils.string_manager')->validateDate($value);
                         }
 
-                        if (@!$item[key($fields)] && @array_key_exists($key, $fields)) {
-                            $item[$fields[$key]] = $value;
+                        if (!empty($fields) && array_key_exists($key, $fields)) {
+                            $item[key($fields[$key])] = $value;
                             unset($item[$key]);
-                        } elseif (@array_search($key, $fields)) {
+                        } elseif (!empty($fields) && (array_search($key, $fields))) {
                             $item[key($fields)] = $value;
+                            unset($fields[$key]);
                         }
                     } else {
                         $rc = new \ReflectionClass($this->class);
+                        $setter = 'set' . ucfirst(key($fields[$key]));
 
                         if (!empty($fields) && array_key_exists($key, $fields)) {
-                            if ($rc->hasMethod('set' . ucfirst($fields[$key]))) {
-                                if ($docs = $rc->getMethod('set' . ucfirst($fields[$key]))->getDocComment()) {
+                            if ($rc->hasMethod($setter)) {
+                                if ($docs = $rc->getMethod($setter)->getDocComment()) {
                                     if (strpos($docs, "@param datetime") || strpos($docs, "@param \\DateTime")) {
                                         $value = new \DateTime(null);
                                     }
@@ -134,14 +137,16 @@ class Import
                     }
                 }
 
-                foreach ($this->images as $image) {
+                if ($this->images && reset($this->images) instanceof UploadedFile) {
+                    foreach ($this->images as $image) {
 
-                    /** @var UploadedFile $image */
-                    $string = explode(".", $image->getClientOriginalName());
-                    $string = $string[0];
+                        /** @var UploadedFile $image */
+                        $string = explode(".", $image->getClientOriginalName());
+                        $string = $string[0];
 
-                    if ($item[key($fields)] == $string) {
-                        $item[key($fields)] = $image;
+                        if ($item[key($fields)] == $string) {
+                            $item[key($fields)] = $image;
+                        }
                     }
                 }
 
