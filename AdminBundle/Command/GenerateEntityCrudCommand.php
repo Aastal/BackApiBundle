@@ -183,7 +183,7 @@ class GenerateEntityCrudCommand extends ContainerAwareCommand
                     file_put_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/' . $name . 'Controller.php', $content);
                 }
 
-                exec("php app/console generate:doctrine:entities AppBundle:" . $m->getReflectionClass()->getShortName());
+                exec("php bin/console generate:doctrine:entities AppBundle:" . $m->getReflectionClass()->getShortName());
             }
         }
     }
