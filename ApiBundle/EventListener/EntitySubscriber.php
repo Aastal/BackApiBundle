@@ -46,7 +46,7 @@ class EntitySubscriber implements EventSubscriberInterface
     public function onPreSerialize(PreSerializeEvent $event)
     {
         $entity = $event->getObject();
-
+var_dump('test');
         try
         {
             $classReflection = ClassUtils::newReflectionObject($entity);
