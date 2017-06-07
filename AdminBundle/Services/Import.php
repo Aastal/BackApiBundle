@@ -116,15 +116,15 @@ class Import
 
                         if (!empty($fields) && array_key_exists($key, $fields)) {
 
-                            if ($fields[$key]['type'] == 'name') {
+                            if ($fields[$key]['type'] == 'string') {
                                 $item[key($fields[$key])] = $value;
                                 unset($item[$key]);
                             }
                         } elseif (!empty($fields)) {
 
-                            foreach ($fields as &$field) {
-                                if (array_key_exists($key, $field)) {
-                                    $item[key($fields)] = $value;
+                            foreach ($fields as $k => $field) {
+                                if ($key == $field['name']) {
+                                    $item[$k] = $value;
                                 }
                             }
 
@@ -152,14 +152,19 @@ class Import
                         $string = explode(".", $image->getClientOriginalName());
                         $string = $string[0];
 
-                        if ($item[key($fields)] == $string) {
-                            $item[key($fields)] = $image;
+                        foreach ($fields as $key => $v) {
+
+                            if ($item[$key] == $string) {
+                                $item[$key] = $image;
+                            }
                         }
                     }
                 }
 
-                if (!$item[key($fields)] instanceof File) {
-                    $item[key($fields)] = null;
+                foreach ($fields as $key => &$value) {
+                    if (isset($item[$key]) && !$item[$key] instanceof File && $value['type'] == 'file') {
+                        $item[$key] = null;
+                    }
                 }
 
                 $entities[] = $serializer->denormalize($item, $this->class);
