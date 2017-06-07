@@ -108,7 +108,6 @@ class Import
             foreach ($data as $item) {
 
                 foreach ($item as $key => &$value) {
-
                     if ($value) {
                         if (!is_object($value) && $this->container->get('geoks.utils.string_manager')->validateDate($value)) {
                             $value = $this->container->get('geoks.utils.string_manager')->validateDate($value);
@@ -118,7 +117,7 @@ class Import
                             foreach ($fields as $k => $field) {
                                 if ($key == $field['name'] && $field['type'] == 'file') {
                                     $item[$k] = $value;
-                                } elseif ($key == $k) {
+                                } elseif ($key == $k && $field['type'] == 'string') {
                                     $item[$field['name']] = $value;
                                     unset($item[$key]);
                                 }
@@ -148,7 +147,7 @@ class Import
                         $string = $string[0];
 
                         foreach ($fields as $key => $v) {
-                            if ($item[$key] == $string) {
+                            if (isset($item[$key]) && $item[$key] == $string) {
                                 $item[$key] = $image;
                             }
                         }
@@ -157,7 +156,6 @@ class Import
 
                 foreach ($fields as $key => &$value) {
                     if (isset($item[$key]) && !$item[$key] instanceof File && $value['type'] == 'file') {
-
                         $item[$key] = null;
                     }
                 }
