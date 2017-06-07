@@ -26,6 +26,8 @@ class Image
      */
     public function setImage($image)
     {
-        $this->image = $image;
+        if ($image instanceof File) {
+            $this->image = $image;
+        }
     }
 }

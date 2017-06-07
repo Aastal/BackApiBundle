@@ -97,9 +97,9 @@ class Import
             if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\AdminBundle\\Annotation\\ImportField")) {
 
                 if ((isset($annotation->type) && isset($annotation->name)) && $annotation->type == "file") {
-                    $fields[$annotation->name] = [$reflectionProperty->name => "file"];
+                    $fields[$annotation->name] = ['name' => $reflectionProperty->name, 'type' => "file"];
                 } elseif (isset($annotation->name)) {
-                    $fields[$annotation->name] = [$reflectionProperty->name => "string"];
+                    $fields[$annotation->name] = ['name' => $reflectionProperty->name, 'type' => "string"];
                 }
             }
         }
@@ -115,11 +115,19 @@ class Import
                         }
 
                         if (!empty($fields) && array_key_exists($key, $fields)) {
-                            $item[key($fields[$key])] = $value;
-                            unset($item[$key]);
-                        } elseif (!empty($fields) && (array_search($key, $fields))) {
-                            $item[key($fields)] = $value;
-                            unset($fields[$key]);
+
+                            if ($fields[$key]['type'] == 'name') {
+                                $item[key($fields[$key])] = $value;
+                                unset($item[$key]);
+                            }
+                        } elseif (!empty($fields)) {
+
+                            foreach ($fields as &$field) {
+                                if (array_key_exists($key, $field)) {
+                                    $item[key($fields)] = $value;
+                                }
+                            }
+
                         }
                     } else {
                         $rc = new \ReflectionClass($this->class);
@@ -148,6 +156,10 @@ class Import
                             $item[key($fields)] = $image;
                         }
                     }
+                }
+
+                if (!$item[key($fields)] instanceof File) {
+                    $item[key($fields)] = null;
                 }
 
                 $entities[] = $serializer->denormalize($item, $this->class);
