@@ -39,6 +39,13 @@ class ImportType extends AbstractType
                     'class' => 'control-animate'
                 ]
             ])
+            ->add('images', VichImageType::class, [
+                'label' => "Importer les images de l'import",
+                "required" => false,
+                'attr' => [
+                    'class' => 'control-animate'
+                ]
+            ])
         ;
     }
 
