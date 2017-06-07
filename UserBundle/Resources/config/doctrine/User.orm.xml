@@ -31,6 +31,7 @@
         <field name="phone" length="13" column="phone" type="phone_number" nullable="true" />
         <field name="address" column="address" type="string" length="255" nullable="true" />
         <field name="gcmToken" column="gcm_token" type="string" length="255" nullable="true" />
+        <field name="imageName" column="image_name" type="string" length="255" nullable="true" />
 
     </mapped-superclass>
 

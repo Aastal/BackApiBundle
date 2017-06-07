@@ -4,6 +4,7 @@ namespace Geoks\ApiBundle\Controller;
 
 use Geoks\ApiBundle\Form\Security\ChangePasswordForm;
 use Geoks\UserBundle\Entity\User;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -302,5 +303,26 @@ abstract class UserController extends ApiController
         }
 
         return $this->serializeResponse($form, Response::HTTP_BAD_REQUEST);
+    }
+
+    public function updateUserPicture(Request $request)
+    {
+        if (!$this->getUser()) {
+            return $this->serializeResponse(["error" => $this->get('translator')->trans("weave.user.notConnected")], Response::HTTP_FORBIDDEN);
+        }
+
+        if (!$request->files->get('imageFile')) {
+            return $this->serializeResponse(["error" => $this->get('translator')->trans("weave.imageFile.notFound")], Response::HTTP_BAD_REQUEST);
+        }
+
+        /** @var File $image */
+        $image = $request->files->get('imageFile');
+
+        $this->getUser()->setImageFile(new UploadedFile($image, $image->getFilename()));
+
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        return $this->serializeResponse(["details" => $this->getUser()]);
     }
 }

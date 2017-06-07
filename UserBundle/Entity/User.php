@@ -5,6 +5,7 @@ namespace Geoks\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Geoks\AdminBundle\Annotation\ChoiceList;
 use libphonenumber\PhoneNumber;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -14,6 +15,9 @@ use JMS\Serializer\Annotation\MaxDepth;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use Geoks\AdminBundle\Annotation\HasChoiceField;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Geoks\ApiBundle\Annotation\FilePath;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * Class User
@@ -21,6 +25,7 @@ use Geoks\AdminBundle\Annotation\HasChoiceField;
  *
  * @ExclusionPolicy("all")
  * @HasChoiceField
+ * @Vich\Uploadable
  */
 abstract class User extends BaseUser
 {
@@ -121,6 +126,22 @@ abstract class User extends BaseUser
      * @ChoiceList(choices = {"ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
      */
     protected $roles;
+
+    /**
+     * @var File
+     *
+     * @Vich\UploadableField(mapping="user_image", fileNameProperty="imageName")
+     */
+    protected $imageFile;
+
+    /**
+     * @var string
+     *
+     * @Expose
+     * @Groups({"details", "list"})
+     * @FilePath(path="user_image", type="vich")
+     */
+    protected $imageName;
 
     public function __construct()
     {
@@ -366,5 +387,45 @@ abstract class User extends BaseUser
     public function setGcmToken($gcmToken)
     {
         $this->gcmToken = $gcmToken;
+    }
+
+    /**
+     * @return File
+     */
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $image
+     *
+     * @return User
+     */
+    public function setImageFile(File $image = null)
+    {
+        $this->imageFile = $image;
+
+        if ($image) {
+            $this->updated = new \DateTime('now');
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageName()
+    {
+        return $this->imageName;
+    }
+
+    /**
+     * @param string $imageName
+     */
+    public function setImageName($imageName)
+    {
+        $this->imageName = $imageName;
     }
 }
