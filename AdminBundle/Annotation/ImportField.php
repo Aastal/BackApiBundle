@@ -12,4 +12,9 @@ final class ImportField
      * @var string
      */
     public $name;
+
+    /**
+     * @var string
+     */
+    public $type;
 }

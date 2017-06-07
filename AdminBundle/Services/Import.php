@@ -49,6 +49,7 @@ class Import
      * @param File $file
      * @param string $class
      * @param string $type
+     * @param string $dedupeField
      *
      * @return array
      */
@@ -83,7 +84,12 @@ class Import
         $fields = [];
         foreach ($reflection->getProperties() as $reflectionProperty) {
             if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\AdminBundle\\Annotation\\ImportField")) {
-                $fields[$annotation->name] = $reflectionProperty->name;
+
+                if ((isset($annotation->type) && isset($annotation->name)) && $annotation->type == "file") {
+                    $fields[$annotation->name] = $reflectionProperty->name;
+                } else {
+                    $fields[$annotation->name] = $reflectionProperty->name;
+                }
             }
         }
 
@@ -95,6 +101,7 @@ class Import
                             $value = $this->container->get('geoks.utils.string_manager')->validateDate($value);
                         }
 
+                            var_dump($item);
                         if (!empty($fields) && array_key_exists($key, $fields)) {
                             $item[$fields[$key]] = $value;
                             unset($item[$key]);
@@ -113,7 +120,7 @@ class Import
                         }
                     }
                 }
-
+                die;
                 $entities[] = $serializer->denormalize($item, $this->class);
             }
         } else {
