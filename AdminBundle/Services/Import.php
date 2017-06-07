@@ -9,7 +9,9 @@ use Doctrine\DBAL\Types\DateTimeType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
@@ -37,6 +39,11 @@ class Import
     private $class;
 
     /**
+     * @var array
+     */
+    private $images;
+
+    /**
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -46,15 +53,19 @@ class Import
     }
 
     /**
-     * @param File $file
+     * @param Form $form
      * @param string $class
-     * @param string $type
      * @param string $dedupeField
      *
      * @return array
      */
-    public function importFromCsv($file, $class, $type = null, $dedupeField = null)
+    public function importFromCsv($form, $class, $dedupeField = null)
     {
+        $file = $form->get('csv')->getData();
+        $type = $form->get('type')->getData();
+
+        $this->images = $form->get('images')->getData();
+
         $data = $this->parseCsv($file);
         $response = $this->importData($data, $class, $type, $dedupeField);
 
@@ -95,16 +106,18 @@ class Import
 
         if (array_key_exists("0", $data)) {
             foreach ($data as $item) {
+
                 foreach ($item as $key => &$value) {
                     if ($value) {
                         if (!is_object($value) && $this->container->get('geoks.utils.string_manager')->validateDate($value)) {
                             $value = $this->container->get('geoks.utils.string_manager')->validateDate($value);
                         }
 
-                            var_dump($item);
-                        if (!empty($fields) && array_key_exists($key, $fields)) {
+                        if (@!$item[key($fields)] && @array_key_exists($key, $fields)) {
                             $item[$fields[$key]] = $value;
                             unset($item[$key]);
+                        } elseif (@array_search($key, $fields)) {
+                            $item[key($fields)] = $value;
                         }
                     } else {
                         $rc = new \ReflectionClass($this->class);
@@ -120,7 +133,18 @@ class Import
                         }
                     }
                 }
-                die;
+
+                foreach ($this->images as $image) {
+
+                    /** @var UploadedFile $image */
+                    $string = explode(".", $image->getClientOriginalName());
+                    $string = $string[0];
+
+                    if ($item[key($fields)] == $string) {
+                        $item[key($fields)] = $image;
+                    }
+                }
+
                 $entities[] = $serializer->denormalize($item, $this->class);
             }
         } else {
@@ -143,7 +167,7 @@ class Import
                     $header = $row;
                 } else {
                     foreach ($header as &$h) {
-                        $h = trim($h);
+                        $h = trim(lcfirst($h));
                     }
 
                     $data[] = array_combine($header, $row);

@@ -4,8 +4,11 @@ namespace Geoks\AdminBundle\Form\Import;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
@@ -29,17 +32,17 @@ class ImportType extends AbstractType
                     'class' => 'control-animate'
                 ]
             ])
-            ->add('import_csv', FileType::class, [
+            ->add('csv', FileType::class, [
                 'label' => "Importer un fichier CSV",
                 'attr' => [
                     'class' => 'control-animate'
                 ]
             ])
-            ->add('images', VichImageType::class, [
+            ->add('images', FileType::class, [
                 'label' => "Images liées à l'import",
                 'required' => false,
+                'multiple' => true,
                 'attr' => [
-                    'multiple' => true,
                     'class' => 'control-animate'
                 ]
             ])
@@ -57,7 +60,7 @@ class ImportType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => null,
+            'data_class' => 'Geoks\AdminBundle\Entity\Import',
             'csrf_protection' => false,
             'allow_extra_fields' => true,
             "required" => true
