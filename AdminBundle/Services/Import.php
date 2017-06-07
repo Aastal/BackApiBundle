@@ -114,20 +114,15 @@ class Import
                             $value = $this->container->get('geoks.utils.string_manager')->validateDate($value);
                         }
 
-                        if (!empty($fields) && array_key_exists($key, $fields)) {
-
-                            if ($fields[$key]['type'] == 'string') {
-                                $item[key($fields[$key])] = $value;
-                                unset($item[$key]);
-                            }
-                        } elseif (!empty($fields)) {
-
+                        if ($fields) {
                             foreach ($fields as $k => $field) {
-                                if ($key == $field['name']) {
+                                if ($key == $field['name'] && $field['type'] == 'file') {
                                     $item[$k] = $value;
+                                } elseif ($key == $k) {
+                                    $item[$field['name']] = $value;
+                                    unset($item[$key]);
                                 }
                             }
-
                         }
                     } else {
                         $rc = new \ReflectionClass($this->class);
@@ -153,7 +148,6 @@ class Import
                         $string = $string[0];
 
                         foreach ($fields as $key => $v) {
-
                             if ($item[$key] == $string) {
                                 $item[$key] = $image;
                             }
@@ -163,6 +157,7 @@ class Import
 
                 foreach ($fields as $key => &$value) {
                     if (isset($item[$key]) && !$item[$key] instanceof File && $value['type'] == 'file') {
+
                         $item[$key] = null;
                     }
                 }
