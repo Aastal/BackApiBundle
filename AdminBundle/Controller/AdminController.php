@@ -349,7 +349,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $form = $this->__importForm();
         $form->handleRequest($request);
 
-        $result = $this->container->get('geoks_admin.import')->importFromCsv($form->get('import_csv')->getData(), $this->getEntityRepository(), $form->get('type')->getData());
+        $result = $this->container->get('geoks_admin.import')->importFromCsv($form, $this->getEntityRepository());
 
         if ($result["success"] === true) {
             $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'import');
