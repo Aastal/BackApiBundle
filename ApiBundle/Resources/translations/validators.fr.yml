@@ -18,3 +18,6 @@ geoks:
         lastname:
             assert:
                 notNull: "Merci de renseigner un nom"
+        username:
+            assert:
+                already_used: "Ce pseudo est déjà utilisé"
