@@ -101,7 +101,7 @@ class TemplateDoc extends TemplateController
     }
 
     /**
-     * @Route("/entities-remove", name="delete_entities", options={"expose"=true})
+     * @Route("/entities-remove", name="delete_template_entities", options={"expose"=true})
      *
      * @param Request $request
      * @return JsonResponse
@@ -109,5 +109,16 @@ class TemplateDoc extends TemplateController
     public function multipleDeleteAction(Request $request)
     {
         return parent::multipleDeleteAction($request);
+    }
+
+    /**
+     * @Route("/entities-export", name="export_template_entities", options={"expose"=true})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function dataExportAction(Request $request)
+    {
+        return parent::dataExportAction($request);
     }
 }

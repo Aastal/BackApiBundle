@@ -2,6 +2,7 @@
 
 namespace Geoks\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Geoks\AdminBundle\Annotation\ChoiceList;
 use Geoks\ApiBundle\EventListener;
@@ -154,6 +155,17 @@ abstract class User extends BaseUser
      * @Groups({"details", "list"})
      */
     protected $imageThumbs;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @Expose
+     * @Groups({"posts"})
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Post", mappedBy="user")
+     * @ORM\OrderBy({"id"="DESC"})
+     */
+    protected $posts;
 
     public function __construct()
     {
@@ -455,5 +467,21 @@ abstract class User extends BaseUser
     public function setImageThumbs($imageThumbs)
     {
         $this->imageThumbs = $imageThumbs;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getPost()
+    {
+        return $this->posts;
+    }
+
+    /**
+     * @param ArrayCollection $posts
+     */
+    public function setPost($posts)
+    {
+        $this->posts = $posts;
     }
 }

@@ -77,7 +77,6 @@ class ExportType extends AbstractType
                     ->add($name, EntityType::class, [
                         'label' => ucfirst($name),
                         'class' => $class['targetEntity'],
-                        'empty_value' => "",
                         'attr' => [
                             'class' => 'control-animate'
                         ]

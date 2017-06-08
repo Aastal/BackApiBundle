@@ -262,6 +262,7 @@ $(document).on('change', '#check-import', function () {
 });
 
 function multipleDelete() {
+    console.log('test');
     var ids = [];
     var entityName = $('#entity-name').text();
 
