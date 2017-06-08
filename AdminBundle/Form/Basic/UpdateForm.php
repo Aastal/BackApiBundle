@@ -66,6 +66,7 @@ class UpdateForm extends AbstractType
         }
 
         foreach ($rowArr as $name => $field) {
+
             if (isset($field["type"]) && !in_array($name, $banList)) {
 
                 $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);
