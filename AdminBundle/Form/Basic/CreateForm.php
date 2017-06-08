@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -47,8 +48,8 @@ class CreateForm extends AbstractType
         $rowAssos = $container->get('geoks_admin.entity_fields')->getFieldsAssociations($table);
 
         foreach ($rowArr as $name => $field) {
-            if (isset($field["type"]) && !in_array($name, $banList)) {
 
+            if (isset($field["type"]) && !in_array($name, $banList)) {
                 $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);
 
                 if ((isset($field["nullable"]) && $field["nullable"]) || $field["type"] == 'boolean') {
@@ -127,10 +128,24 @@ class CreateForm extends AbstractType
 
         if (isset($rowArr["password"])) {
             $builder
-                ->add('plainPassword', PasswordType::class, [
-                    'label' => $this->entityName . '.password',
+                ->remove('password')
+                ->add('plainPassword', RepeatedType::class, [
+                    'type' => TextType::class,
+                    'first_options' => [
+                        'label' => $this->entityName . '.password',
+                        'attr' => [
+                            'class' => 'control-animate'
+                        ]
+                    ],
+                    'second_options' => [
+                        'label' => $this->entityName . '.confirmPassword',
+                        'attr' => [
+                            'class' => 'control-animate'
+                        ]
+                    ],
+                    'invalid_message' => 'geoks.password.mismatch',
                     'attr' => [
-                        'class' => 'control-animate'
+                        'class' => 'form-horizontal'
                     ]
                 ])
             ;
