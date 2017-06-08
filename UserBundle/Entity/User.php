@@ -156,17 +156,6 @@ abstract class User extends BaseUser
      */
     protected $imageThumbs;
 
-    /**
-     * @var ArrayCollection
-     *
-     * @Expose
-     * @Groups({"posts"})
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Post", mappedBy="user")
-     * @ORM\OrderBy({"id"="DESC"})
-     */
-    protected $posts;
-
     public function __construct()
     {
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
@@ -467,21 +456,5 @@ abstract class User extends BaseUser
     public function setImageThumbs($imageThumbs)
     {
         $this->imageThumbs = $imageThumbs;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getPost()
-    {
-        return $this->posts;
-    }
-
-    /**
-     * @param ArrayCollection $posts
-     */
-    public function setPost($posts)
-    {
-        $this->posts = $posts;
     }
 }
