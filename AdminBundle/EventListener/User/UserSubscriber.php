@@ -44,7 +44,7 @@ class UserSubscriber implements EventSubscriber
                 $user->setUsernameCanonical($user->getEmail());
             }
 
-            if ($user->getPassword() && strlen($user->getSalt() == 0)) {
+            if ($user->getPassword() && strlen($user->getSalt()) == 0) {
                 $encoder = $this->container->get('security.password_encoder');
                 $encoded = $encoder->encodePassword($user, $user->getPassword());
 
@@ -58,7 +58,7 @@ class UserSubscriber implements EventSubscriber
         $user = $args->getEntity();
 
         if ($user instanceof User) {
-            if ($user->getPlainPassword() && strlen($user->getSalt() == 0)) {
+            if ($user->getPlainPassword() && strlen($user->getSalt()) == 0) {
                 $encoder = $this->container->get('security.password_encoder');
                 $encoded = $encoder->encodePassword($user, $user->getPlainPassword());
 
