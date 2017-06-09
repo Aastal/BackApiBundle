@@ -247,10 +247,6 @@ abstract class AdminController extends Controller implements AdminControllerInte
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
 
-                if ($form->has('plainPassword')) {
-                    $entity->setPassword($this->encodeUserPassword($entity, $entity->getPlainPassword()));
-                }
-
                 $em->persist($entity);
                 $em->flush();
 
@@ -295,10 +291,9 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
         $form->remove('password');
 
-        if ($request->getMethod() == 'PATCH') {
+        $form->handleRequest($request);
 
-            $form->submit($request, true);
-
+        if ($form->isSubmitted()) {
             if ($form->isValid()) {
 
                 if ($changePassword) {
