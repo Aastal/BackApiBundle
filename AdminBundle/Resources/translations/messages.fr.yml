@@ -24,6 +24,7 @@ app:
   return_admin_page: Retourner à la page d'administration
   entities_list: Liste des entitées
   posts: Posts
+  hashtags: Hashtags
   fields:
     id: ID
   show:
