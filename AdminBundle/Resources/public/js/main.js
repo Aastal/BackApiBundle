@@ -108,11 +108,11 @@ function searchAjax(target, url, text, returnObj) {
         target = target.replace('#', '');
 
         if ($("#geoks_admin_create_" + target).length) {
-            target = $("#geoks_admin_create_" + target);
+            target = "#geoks_admin_create_" + target;
         }
 
         if ($("#geoks_admin_update_" + target).length) {
-            target = $("#geoks_admin_update_" + target);
+            target = "#geoks_admin_update_" + target;
         }
     }
 
@@ -182,7 +182,7 @@ function searchAjax(target, url, text, returnObj) {
         width: '100%'
     });
 
-    select2.on("select2:selecting", function(e) {
+    select2.on("select2:selecting", function (e) {
         var id = e.params['args']['data']['id'];
         var text = e.params['args']['data']['text'];
 
@@ -275,7 +275,6 @@ $(document).on('change', '#check-import', function () {
 });
 
 function multipleDelete() {
-    console.log('test');
     var ids = [];
     var entityName = $('#entity-name').text();
 
