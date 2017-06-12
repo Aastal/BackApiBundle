@@ -47,6 +47,6 @@ class ChangePasswordForm extends AbstractType
 
     public function getBlockPrefix()
     {
-        return '';
+        return 'geoks_api_change_password';
     }
 }

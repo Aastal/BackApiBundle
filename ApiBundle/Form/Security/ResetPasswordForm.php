@@ -35,6 +35,6 @@ class ResetPasswordForm extends AbstractType
 
     public function getBlockPrefix()
     {
-        return '';
+        return 'geoks_api_reset_password';
     }
 }

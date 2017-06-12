@@ -193,7 +193,7 @@ class UpdateForm extends AbstractType
 
     public function getBlockPrefix()
     {
-        return '';
+        return 'geoks_admin_update';
     }
 
     /**

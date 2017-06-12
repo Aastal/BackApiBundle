@@ -291,9 +291,9 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
         $form->remove('password');
 
-        if ($request->getMethod() == 'PATCH') {
+        if ($request->isMethod('PATCH')) {
 
-            $form->submit($request, true);
+            $form->submit($request->request->get($form->getName()), false);
 
             if ($form->isSubmitted()) {
                 if ($form->isValid()) {

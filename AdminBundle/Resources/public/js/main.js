@@ -103,6 +103,19 @@ $(document).on('click', '#changePassword', function () {
  * @param returnObj
  */
 function searchAjax(target, url, text, returnObj) {
+
+    if (!$(target).length) {
+        target = target.replace('#', '');
+
+        if ($("#geoks_admin_create_" + target).length) {
+            target = $("#geoks_admin_create_" + target);
+        }
+
+        if ($("#geoks_admin_update_" + target).length) {
+            target = $("#geoks_admin_update_" + target);
+        }
+    }
+
     var select2 = $(target).select2({
         placeholder: text,
         allowClear: true,
