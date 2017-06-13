@@ -40,7 +40,7 @@ abstract class GlobalRepository extends EntityRepository
                         ->andWhere('a.' . $key . ' = 1');
                 }
             } elseif (is_object($search) && !$search instanceof \DateTime) {
-                $joinLetter = strtolower(substr($key, -4));
+                $joinLetter = strtolower(substr($key, -4)) . rand(1, 100);
 
                 $queryBuilder
                     ->andWhere($joinLetter  .'.id = ' .  ':search' . $i)
