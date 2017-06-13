@@ -103,17 +103,21 @@ $(document).on('click', '#changePassword', function () {
  * @param returnObj
  */
 function searchAjax(target, url, text, returnObj) {
+    var form = "";
 
     if (!$(target).length) {
         target = target.replace('#', '');
+        var targetEntity = target;
 
         if ($("#geoks_admin_create_" + target).length) {
-            target = "#geoks_admin_create_" + target;
+            form = "geoks_admin_create";
         }
 
         if ($("#geoks_admin_update_" + target).length) {
-            target = "#geoks_admin_update_" + target;
+            form = "geoks_admin_update";
         }
+
+        target = "#" + form + "_" + target;
     }
 
     var select2 = $(target).select2({
@@ -189,7 +193,7 @@ function searchAjax(target, url, text, returnObj) {
         if (!$(target + "_" + id).length) {
             $(target).parent().parent().find('.multiple').append(
                 "<li>" +
-                "<input type='checkbox' id=" + target.replace("#", "") + "_" + id + " name=" + target.replace("#", "") +"[] hidden='hidden' value='" + id +"' checked='checked'>" +
+                "<input type='checkbox' id=" + target.replace("#", "") + "_" + id + " name=" + form + "[" + targetEntity + "][] hidden='hidden' value='" + id +"' checked='checked'>" +
                 "<button role='button' class='btn btn-default btn-list-remove'>" + text + "</button>" +
                 "</li>"
             );

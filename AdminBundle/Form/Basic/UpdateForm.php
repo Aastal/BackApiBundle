@@ -132,14 +132,16 @@ class UpdateForm extends AbstractType
                     $typeOptions['options']['required'] = true;
                 }
 
-                if ($class["type"] == 4 || $class["type"] == 8) {
+                if ($class["type"] == 8) {
+
                     $typeOptions['options']['expanded'] = true;
                     $typeOptions['options']['multiple'] = true;
                     $typeOptions['options']['attr']['class'] = 'multiple';
                     $typeOptions['options']['label_attr']['class'] = 'label-multiple';
 
                     $builder->add($name, EntityMultipleType::class, $typeOptions['options']);
-                } else {
+
+                } elseif ($class["type"] != 4) {
                     $builder->add($name, EntityType::class, $typeOptions['options']);
                 }
             }
