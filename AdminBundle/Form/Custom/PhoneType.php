@@ -3,6 +3,8 @@
 namespace Geoks\AdminBundle\Form\Custom;
 
 use Geoks\AdminBundle\Services\CountriesPhone;
+use libphonenumber\PhoneNumberFormat;
+use libphonenumber\PhoneNumberUtil;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -57,7 +59,10 @@ class PhoneType extends AbstractType
                     $form = $event->getForm();
 
                     $concatData = $form->get('dialCode')->getData() . $form->get('phone')->getData();
-                    $event->setData($concatData);
+                    $phoneUtil = PhoneNumberUtil::getInstance();
+
+                    $phoneNumber = $phoneUtil->parse($concatData, PhoneNumberFormat::INTERNATIONAL);
+                    $event->setData($phoneNumber);
                 }
             )
         ;
