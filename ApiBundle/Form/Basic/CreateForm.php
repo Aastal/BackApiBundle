@@ -125,7 +125,7 @@ class CreateForm extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'geoks_api_create';
+        return '';
     }
 
     /**
