@@ -131,7 +131,7 @@ class CreateForm extends AbstractType
             $builder
                 ->remove('password')
                 ->add('plainPassword', RepeatedType::class, [
-                    'type' => TextType::class,
+                    'type' => PasswordType::class,
                     'first_options' => [
                         'label' => $this->entityName . '.password',
                         'attr' => [
