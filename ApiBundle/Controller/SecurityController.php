@@ -285,6 +285,11 @@ abstract class SecurityController extends ApiController
             $user->addRole('ROLE_USER');
             $user->setEnabled(true);
 
+            $encoder = $this->container->get('security.password_encoder');
+            $encoded = $encoder->encodePassword($user, $user->getPassword());
+
+            $user->setPassword($encoded);
+
             $em->persist($user);
             $em->flush();
 
