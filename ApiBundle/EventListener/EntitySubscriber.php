@@ -73,7 +73,7 @@ class EntitySubscriber implements EventSubscriberInterface
                             $vichMappings = $this->container->getParameter('vich_uploader.mappings');
 
                             // Check if the project use resize files and map them
-                            if (isset($this->container->getParameter('liip_imagine.filter_sets')["resize_thumb"]) && $sizes = $this->container->getParameter('liip_imagine.filter_sets')["resize_thumb"]["filters"]) {
+                            if ($this->container->hasParameter('liip_imagine') && isset($this->container->getParameter('liip_imagine.filter_sets')["resize_thumb"]) && $sizes = $this->container->getParameter('liip_imagine.filter_sets')["resize_thumb"]["filters"]) {
 
                                 $arraySize = [];
                                 foreach ($sizes as $key => $size) {
