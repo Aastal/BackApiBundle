@@ -61,7 +61,7 @@ class UserDoc extends UserController
      *      403 = "geoks.user.notConnected",
      *  },
      * )
-     * @Route("/{id}", name="user")
+     * @Route("/{id}", name="user", requirements={"id": "\d+"})
      * @Method({"GET"})
      *
      * @param integer $id
@@ -81,7 +81,7 @@ class UserDoc extends UserController
      *      403 = "geoks.user.notConnected",
      *  },
      * )
-     * @Route("/{id}", name="user_update")
+     * @Route("/{id}", name="user_update", requirements={"id": "\d+"})
      * @Method({"PATCH"})
      *
      * @param Request $request
@@ -102,7 +102,7 @@ class UserDoc extends UserController
      *      403 = "geoks.user.notConnected",
      *  },
      * )
-     * @Route("/{id}", name="user_delete")
+     * @Route("/{id}", name="user_delete", requirements={"id": "\d+"})
      * @Method({"DELETE"})
      *
      * @param integer $id
