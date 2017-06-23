@@ -127,6 +127,22 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         return $this->serializeResponse(['details' => $entity]);
     }
 
+    public function getOneCustom($id, $group)
+    {
+        if (!$this->getUser()) {
+            return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository($this->getEntityRepository())->find($id);
+
+        if (!$entity) {
+            return $this->serializeResponse("geoks.entity.notFound", Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->serializeResponse([$group => $entity]);
+    }
+
     public function getAllByUser()
     {
         if (!$this->getUser()) {
