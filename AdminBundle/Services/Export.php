@@ -78,7 +78,7 @@ class Export
                         $values[] = 0;
                     }
                 } elseif (!$value) {
-                    $values[] = $this->container->get('translator')->trans('geoks.data.empty');
+                    $values[] = null;
                 } elseif ($value instanceof \DateTime) {
                     $values[] = $value->format('d/m/Y H:i:s');
                 } elseif (is_array($value)) {
@@ -94,7 +94,7 @@ class Export
 
                         $values[$f] = implode(",", $values[$f]);
                     } else {
-                        $values[] = $this->container->get('translator')->trans('geoks.data.empty');
+                        $values[] = null;
                     }
                 } else {
                     $values[] = (string) $value;

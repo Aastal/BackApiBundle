@@ -5,9 +5,12 @@ namespace Geoks\AdminBundle\Services;
 use AppBundle\Entity\Category;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\DBAL\Types\DateTimeType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
+use function GuzzleHttp\Psr7\str;
+use Metadata\ClassMetadata;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\File\File;
@@ -17,6 +20,8 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class Import
 {
@@ -125,9 +130,10 @@ class Import
                         }
                     } else {
                         $rc = new \ReflectionClass($this->class);
-                        $setter = 'set' . ucfirst(key($fields[$key]));
 
                         if (!empty($fields) && array_key_exists($key, $fields)) {
+                            $setter = 'set' . ucfirst(key($fields[$key]));
+
                             if ($rc->hasMethod($setter)) {
                                 if ($docs = $rc->getMethod($setter)->getDocComment()) {
                                     if (strpos($docs, "@param datetime") || strpos($docs, "@param \\DateTime")) {
@@ -251,29 +257,82 @@ class Import
                     $getter = $entity->{'get' . ucfirst($entry["fieldName"])}();
 
                     if (method_exists($entity, 'set' . ucfirst($entry["fieldName"]))) {
-                        if (is_string($getter)) {
+
+                        $entity->{'set' . ucfirst($entry["fieldName"])}(null);
+
+                        if ($getter && is_string($getter)) {
+
+                            $found = false;
+
                             if (strpos($getter, ",")) {
+
                                 $array = explode(",", $getter);
                                 $collection = new ArrayCollection();
 
                                 foreach ($array as $item) {
-                                    if ($assoc = $this->em->getRepository($entry["targetEntity"])->find($item)) {
+                                    if (is_numeric($item) && $assoc = $this->em->getRepository($entry["targetEntity"])->find($item)) {
                                         $collection->add($assoc);
+                                        $found = true;
                                     }
                                 }
 
-                                $entity->{'set' . ucfirst($entry["fieldName"])}($collection);
-                            } else {
+                                if ($collection) {
+                                    $entity->{'set' . ucfirst($entry["fieldName"])}($collection);
+                                }
+                            }
+
+                            if (!$found) {
+
+                                /** @var \Doctrine\Common\Persistence\Mapping\ClassMetadata $metaTarget */
+                                $metaTarget = $this->em->getClassMetadata($entry["targetEntity"]);
+                                $defaults = $metaTarget->getFieldNames();
+
                                 if ($assoc = $this->em->getRepository($entry["targetEntity"])->find($getter)) {
-                                    $rc = new \ReflectionClass($this->class);
+                                    $found = $this->findRelation($entry, $assoc, $entity);
+                                }
 
-                                    if ($docs = $rc->getMethod('set' . ucfirst($entry["fieldName"]))->getDocComment()) {
-                                        if (strpos($docs, "@param Collection") || strpos($docs, "@param ArrayCollection")) {
-                                            $assoc = new ArrayCollection([$assoc]);
+                                if (!$found) {
+                                    $string = (string) $getter;
+
+                                    foreach ($defaults as $default):
+                                        $association = null;
+
+                                        if ($metaTarget->getReflectionClass()->hasProperty($default)) {
+                                            $docs = $metaTarget->getReflectionClass()->getProperty($default)->getDocComment();
+
+                                            if (!strpos($docs, "type=\"string\"")) {
+                                                $association = true;
+                                            }
                                         }
-                                    }
 
-                                    $entity->{'set' . ucfirst($entry["fieldName"])}($assoc);
+                                        if (!$association) {
+
+                                            if ($entry["type"] == 8) {
+                                                $association = new ArrayCollection();
+
+                                                if (strpos($string, ",")) {
+                                                    $array = explode(",", $string);
+
+                                                    foreach ($array as $item) {
+                                                        if ($assoc = $this->em->getRepository($entry["targetEntity"])->findOneBy([$default => $item])) {
+                                                            $association->add($assoc);
+                                                        }
+                                                    }
+
+                                                } else {
+                                                    if ($target = $this->em->getRepository($entry["targetEntity"])->findOneBy([$default => $string])) {
+                                                        $association->add($target);
+                                                    }
+                                                }
+                                            } else {
+                                                $association = $this->em->getRepository($entry["targetEntity"])->findOneBy([$default => $string]);
+                                            }
+
+                                            if ($association) {
+                                                $entity->{'set' . ucfirst($entry["fieldName"])}($association);
+                                            }
+                                        }
+                                    endforeach;
                                 }
                             }
                         }
@@ -286,6 +345,27 @@ class Import
 
         $this->em->flush();
         $this->em->clear();
+    }
+
+    /**
+     * @param $entry
+     * @param $assoc
+     * @param $entity
+     * @return bool
+     *
+     */
+    private function findRelation($entry, $assoc, $entity)
+    {
+        if (method_exists($entity, 'set' . ucfirst($entry["fieldName"]))) {
+            if ($entry["type"] == 8) {
+                $assoc = new ArrayCollection([$assoc]);
+                $entity->{'set' . ucfirst($entry["fieldName"])}($assoc);
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function manageException($entity)
