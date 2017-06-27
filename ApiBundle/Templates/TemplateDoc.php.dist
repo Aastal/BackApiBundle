@@ -43,7 +43,7 @@ class TemplateDoc extends TemplateController
      *      403 = "geoks.user.notConnected",
      *  },
      * )
-     * @Route("/{id}", name="template")
+     * @Route("/{id}", name="template", requirements={"id": "\d+"})
      * @Method({"GET"})
      *
      * @param integer $id
@@ -84,7 +84,7 @@ class TemplateDoc extends TemplateController
      *      403 = "geoks.user.notConnected",
      *  },
      * )
-     * @Route("/{id}", name="template_update")
+     * @Route("/{id}", name="template_update", requirements={"id": "\d+"})
      * @Method({"PATCH"})
      *
      * @param Request $request
@@ -106,7 +106,7 @@ class TemplateDoc extends TemplateController
      *      403 = "geoks.user.notConnected",
      *  },
      * )
-     * @Route("/{id}", name="template_delete")
+     * @Route("/{id}", name="template_delete", requirements={"id": "\d+"})
      * @Method({"DELETE"})
      *
      * @param integer $id
