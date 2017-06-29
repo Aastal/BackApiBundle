@@ -90,6 +90,8 @@ abstract class User extends BaseUser
 
     /**
      * @var PhoneNumber
+     *
+     * @AssertPhoneNumber(type="MOBILE", defaultRegion="FR")
      */
     protected $phone;
 

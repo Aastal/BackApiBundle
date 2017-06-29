@@ -40,17 +40,36 @@ class EntityFields
         return (new \ReflectionClass($table))->getShortName();
     }
 
-    public function getFieldsName($table)
+    public function getFieldsName($table, $isRequired = false)
     {
         $rowArr = [];
-        $excArr = ['id', 'salt'];
 
         $cm = $this->em->getClassMetadata($table);
         $rows = $cm->getFieldNames();
+        $rows = array_diff($rows, ['id', 'salt']);
 
         foreach ($rows as $row) {
-            if (!in_array($row, $excArr)) {
+            if ($isRequired) {
+                if (!$cm->isNullable($row)) {
+                    $rowArr[$row] = $cm->getFieldMapping($row);
+                }
+            } else {
                 $rowArr[$row] = $cm->getFieldMapping($row);
+            }
+        }
+
+        return $rowArr;
+    }
+
+    public function getFieldsByName($table, $fields)
+    {
+        $rowArr = [];
+
+        $cm = $this->em->getClassMetadata($table);
+
+        foreach ($fields as $field) {
+            if ($cm->hasField($field)) {
+                $rowArr[$field] = $cm->getFieldMapping($field);
             }
         }
 
@@ -140,7 +159,6 @@ class EntityFields
                 $r['type'] = CheckboxType::class;
                 $r['options'] = [
                     'label' => $fieldName,
-                    'required' => true,
                     'attr' => [
                         'class' => 'checkbox-animate'
                     ]
@@ -197,6 +215,7 @@ class EntityFields
     public function fieldsBanList()
     {
         $customList = $this->container->getParameter('geoks_admin.ban_fields');
+
         $autoBan = [
             "created", "created_at", "updated", "updated_at", "passwordRequestedAt", "credentialsExpireAt", "confirmationToken",
             "usernameCanonical", "emailCanonical", "lastLogin", "expired", "expired_at", "credentialsExpired", "token",

@@ -262,7 +262,8 @@ abstract class GlobalController extends ApiController implements GlobalControlle
             ],
             'method' => 'POST',
             'data_class' => $this->getEntityRepository(),
-            'service_container' => $this->get('service_container')
+            'service_container' => $this->get('service_container'),
+            'fields' => array_keys($request->request->all())
         ]);
 
         $form->handleRequest($request);
