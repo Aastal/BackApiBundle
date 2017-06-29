@@ -50,7 +50,7 @@ class EntityFields
 
         foreach ($rows as $row) {
             if ($isRequired) {
-                if (!$cm->isNullable($row)) {
+                if (!$cm->isNullable($row) && $cm->getFieldMapping($row)["type"] != "boolean") {
                     $rowArr[$row] = $cm->getFieldMapping($row);
                 }
             } else {
