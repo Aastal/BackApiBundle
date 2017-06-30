@@ -1,10 +1,11 @@
 <?php
 namespace Geoks\ApiBundle\EventListener;
 
+use AppBundle\Entity\Comment;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\EventSubscriber;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Geoks\ApiBundle\Entity\Image;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -69,7 +70,7 @@ class Base64HandleSubscriber implements EventSubscriber
 
         try
         {
-            $classReflection = new \ReflectionClass($entity);
+            $classReflection = ClassUtils::newReflectionObject($entity);
         }
         catch (\Exception $exception)
         {
@@ -79,9 +80,11 @@ class Base64HandleSubscriber implements EventSubscriber
         if ($classReflection) {
             $reader = new AnnotationReader();
 
-            foreach ($classReflection->getProperties() as $reflectionProperty) {
-                if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\Base64Handler")) {
-                    $entity->{'set' . ucfirst($reflectionProperty->name)}(base64_encode($entity->{'get' . ucfirst($reflectionProperty->name)}()));
+            if ($reader->getClassAnnotation($classReflection, "Geoks\\ApiBundle\\Annotation\\Base64Check")) {
+                foreach ($classReflection->getProperties() as $reflectionProperty) {
+                    if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\Base64Handle")) {
+                        $entity->{'set' . ucfirst($reflectionProperty->name)}(base64_encode($entity->{'get' . ucfirst($reflectionProperty->name)}()));
+                    }
                 }
             }
         }
