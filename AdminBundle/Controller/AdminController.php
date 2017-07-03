@@ -49,7 +49,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
     /**
      * @return string
      */
-    public function getUserRepository()
+    protected function getUserRepository()
     {
         return $this->getParameter('geoks_api.user_class');
     }
@@ -57,7 +57,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
     /**
      * @return string
      */
-    public function getClassName()
+    protected function getClassName()
     {
         return $this->className;
     }
@@ -65,7 +65,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
     /**
      * @return string
      */
-    public function getEntityRepository()
+    protected function getEntityRepository()
     {
         return $this->entityRepository;
     }
@@ -73,7 +73,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
     /**
      * @return array
      */
-    public function getFieldsExport()
+    protected function getFieldsExport()
     {
         return $this->fieldsExport;
     }
@@ -81,7 +81,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
     /**
      * @return string
      */
-    public function getAdminBundle()
+    protected function getAdminBundle()
     {
         return $this->getParameter('geoks_admin.local_bundle');
     }
@@ -89,7 +89,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
     /**
      * @return string
      */
-    public function getFormFilter()
+    protected function getFormFilter()
     {
         if (!$this->formFilter) {
             $this->formFilter = "Geoks\\AdminBundle\\Form\\Export\\ExportType";
@@ -101,7 +101,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
     /**
      * @return string
      */
-    public function getFormCreate()
+    protected function getFormCreate()
     {
         return $this->formCreate;
     }
@@ -109,7 +109,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
     /**
      * @return string
      */
-    public function getFormUpdate()
+    protected function getFormUpdate()
     {
         return $this->formUpdate;
     }

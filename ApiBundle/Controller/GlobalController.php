@@ -37,7 +37,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
     /**
      * @return string
      */
-    public function getClassName()
+    protected function getClassName()
     {
         return $this->className;
     }
@@ -45,7 +45,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
     /**
      * @return string
      */
-    public function getEntityRepository()
+    protected function getEntityRepository()
     {
         return $this->entityRepository;
     }
@@ -53,7 +53,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
     /**
      * @return string
      */
-    public function getFormCreate()
+    protected function getFormCreate()
     {
         return $this->formCreate;
     }
@@ -61,7 +61,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
     /**
      * @return string
      */
-    public function getFormUpdate()
+    protected function getFormUpdate()
     {
         return $this->formUpdate;
     }

@@ -43,7 +43,7 @@ abstract class SecurityController extends ApiController
     /**
      * @return string
      */
-    public function getClassName()
+    protected function getClassName()
     {
         return (new \ReflectionClass($this->userRepository))->getShortName();
     }
@@ -51,7 +51,7 @@ abstract class SecurityController extends ApiController
     /**
      * @return string
      */
-    public function getUserRepository()
+    protected function getUserRepository()
     {
         if ($this->userRepository) {
             return $this->userRepository;
@@ -63,7 +63,7 @@ abstract class SecurityController extends ApiController
     /**
      * @return string
      */
-    public function getFormCreate()
+    protected function getFormCreate()
     {
         return $this->formCreate;
     }
@@ -71,7 +71,7 @@ abstract class SecurityController extends ApiController
     /**
      * @return string
      */
-    public function getAdminViews()
+    protected function getAdminViews()
     {
         return $this->adminViews;
     }

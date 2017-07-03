@@ -39,7 +39,7 @@ abstract class UserController extends ApiController
     /**
      * @return string
      */
-    public function getClassName()
+    protected function getClassName()
     {
         return $this->className;
     }
@@ -47,7 +47,7 @@ abstract class UserController extends ApiController
     /**
      * @return string
      */
-    public function getUserRepository()
+    protected function getUserRepository()
     {
         return $this->userRepository;
     }
@@ -55,7 +55,7 @@ abstract class UserController extends ApiController
     /**
      * @return string
      */
-    public function getFormCreate()
+    protected function getFormCreate()
     {
         return $this->formCreate;
     }
@@ -63,7 +63,7 @@ abstract class UserController extends ApiController
     /**
      * @return string
      */
-    public function getFormUpdate()
+    protected function getFormUpdate()
     {
         return $this->formUpdate;
     }
