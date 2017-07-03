@@ -31,6 +31,7 @@ app:
     attributes: Liste des attributs
     associations: Liste des relations
     return: Revenir à l'index
+  logs: Logs
 
 admin:
   properties: Propriétées
