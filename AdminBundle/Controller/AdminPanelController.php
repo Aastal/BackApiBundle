@@ -43,6 +43,18 @@ abstract class AdminPanelController extends Controller
         ]);
     }
 
+    public function logsAction()
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+
+
+        $frontLogs = $em->getRepository('GeoksApiBundle:Log')->findBy(["type" => "front"]);
+
+        return $this->render("@GeoksAdmin/adminPanel/logs.html.twig", [
+            'front_logs' => $frontLogs
+        ]);
+    }
+
     /**
      * @param \ReflectionClass $reflection
      * @return array

@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -165,6 +166,17 @@ class EntityFields
                 ];
                 break;
             case 'date':
+                $r['type'] = DateType::class;
+                $r['options'] = [
+                    'label' => $fieldName,
+                    'widget' => 'single_text',
+                    'required' => false,
+                    'format' => 'dd/MM/yyyy',
+                    'attr' => [
+                        'class' => 'control-animate datetimepicker'
+                    ]
+                ];
+                break;
             case 'datetime':
                 $r['type'] = DateTimeType::class;
                 $r['options'] = [
