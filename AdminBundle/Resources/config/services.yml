@@ -3,6 +3,8 @@ parameters:
       name: 'hr'
     phone:
       name: 'phone'
+    geoks_admin:
+      ban_fields: []
 
 services:
     geoks_admin.form.type.hr:
@@ -37,22 +39,27 @@ services:
 
     geoks_admin.export:
         class: Geoks\AdminBundle\Services\Export
-        arguments: [ "@service_container" ]
+        arguments: [ "@kernel" ]
 
     geoks_admin.twig_extension:
         class: Geoks\AdminBundle\Twig\AdminExtension
-        arguments: [ "@service_container" ]
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+            - "@router"
+            - "@geoks.utils.string_manager"
+            - "@geoks_admin.entity_fields"
+
         public: false
         tags:
             - { name: twig.extension }
 
     geoks_admin.entity_fields:
         class: Geoks\AdminBundle\Services\EntityFields
-        arguments: [ "@service_container" ]
+        arguments: [ "@doctrine.orm.default_entity_manager", "%geoks_admin.ban_fields%" ]
 
     geoks.user.subscriber:
         class: Geoks\AdminBundle\EventListener\User\UserSubscriber
-        arguments: [ "@service_container" ]
+        arguments: [ "@security.password_encoder" ]
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 

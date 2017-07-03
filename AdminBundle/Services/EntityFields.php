@@ -23,17 +23,18 @@ class EntityFields
     private $em;
 
     /**
-     * @var ContainerInterface
+     * @var array
      */
-    private $container;
+    private $banFields;
 
     /**
-     * @param ContainerInterface $container
+     * @param EntityManager $em
+     * @param array $banFields
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(EntityManager $em, $banFields)
     {
-        $this->container = $container;
-        $this->em = $container->get('doctrine')->getManager();
+        $this->em = $em;
+        $this->banFields = $banFields;
     }
 
     public function getEntityName($table)
@@ -226,15 +227,13 @@ class EntityFields
 
     public function fieldsBanList()
     {
-        $customList = $this->container->getParameter('geoks_admin.ban_fields');
-
         $autoBan = [
             "created", "created_at", "updated", "updated_at", "passwordRequestedAt", "credentialsExpireAt", "confirmationToken",
             "usernameCanonical", "emailCanonical", "lastLogin", "expired", "expired_at", "credentialsExpired", "token",
             "twoStepVerificationCode", "gcm_token", "expiresAt", "credentialsExpired", "timezone", "createdAt", "updatedAt"
         ];
 
-        $banList = array_merge($customList, $autoBan);
+        $banList = array_merge($this->banFields, $autoBan);
 
         return $banList;
     }

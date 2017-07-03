@@ -11,7 +11,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 class AdminDoc extends AdminController
 {
     /**
-     * @return \Symfony\Component\HttpFoundation\Response|void
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function loginAction()
     {
@@ -20,7 +20,7 @@ class AdminDoc extends AdminController
 
     /**
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response|void
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function loginCheckAction(Request $request)
     {

@@ -40,7 +40,7 @@ class Notification extends BaseNotification
     /**
      * @var boolean
      */
-    protected $is_read = false;
+    protected $read = false;
 
     /**
      * @var User
@@ -178,19 +178,19 @@ class Notification extends BaseNotification
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isIsRead()
+    public function isRead()
     {
-        return $this->is_read;
+        return $this->read;
     }
 
     /**
-     * @param boolean $is_read
+     * @param bool $read
      */
-    public function setIsRead($is_read)
+    public function setRead($read)
     {
-        $this->is_read = $is_read;
+        $this->read = $read;
     }
 
     /**

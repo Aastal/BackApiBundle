@@ -28,9 +28,6 @@ services:
     geoks.api.regex_utils:
         class: Geoks\ApiBundle\Utils\RegexUtils
 
-    geoks.api.pluralization:
-        class: Geoks\ApiBundle\Services\Pluralization
-
     geoks.api.geo:
         class: Geoks\ApiBundle\Services\Geo
 

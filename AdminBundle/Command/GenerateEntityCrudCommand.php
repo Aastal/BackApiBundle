@@ -113,7 +113,7 @@ class GenerateEntityCrudCommand extends ContainerAwareCommand
             $content = file_get_contents($kernel->getRootDir() . '/../src/AdminBundle/Controller/ApiDocs/' . $name . 'Doc.php');
             $content = str_replace("Template", $name, $content);
 
-            $namePluralize = $this->getContainer()->get('geoks.api.pluralization')->pluralize($name);
+            $namePluralize = $this->getContainer()->get('geoks.utils.string_manager')->pluralize($name);
 
             $content = str_replace("template", lcfirst($namePluralize), $content);
 
@@ -156,7 +156,7 @@ class GenerateEntityCrudCommand extends ContainerAwareCommand
                 );
 
                 $content = file_get_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php');
-                $namePluralize = $this->getContainer()->get('geoks.api.pluralization')->pluralize($name);
+                $namePluralize = $this->getContainer()->get('geoks.utils.string_manager')->pluralize($name);
 
                 $content = str_replace("TemplateSection", $namePluralize, $content);
                 $content = str_replace("Template", $name, $content);

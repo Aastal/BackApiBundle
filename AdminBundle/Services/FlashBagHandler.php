@@ -28,7 +28,7 @@ class FlashBagHandler
     {
         $condition === true ? $test = 'success' : $test = 'fail';
 
-        $this->session->getFlashBag()->add(
+        return $this->session->getFlashBag()->add(
             'form',
             'form.' . $test . '.' . $arg
         );

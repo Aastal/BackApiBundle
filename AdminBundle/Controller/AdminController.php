@@ -151,7 +151,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
     public function indexAction(Request $request)
     {
-        $namePluralize = $this->get("geoks.api.pluralization")->pluralize(lcfirst($this->className));
+        $namePluralize = $this->get("geoks.utils.string_manager")->pluralize(lcfirst($this->className));
         $router = $this->container->get('router');
         $payload = $this->sortEntities($request);
 
@@ -228,7 +228,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $em = $this->getDoctrine()->getManager();
         $entity = new $this->entityRepository();
 
-        $namePluralize = $this->get("geoks.api.pluralization")->pluralize(lcfirst($this->className));
+        $namePluralize = $this->get("geoks.utils.string_manager")->pluralize(lcfirst($this->className));
 
         $form = $this->createForm($this->getFormCreate(), $entity, [
             'attr' => [
@@ -269,7 +269,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository($this->entityRepository)->find($id);
 
-        $namePluralize = $this->get("geoks.api.pluralization")->pluralize(lcfirst($this->className));
+        $namePluralize = $this->get("geoks.utils.string_manager")->pluralize(lcfirst($this->className));
         $changePassword = false;
 
         if ($request->get('changePassword') == true || $request->get('plainPassword')) {
@@ -324,7 +324,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository($this->entityRepository)->find($id);
 
-        $namePluralize = $this->get("geoks.api.pluralization")->pluralize(lcfirst($this->className));
+        $namePluralize = $this->get("geoks.utils.string_manager")->pluralize(lcfirst($this->className));
 
         if (!$entity) {
             $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'delete');
@@ -342,7 +342,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
     public function importAction(Request $request)
     {
-        $namePluralize = $this->get("geoks.api.pluralization")->pluralize(lcfirst($this->className));
+        $namePluralize = $this->get("geoks.utils.string_manager")->pluralize(lcfirst($this->className));
 
         $form = $this->__importForm();
         $form->handleRequest($request);
@@ -373,7 +373,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
     private function __importForm()
     {
-        $namePluralize = $this->get("geoks.api.pluralization")->pluralize(lcfirst($this->className));
+        $namePluralize = $this->get("geoks.utils.string_manager")->pluralize(lcfirst($this->className));
 
         $form = $this->createForm(ImportType::class, null, [
             'action' => $this->generateUrl('geoks_admin_' . $namePluralize . '_import'),

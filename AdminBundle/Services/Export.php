@@ -6,20 +6,21 @@ use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class Export
 {
     /**
-     * @var Container
+     * @var KernelInterface
      */
-    private $container;
+    private $kernel;
 
     /**
-     * @param $container
+     * @param $kernel
      */
-    public function __construct($container)
+    public function __construct(KernelInterface $kernel)
     {
-        $this->container = $container;
+        $this->kernel = $kernel;
     }
 
     public function getContentType() {
@@ -40,7 +41,7 @@ class Export
         $name = (new \ReflectionClass($entities[0]))->getShortName();
 
         $now = new \DateTime();
-        $rootRacine = $this->container->get('kernel')->getRootDir() . '/../web/exports';
+        $rootRacine = $this->kernel->getRootDir() . '/../web/exports';
         $filenameWeb = '/export-' . strtolower($name) . '(' . $now->format('d-m-Y-H:i') . ').csv';
 
         $handle = fopen($rootRacine . $filenameWeb, 'w+');

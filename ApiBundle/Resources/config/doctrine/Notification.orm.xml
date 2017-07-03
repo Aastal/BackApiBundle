@@ -14,7 +14,7 @@
         <field name="title" type="string" column="title" nullable="false" />
         <field name="body" type="string" column="body" nullable="false" />
         <field name="created_at" type="datetime" column="created_at" nullable="false" />
-        <field name="is_read" type="boolean" column="is_read" nullable="false" />
+        <field name="read" type="boolean" column="read" nullable="false" />
 
         <many-to-one field="receiver" target-entity="Geoks\UserBundle\Entity\User">
             <join-column name="receiver_id" referenced-column-name="id" on-delete="CASCADE"/>

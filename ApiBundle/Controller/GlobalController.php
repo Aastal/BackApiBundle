@@ -415,6 +415,4 @@ abstract class GlobalController extends ApiController implements GlobalControlle
 
         return $this->serializeResponse(["success" => "geoks.entity.deleted"]);
     }
-
-
 }
