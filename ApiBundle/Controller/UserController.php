@@ -94,7 +94,7 @@ abstract class UserController extends ApiController
         }
     }
 
-    public function getAll()
+    public function getAllAction()
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
@@ -111,7 +111,7 @@ abstract class UserController extends ApiController
         return $this->serializeResponse(['list' => $users]);
     }
 
-    public function me()
+    public function meAction()
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
@@ -131,7 +131,7 @@ abstract class UserController extends ApiController
         return $this->serializeResponse(['details' => $user]);
     }
 
-    public function meCustom($group)
+    public function meCustomAction($group)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
@@ -151,7 +151,7 @@ abstract class UserController extends ApiController
         return $this->serializeResponse([$group => $user]);
     }
 
-    public function getOne($id)
+    public function getOneAction($id)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
@@ -167,7 +167,7 @@ abstract class UserController extends ApiController
         return $this->serializeResponse(['details' => $user]);
     }
 
-    public function getOneCustom($id, $group)
+    public function getOneCustomAction($id, $group)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
@@ -183,7 +183,7 @@ abstract class UserController extends ApiController
         return $this->serializeResponse([$group => $user]);
     }
 
-    public function update(Request $request, $id)
+    public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository($this->getUserRepository())->find($id);
@@ -215,7 +215,7 @@ abstract class UserController extends ApiController
         return $this->serializeResponse($form, Response::HTTP_BAD_REQUEST);
     }
 
-    public function delete($id = null)
+    public function deleteAction($id = null)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
@@ -305,7 +305,7 @@ abstract class UserController extends ApiController
         return $this->serializeResponse($form, Response::HTTP_BAD_REQUEST);
     }
 
-    public function updateUserPicture(Request $request)
+    public function updateUserPictureAction(Request $request)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse(["error" => $this->get('translator')->trans("weave.user.notConnected")], Response::HTTP_FORBIDDEN);

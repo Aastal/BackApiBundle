@@ -92,7 +92,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         }
     }
 
-    public function getAll($secure = null)
+    public function getAllAction($secure = null)
     {
         if ($secure) {
             if (!$this->getUser()) {
@@ -111,7 +111,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         return $this->serializeResponse(['list' => $entities]);
     }
 
-    public function getOne($id)
+    public function getOneAction($id)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
@@ -127,7 +127,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         return $this->serializeResponse(['details' => $entity]);
     }
 
-    public function getAllByUser()
+    public function getAllByUserAction()
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
@@ -139,7 +139,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         return $this->serializeResponse(['list' => $entities]);
     }
 
-    public function getOneByUser($id)
+    public function getOneByUserAction($id)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
@@ -164,7 +164,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
      * @param array $criteria
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getAllByCriteria(array $criteria)
+    public function getAllByCriteriaAction(array $criteria)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
@@ -183,7 +183,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
      * @param integer $limit
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getAllByCriteriaOrderAndPagination(Request $request, array $criteria = [], array $order = ["id" => "DESC"], $limit = 10)
+    public function getAllByCriteriaOrderAndPaginationAction(Request $request, array $criteria = [], array $order = ["id" => "DESC"], $limit = 10)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
@@ -197,7 +197,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         return $this->serializeResponse(['list' => $entities]);
     }
 
-    public function getOneByCriteria($id, array $criteria)
+    public function getOneByCriteriaAction($id, array $criteria)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
@@ -215,7 +215,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         return $this->serializeResponse(['details' => $entity]);
     }
 
-    public function getOneByRelation(array $relation = null)
+    public function getOneByRelationAction(array $relation = null)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
@@ -231,7 +231,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         return $this->serializeResponse(['details' => $entity]);
     }
 
-    public function create(Request $request, $customSetters = [])
+    public function createAction(Request $request, $customSetters = [])
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
@@ -265,7 +265,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         return $this->serializeResponse($form, Response::HTTP_BAD_REQUEST);
     }
 
-    public function import(Request $request)
+    public function importAction(Request $request)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
@@ -280,7 +280,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         return $this->serializeResponse(["success" => false], Response::HTTP_BAD_REQUEST);
     }
 
-    public function update(Request $request, $id, $customSetters = [])
+    public function updateAction(Request $request, $id, $customSetters = [])
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
@@ -315,7 +315,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         return $this->serializeResponse($form, Response::HTTP_BAD_REQUEST);
     }
 
-    public function updateMe(Request $request, $id, $customSetters = [])
+    public function updateMeAction(Request $request, $id, $customSetters = [])
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
@@ -353,7 +353,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         return $this->serializeResponse($form, Response::HTTP_BAD_REQUEST);
     }
 
-    public function deleteByUser($id)
+    public function deleteByUserAction($id)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
@@ -376,7 +376,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         return $this->serializeResponse(["success" => "geoks.entity.deleted"]);
     }
 
-    public function delete($id)
+    public function deleteAction($id)
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
