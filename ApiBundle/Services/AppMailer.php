@@ -3,8 +3,8 @@
 namespace Geoks\ApiBundle\Services;
 
 use Geoks\UserBundle\Entity\User;
-use Hip\MandrillBundle\Message;
-use Hip\MandrillBundle\Dispatcher;
+use Slot\MandrillBundle\Dispatcher;
+use Slot\MandrillBundle\Message;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Translation\DataCollectorTranslator;

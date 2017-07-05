@@ -40,7 +40,7 @@ services:
 
     geoks.api.mailer:
         class: Geoks\ApiBundle\Services\AppMailer
-        arguments: [ "@service_container", "@translator", "@hip_mandrill.dispatcher", "@router" ]
+        arguments: [ "@service_container", "@translator", "@slot_mandrill.dispatcher", "@router" ]
 
     geoks.api.pushnotifications:
         class: Geoks\ApiBundle\Services\PushNotify
