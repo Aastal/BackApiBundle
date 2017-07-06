@@ -282,7 +282,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
                 'class' => "form-horizontal"
             ],
             'action' => $this->generateUrl(sprintf('geoks_admin_' . $namePluralize . '_update'), ['id' => $id]),
-            'method' => 'PATCH',
+            'method' => 'POST',
             'translation_domain' => strtolower($this->className),
             'data_class' => $this->entityRepository,
             'service_container' => $this->get('service_container'),
@@ -291,26 +291,23 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
         $form->remove('password');
 
-        if ($request->isMethod('PATCH')) {
+        $form->handleRequest($request);
 
-            $form->submit($request->request->get($form->getName()), false);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
 
-            if ($form->isSubmitted()) {
-                if ($form->isValid()) {
-
-                    if ($changePassword) {
-                        $entity->setPassword($this->encodeUserPassword($entity, $entity->getPlainPassword()));
-                    }
-
-                    $em->flush();
-
-                    $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'update');
-
-                    return $this->redirect($this->generateUrl('geoks_admin_' . $namePluralize . '_index'));
+                if ($changePassword) {
+                    $entity->setPassword($this->encodeUserPassword($entity, $entity->getPlainPassword()));
                 }
 
-                $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'update');
+                $em->flush();
+
+                $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'update');
+
+                return $this->redirect($this->generateUrl('geoks_admin_' . $namePluralize . '_index'));
             }
+
+            $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'update');
         }
 
         return $this->render($this->getAdminBundle() . ':' . $this->className . ':form.html.twig', [

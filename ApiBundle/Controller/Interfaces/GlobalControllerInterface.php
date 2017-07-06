@@ -12,7 +12,7 @@ interface GlobalControllerInterface
      *
      * @return JsonResponse
      */
-    public function getAll();
+    public function getAllAction();
 
     /**
      * Get an entity by id.
@@ -20,7 +20,7 @@ interface GlobalControllerInterface
      * @param integer $id
      * @return JsonResponse
      */
-    public function getOne($id);
+    public function getOneAction($id);
 
     /**
      * Create a entity.
@@ -29,7 +29,7 @@ interface GlobalControllerInterface
      * @param array $customSetters
      * @return JsonResponse
      */
-    public function create(Request $request, $customSetters = []);
+    public function createAction(Request $request, $customSetters = []);
 
     /**
      * Update a entity.
@@ -39,7 +39,7 @@ interface GlobalControllerInterface
      * @param array $customSetters
      * @return JsonResponse
      */
-    public function update(Request $request, $id, $customSetters = []);
+    public function updateAction(Request $request, $id, $customSetters = []);
 
     /**
      * Delete a entity.
@@ -47,5 +47,5 @@ interface GlobalControllerInterface
      * @param integer $id
      * @return JsonResponse
      */
-    public function delete($id);
+    public function deleteAction($id);
 }
