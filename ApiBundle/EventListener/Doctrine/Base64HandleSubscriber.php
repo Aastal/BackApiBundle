@@ -1,7 +1,6 @@
 <?php
-namespace Geoks\ApiBundle\EventListener;
+namespace Geoks\ApiBundle\EventListener\Doctrine;
 
-use AppBundle\Entity\Comment;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Util\ClassUtils;

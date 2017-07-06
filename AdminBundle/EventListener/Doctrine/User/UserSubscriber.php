@@ -1,5 +1,5 @@
 <?php
-namespace Geoks\AdminBundle\EventListener\User;
+namespace Geoks\AdminBundle\EventListener\Doctrine\User;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;

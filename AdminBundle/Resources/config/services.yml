@@ -44,7 +44,7 @@ services:
     geoks_admin.twig_extension:
         class: Geoks\AdminBundle\Twig\AdminExtension
         arguments:
-            - "@doctrine.orm.default_entity_manager"
+            - "@doctrine.orm.entity_manager"
             - "@router"
             - "@geoks.utils.string_manager"
             - "@geoks_admin.entity_fields"
@@ -55,10 +55,10 @@ services:
 
     geoks_admin.entity_fields:
         class: Geoks\AdminBundle\Services\EntityFields
-        arguments: [ "@doctrine.orm.default_entity_manager", "%geoks_admin.ban_fields%" ]
+        arguments: [ "@doctrine.orm.entity_manager", "%geoks_admin.ban_fields%" ]
 
     geoks.user.subscriber:
-        class: Geoks\AdminBundle\EventListener\User\UserSubscriber
+        class: Geoks\AdminBundle\EventListener\Doctrine\User\UserSubscriber
         arguments: [ "@security.password_encoder" ]
         tags:
             - { name: doctrine.event_subscriber, connection: default }

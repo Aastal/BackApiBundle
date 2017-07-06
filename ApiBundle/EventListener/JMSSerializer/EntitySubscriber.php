@@ -1,5 +1,5 @@
 <?php
-namespace Geoks\ApiBundle\EventListener;
+namespace Geoks\ApiBundle\EventListener\JMSSerializer;
 
 use Aws\S3\S3Client;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -93,7 +93,6 @@ class EntitySubscriber implements EventSubscriberInterface
                         }
                     }
                 }
-
             }
         }
     }
