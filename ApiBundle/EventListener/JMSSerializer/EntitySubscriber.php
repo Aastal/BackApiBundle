@@ -94,6 +94,19 @@ class EntitySubscriber implements EventSubscriberInterface
                     }
                 }
             }
+
+            if ($reader->getClassAnnotation($classReflection, "Geoks\\ApiBundle\\Annotation\\Base64Check")) {
+                foreach ($classReflection->getProperties() as $reflectionProperty) {
+                    if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\Base64Handle")) {
+
+                        $property = $entity->{'get' . $reflectionProperty->name}();
+
+                        if ((base64_encode(base64_decode($property, true)) === $property) && $property != "test" && $property != "true") {
+                            $entity->{'set' . $reflectionProperty->name}(base64_decode($property));
+                        }
+                    }
+                }
+            }
         }
     }
 }
