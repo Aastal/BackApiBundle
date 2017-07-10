@@ -38,7 +38,8 @@ class UserSubscriber implements EventSubscriber
     {
         $user = $args->getEntity();
 
-        if ($user instanceof User) {
+        if (is_subclass_of($user, 'Geoks\UserBundle\Entity\User') || $user instanceof User) {
+
             if (!$user->getUsername()) {
                 $user->setUsername($user->getEmail());
                 $user->setUsernameCanonical($user->getEmail());
@@ -49,6 +50,7 @@ class UserSubscriber implements EventSubscriber
 
                 $user->setPassword($encoded);
             }
+
         }
     }
 
@@ -56,7 +58,7 @@ class UserSubscriber implements EventSubscriber
     {
         $user = $args->getEntity();
 
-        if ($user instanceof User) {
+        if (is_subclass_of($user, 'Geoks\UserBundle\Entity\User') || $user instanceof User) {
             if ($user->getPlainPassword() && strlen($user->getSalt()) == 0) {
                 $encoded = $this->passwordEncoder->encodePassword($user, $user->getPlainPassword());
 

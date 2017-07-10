@@ -2,7 +2,7 @@
 
 namespace Geoks\AdminBundle\Services;
 
-use AppBundle\Entity\Category;
+use AppBundle\Entity\Directory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Util\ClassUtils;
@@ -109,7 +109,7 @@ class Import
             }
         }
 
-        if (array_key_exists("0", $data)) {
+        if (!empty($data)) {
             foreach ($data as $item) {
 
                 foreach ($item as $key => &$value) {
@@ -235,7 +235,7 @@ class Import
 
                     $oldEntity = $this->em->getRepository($this->class)->findOneBy($fields);
                 } else {
-                    $value = $entity->{"get" . ucfirst($dedupeField)}();
+                    $value = $entity->{'get' . ucfirst($dedupeField)}();
 
                     if (is_object($value)) {
                         $value = $value->getId();
@@ -257,8 +257,6 @@ class Import
                     $getter = $entity->{'get' . ucfirst($entry["fieldName"])}();
 
                     if (method_exists($entity, 'set' . ucfirst($entry["fieldName"]))) {
-
-                        $entity->{'set' . ucfirst($entry["fieldName"])}(null);
 
                         if ($getter && is_string($getter)) {
 

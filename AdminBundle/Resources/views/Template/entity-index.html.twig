@@ -92,16 +92,15 @@
                                                     {% set field = field|replace({'_': ""}) %}
                                                 {% endif %}
 
-                                                {% if attribute(fieldEntity, field) is defined and attribute(fieldEntity, field) %}
+                                                {% if attribute(fieldEntity, field) is defined and attribute(fieldEntity, field) is not null %}
                                                     {% set field = attribute(fieldEntity, field) %}
-
                                                     {% if field is iterable %}
                                                         {{ field|length }}
                                                     {% elseif field.timestamp is defined %}
                                                         {{ field|date('d/m/Y H:i:s') }}
                                                     {% elseif field == 'true' %}
                                                         {{ "app.yes"|trans }}
-                                                    {% elseif field == 'false' %}
+                                                    {% elseif field == false %}
                                                         {{ "app.no"|trans }}
                                                     {% else %}
                                                         {{ field|trans({}, name|lower) }}
