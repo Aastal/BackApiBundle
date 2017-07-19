@@ -76,7 +76,7 @@ abstract class User extends BaseUser
     /**
      * @var string
      *
-     * @Assert\Choice(choices = {"male", "female"}, message = "Choose a valid gender.")
+     * @Assert\Choice(choices = {"male", "female", "m", "f"}, message = "Choose a valid gender.")
      *
      * @Expose
      * @Groups({"details", "list"})
@@ -132,7 +132,6 @@ abstract class User extends BaseUser
      * @ChoiceList(choices = {"ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
      */
     protected $roles;
-
 
     /**
      * @var File
