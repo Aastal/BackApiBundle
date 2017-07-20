@@ -422,8 +422,6 @@ abstract class User extends BaseUser
 
         if ($image) {
             $this->updated = new \DateTime('now');
-        } else {
-            $this->setImageName(null);
         }
 
         return $this;
