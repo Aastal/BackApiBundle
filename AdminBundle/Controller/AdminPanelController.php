@@ -38,7 +38,7 @@ abstract class AdminPanelController extends Controller
             }
         }
 
-        return $this->render("@GeoksAdmin/adminPanel/index.html.twig", [
+        return $this->render("@GeoksAdmin/AdminPanel/index.html.twig", [
             'entities' => $entities
         ]);
     }
@@ -50,7 +50,7 @@ abstract class AdminPanelController extends Controller
 
         $frontLogs = $em->getRepository('GeoksApiBundle:Log')->findBy(["type" => "front"]);
 
-        return $this->render("@GeoksAdmin/adminPanel/logs.html.twig", [
+        return $this->render("@GeoksAdmin/AdminPanel/logs.html.twig", [
             'front_logs' => $frontLogs
         ]);
     }
