@@ -11,6 +11,8 @@ parameters:
     amazon.s3.secret: null
     amazon.s3.bucket: null
 
+    liip_imagine.filter_sets: null
+
 services:
     geoks.utils.string_manager:
         class: Geoks\ApiBundle\Utils\StringUtils
