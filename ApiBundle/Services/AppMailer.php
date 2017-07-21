@@ -62,8 +62,8 @@ class AppMailer
 
     private function setConfig()
     {
-        $senderName = $this->container->getParameter('hip_mandrill.default.sender_name');
-        $sender = $this->container->getParameter('hip_mandrill.default.sender');
+        $senderName = $this->container->getParameter('slot_mandrill.default.sender_name');
+        $sender = $this->container->getParameter('slot_mandrill.default.sender');
         $lc = strtolower($this->projectName);
 
         $this->config = array(
