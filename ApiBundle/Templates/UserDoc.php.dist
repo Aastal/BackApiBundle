@@ -108,7 +108,7 @@ class UserDoc extends UserController
      * @param integer $id
      * @return JsonResponse
      */
-    public function delete($id)
+    public function delete($id = null)
     {
         return parent::delete($id);
     }

@@ -34,9 +34,9 @@ class GenerateAppCommand extends ContainerAwareCommand
         $fs = new Filesystem();
 
         // Generate bundles
-        $bundles[] = exec('php app/console generate:bundle --format=annotation --namespace=AppBundle --bundle-name=AppBundle --no-interaction');
+        $bundles[] = exec('php bin/console generate:bundle --format=annotation --namespace=AppBundle --bundle-name=AppBundle --no-interaction');
 
-        $bundles[] = exec('php app/console generate:bundle --bundle-name=AdminBundle --format=annotation --namespace=AdminBundle --no-interaction');
+        $bundles[] = exec('php bin/console generate:bundle --bundle-name=AdminBundle --format=annotation --namespace=AdminBundle --no-interaction');
 
         if ($input->getOption('website')) {
             $bundles[] = exec('php app/console generate:bundle --bundle-name=WebBundle --format=annotation --namespace=WebBundle --no-interaction');
@@ -47,8 +47,8 @@ class GenerateAppCommand extends ContainerAwareCommand
             $kernel->getRootDir() . '/../composer.json'
         );
 
-        exec('php app/console doctrine:database:create');
-        exec('php app/console doctrine:schema:create');
+        exec('php bin/console doctrine:database:create');
+        exec('php bin/console doctrine:schema:create');
 
         exec('sudo composer self-update');
         exec('sudo composer update');
@@ -122,7 +122,7 @@ class GenerateAppCommand extends ContainerAwareCommand
         );
 
         // Update schema
-        exec('php app/console doctrine:schema:update --force');
+        exec('php bin/console doctrine:schema:update --force');
 
         // Npm and Bower
         exec('cd src/Geoks && npm install');

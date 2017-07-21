@@ -45,6 +45,8 @@ doctrine:
         user:     "%database_user%"
         password: "%database_password%"
         charset:  UTF8
+        types:
+            phone_number: Misd\PhoneNumberBundle\Doctrine\DBAL\Types\PhoneNumberType
 
     orm:
         auto_generate_proxy_classes:  true
@@ -113,7 +115,7 @@ fos_oauth_server:
             access_token_lifetime: 1209600
             supported_scopes: read
 
-hip_mandrill:
+slot_mandrill:
     api_key: "--TkmnGY9LsoMN8_g8B2Jg"
     default:
         sender: "no-reply@geoks.fr"

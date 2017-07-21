@@ -47,7 +47,6 @@ class UserSubscriber implements EventSubscriber
             if ($user->getPassword() && strlen($user->getSalt()) == 0) {
                 $encoder = $this->container->get('security.password_encoder');
                 $encoded = $encoder->encodePassword($user, $user->getPassword());
-
                 $user->setPassword($encoded);
             }
         }

@@ -138,7 +138,7 @@ class Serializer
                 $name = strtolower($this->entityReflection->getShortName());
             } elseif ($value instanceof PersistentCollection) {
                 $name = $this->getEntityName($value->getMapping()["targetEntity"]);
-            } elseif (is_array($value) && !is_array(reset($value)) && !is_string(reset($value)) && !is_bool(reset($value))) {
+            } elseif (is_array($value) && !is_array(reset($value)) && !is_string(reset($value)) && !is_bool(reset($value)) && !is_numeric(reset($value))) {
                 $name = $this->getEntityName(reset($value));
             } else {
                 $name = $this->key;
