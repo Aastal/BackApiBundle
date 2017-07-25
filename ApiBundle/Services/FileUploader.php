@@ -10,7 +10,7 @@ use Geoks\ApiBundle\Utils\StringUtils;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 class FileUploader
 {
@@ -20,7 +20,7 @@ class FileUploader
     private $em;
 
     /**
-     * @var KernelInterface
+     * @var Kernel
      */
     private $kernel;
 
@@ -49,7 +49,7 @@ class FileUploader
      */
     private $vichMapping;
 
-    public function __construct(EntityManager $em, KernelInterface $kernel, StringUtils $stringUtils, ImageUtil $imageUtil, Aws $aws, $filters, $vichMapping)
+    public function __construct(EntityManager $em, Kernel $kernel, StringUtils $stringUtils, ImageUtil $imageUtil, Aws $aws, $filters, $vichMapping)
     {
         $this->em = $em;
         $this->kernel = $kernel;
@@ -132,7 +132,6 @@ class FileUploader
                     }
 
                     echo '<br />';
-                    echo '============ END ============';
                 }
             }
         }
