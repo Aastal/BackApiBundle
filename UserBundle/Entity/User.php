@@ -420,7 +420,7 @@ abstract class User extends BaseUser
     {
         $this->imageFile = $image;
 
-        if ($image) {
+        if ($image && $image !== $this->getImageFile()) {
             $this->updated = new \DateTime('now');
         }
 
