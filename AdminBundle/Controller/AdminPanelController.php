@@ -26,8 +26,8 @@ abstract class AdminPanelController extends Controller
                 $reflection = $m->getReflectionClass();
 
                 $name = $reflection->getShortName();
-                $groups = $this->__jmsGroup($reflection);
-                $properties = $this->__propertiesType($reflection);
+                $groups = $this->jmsGroup($reflection);
+                $properties = $this->propertiesType($reflection);
 
                 if ($groups && $properties) {
                     $entities[$name] = [
@@ -59,7 +59,7 @@ abstract class AdminPanelController extends Controller
      * @param \ReflectionClass $reflection
      * @return array
      */
-    private function __jmsGroup($reflection)
+    private function jmsGroup($reflection)
     {
         $groups = [];
         $reader = new AnnotationReader();
@@ -72,7 +72,7 @@ abstract class AdminPanelController extends Controller
                     if ($annotationColumn = $reader->getPropertyAnnotation($property, "Doctrine\\ORM\\Mapping\\Column")) {
                         $type = $annotationColumn->type;
                     } else {
-                        $type = $this->__annotationProperty($property);
+                        $type = $this->annotationProperty($property);
                     }
 
                     if ($annotationAssociation = $reader->getPropertyAnnotation($property, "Doctrine\\ORM\\Mapping\\OneToMany")) {
@@ -126,12 +126,12 @@ abstract class AdminPanelController extends Controller
      * @param \ReflectionClass $reflection
      * @return array
      */
-    private function __propertiesType($reflection)
+    private function propertiesType($reflection)
     {
         $properties = [];
         $reader = new AnnotationReader();
 
-        $properties[] = $this->__subClass($reader, $reflection);
+        $properties[] = $this->subClass($reader, $reflection);
 
         return $properties;
     }
@@ -142,12 +142,12 @@ abstract class AdminPanelController extends Controller
      * @param array $properties
      * @return array
      */
-    private function __subClass($reader, $parent, $properties = [])
+    private function subClass($reader, $parent, $properties = [])
     {
         foreach ($parent->getProperties() as $property) {
             if ($annotation = $reader->getPropertyAnnotations($property)) {
 
-                $type = $this->__annotationProperty($property);
+                $type = $this->annotationProperty($property);
 
                 array_unshift($properties, [
                     'name' => $property->name,
@@ -157,7 +157,7 @@ abstract class AdminPanelController extends Controller
         }
 
         if ($parent = $parent->getParentClass()) {
-            $this->__subClass($reader, $parent, $properties);
+            $this->subClass($reader, $parent, $properties);
         }
 
         return $properties;
@@ -167,7 +167,7 @@ abstract class AdminPanelController extends Controller
      * @param \ReflectionProperty $property
      * @return string
      */
-    private function __annotationProperty($property)
+    private function annotationProperty($property)
     {
         if (strpos($property->getDocComment(), "@var string"))
             $type = "string";

@@ -17,6 +17,11 @@ class Log
     protected $id;
 
     /**
+     * @var \DateTime
+     */
+    private $created;
+
+    /**
      * @var string
      *
      * @Assert\Choice(choices={"front", "back"})
@@ -34,6 +39,13 @@ class Log
      * @var array
      */
     private $context;
+
+    public function prePersist()
+    {
+        $now = new \DateTime();
+
+        $this->created = $now;
+    }
 
     /**
      * @return string
@@ -89,5 +101,21 @@ class Log
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param \DateTime $created
+     */
+    public function setCreated(\DateTime $created)
+    {
+        $this->created = $created;
     }
 }
