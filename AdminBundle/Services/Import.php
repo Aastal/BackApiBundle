@@ -172,7 +172,7 @@ class Import
             $entities[] = $serializer->denormalize($data, $this->class);
         }
 
-        $this->__insertByType($entities, $type, $dedupeField);
+        $this->insertByType($entities, $type, $dedupeField);
 
         return ["success" => true];
     }
@@ -201,7 +201,7 @@ class Import
         return $data;
     }
 
-    private function __insertByType($entities, $type, $dedupeField)
+    private function insertByType($entities, $type, $dedupeField)
     {
         $fieldsAssociations = $this->container->get('geoks_admin.entity_fields')->getFieldsAssociations($this->class);
         $fieldsAssociations = new ArrayCollection($fieldsAssociations);
@@ -217,46 +217,82 @@ class Import
 
         foreach ($entities as $entity) {
 
-            if ($dedupeField) {
-                if (is_array($dedupeField)) {
-
-                    $fields = [];
-                    foreach ($dedupeField as $d) {
-                        $value = $entity->{"get" . ucfirst($d)}();
-
-                        if (is_object($value)) {
-                            $value = $value->getId();
-                        }
-
-                        $fields += [
-                            $d => $value
-                        ];
-                    }
-
-                    $oldEntity = $this->em->getRepository($this->class)->findOneBy($fields);
-                } else {
-                    $value = $entity->{'get' . ucfirst($dedupeField)}();
-
-                    if (is_object($value)) {
-                        $value = $value->getId();
-                    }
-
-                    $oldEntity = $this->em->getRepository($this->class)->findOneBy([$dedupeField => $value]);
-                }
-
-                if ($oldEntity) {
-                    $this->em->remove($oldEntity);
-                }
-            }
-
-            $this->em->persist($entity);
-
-            $this->findAssociations($fieldsAssociations, $entity);
+            $changes = $this->dedupeEntity($entity, $dedupeField);
             $this->manageException($entity);
+
+            if (!$changes) {
+                $this->em->persist($entity);
+
+                $this->findAssociations($fieldsAssociations, $entity);
+            }
         }
 
         $this->em->flush();
         $this->em->clear();
+    }
+
+    private function dedupeEntity($entity, $dedupeField)
+    {
+        $changes = false;
+        $oldEntity = null;
+
+        if ($dedupeField && is_array($dedupeField)) {
+
+            $fields = [];
+            foreach ($dedupeField as $d) {
+                $value = $entity->{"get" . ucfirst($d)}();
+
+                if (is_object($value)) {
+                    $value = $value->getId();
+                }
+
+                $fields += [
+                    $d => $value
+                ];
+            }
+
+            $oldEntity = $this->em->getRepository($this->class)->findOneBy($fields);
+
+        } elseif ($dedupeField) {
+
+            $value = $entity->{'get' . ucfirst($dedupeField)}();
+
+            if (is_object($value)) {
+                $value = $value->getId();
+            }
+
+            $oldEntity = $this->em->getRepository($this->class)->findOneBy([$dedupeField => $value]);
+        }
+
+        if ($oldEntity) {
+
+            $changes = true;
+            $rows = $this->container->get('geoks_admin.entity_fields')->getFieldsName($this->class);
+            $reflection = $this->em->getClassMetadata(get_class($entity))->getReflectionClass();
+
+            foreach ($rows as $row) {
+
+                if ($row['fieldName'] != "created" &&
+                    $row['fieldName'] != "updated" &&
+                    !$this->container->get('geoks_admin.entity_fields')->checkAnnotation($reflection, $row['fieldName'], "Geoks\\ApiBundle\\Annotation\\FilePath", "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")
+                ) {
+
+                    if (method_exists($entity, 'get' . ucfirst($row['fieldName']))) {
+                        $newData = $entity->{'get' . ucfirst($row['fieldName'])}();
+                        $oldData = $oldEntity->{'get' . ucfirst($row['fieldName'])}();
+                    } else {
+                        $newData = $entity->{'is' . ucfirst($row['fieldName'])}();
+                        $oldData = $oldEntity->{'is' . ucfirst($row['fieldName'])}();
+                    }
+
+                    if ($newData != $oldData) {
+                        $oldEntity->{'set' . ucfirst($row['fieldName'])}($newData);
+                    }
+                }
+            }
+        }
+
+        return $changes;
     }
 
     /**
