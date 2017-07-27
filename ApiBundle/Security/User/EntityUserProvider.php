@@ -74,6 +74,11 @@ class EntityUserProvider extends BaseClass
         return $this->accessToken->getToken();
     }
 
+    /**
+     * @param User $user
+     * @param null $session
+     * @throws \Exception
+     */
     public function createToken($user, $session = null)
     {
         if (!$this->client) {
@@ -101,6 +106,8 @@ class EntityUserProvider extends BaseClass
             }
 
             $this->accessToken = $accessToken;
+
+            $user->setLastLogin(new \DateTime());
         }
 
         if ($session === true) {
@@ -116,8 +123,6 @@ class EntityUserProvider extends BaseClass
         } else {
             $this->accessToken->setScope('api');
         }
-
-        $user->setLastLogin(new \DateTime());
 
         $this->em->flush();
     }

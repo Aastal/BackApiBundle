@@ -9,7 +9,7 @@
 
         <lifecycle-callbacks>
             <lifecycle-callback type="prePersist" method="prePersist"/>
-            <lifecycle-callback type="postPersist" method="preUpdate"/>
+            <lifecycle-callback type="preUpdate" method="preUpdate"/>
         </lifecycle-callbacks>
 
         <id name="id" type="integer" column="id">

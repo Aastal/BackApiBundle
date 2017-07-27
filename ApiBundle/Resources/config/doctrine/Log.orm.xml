@@ -6,9 +6,15 @@
 
     <entity name="Geoks\ApiBundle\Entity\Log" table="logs">
 
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="prePersist"/>
+        </lifecycle-callbacks>
+
         <id name="id" type="integer" column="id">
             <generator strategy="IDENTITY"/>
         </id>
+
+        <field name="created" type="datetime" column="created" nullable="true"/>
 
         <field name="type" type="string" column="type" nullable="true"/>
         <field name="description" type="string" column="description" nullable="true"/>
