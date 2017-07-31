@@ -16,6 +16,11 @@ $('.datetimepicker').datetimepicker({
     lang: '{{ locale }}'
 });
 
+$('.datepicker').datetimepicker({
+    format: 'd/m/Y',
+    lang: '{{ locale }}'
+});
+
 $(document).on('click', '.btn-list-display', function () {
     $(this).parent().parent().find('.multiple').toggle('slide');
 
