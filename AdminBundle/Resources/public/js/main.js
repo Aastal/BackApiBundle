@@ -137,14 +137,14 @@ function searchAjax(target, url, text, returnObj) {
                             return result;
                         }
 
-                        if (returnObj == 'user') {
+                        if (returnObj === 'user') {
                             return {
                                 id: obj.id,
                                 text: obj.id + ' : ' + obj["firstname"] + ' ' + obj["lastname"] + ' (' + obj["username"] + ')'
                             };
                         }
 
-                        if (returnObj == 'aggression') {
+                        if (returnObj === 'aggression') {
                             return {
                                 id: obj.id,
                                 text: obj.id + ' : ' + obj["aggressionTime"].date
@@ -164,6 +164,7 @@ function searchAjax(target, url, text, returnObj) {
     });
 
     select2.select2({
+        allowClear: true,
         theme: "bootstrap",
         placeholder: 'Rechercher...',
         width: '100%'
