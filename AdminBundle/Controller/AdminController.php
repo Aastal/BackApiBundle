@@ -488,7 +488,6 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $filenameWeb));
 
         return new JsonResponse(["success" => $filenameWeb]);
-
     }
 }
 
