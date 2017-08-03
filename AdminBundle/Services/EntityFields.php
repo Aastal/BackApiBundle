@@ -42,6 +42,24 @@ class EntityFields
         return (new \ReflectionClass($table))->getShortName();
     }
 
+    public function getImageFields($entity)
+    {
+        $properties = [];
+        $reader = new AnnotationReader();
+
+        $cm = $this->em->getClassMetadata(get_class($entity))->getReflectionClass();
+
+        if ($reader->getClassAnnotation($cm, "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
+
+            foreach ($cm->getProperties() as $reflectionProperty) {
+                if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Vich\\UploaderBundle\\Mapping\\Annotation\\UploadableField")) {
+                    $properties[$reflectionProperty->getName()] = $annotation;
+                }
+            }
+        }
+        return $properties;
+    }
+
     public function getFieldsName($table, $isRequired = false)
     {
         $rowArr = [];

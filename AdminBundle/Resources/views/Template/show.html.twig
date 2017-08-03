@@ -1,7 +1,5 @@
 {% set className = class(entity) %}
 {% set namePluralize = name_pluralize(className) %}
-{% set fields = fields(class_repository(entity) ~ '\\' ~ className) %}
-{% set fields_associations = fields_associations(class_repository(entity) ~ '\\' ~ className) %}
 
 <h1>{{ ('app.' ~ className)|lower|trans }} n°{{ entity.id }}</h1>
 
@@ -18,6 +16,7 @@
             <div class="box-header">
                 <h3 class="box-title">{{ "app.show.attributes"|trans }}</h3>
             </div>
+
             <div class="box-body padding">
                 <div class="table-responsive">
                     <table class="table no-margin">
@@ -29,6 +28,7 @@
                                     <td>
                                         {% if attribute(entity, field.fieldName) is defined and attribute(entity, field.fieldName) is not null %}
                                             {% set fieldValue = attribute(entity, field.fieldName) %}
+
                                             <b>
                                                 {% if fieldValue is iterable %}
                                                     {{ fieldValue|length }}
@@ -101,3 +101,40 @@
         </div>
     {% endif %}
 </div>
+
+{% if images %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title">{{ "app.show.images"|trans }}</h3>
+                </div>
+
+                <div class="box-body padding">
+                    <div class="table-responsive">
+                        <table class="table no-margin">
+                            <tbody>
+                            {% for key, value in images %}
+                                <tr>
+                                    <td>
+                                        {% if attribute(entity, value.fileNameProperty) is defined and attribute(entity, value.fileNameProperty) is not null %}
+                                            {% set fieldValue = attribute(entity, value.fileNameProperty) %}
+
+                                            {% if fieldValue %}
+                                                <img src="{{ vich_uploader_asset(entity, key) }}" alt="{{ fieldValue }}"
+                                                     class="img-thumbnail" width="40%">
+                                            {% endif %}
+                                        {% else %}
+                                            <label class="label label-default">{{ "app.noData"|trans }}</label>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}

@@ -87,13 +87,14 @@
                                                     {% set fieldEntity = attribute(entity, fieldName) %}
 
                                                     {% set field = field[1]|replace({'_': ""}) %}
-                                                {% else  %}
+                                                {% else %}
                                                     {% set fieldEntity = entity %}
                                                     {% set field = field|replace({'_': ""}) %}
                                                 {% endif %}
 
                                                 {% if attribute(fieldEntity, field) is defined and attribute(fieldEntity, field) is not null %}
                                                     {% set field = attribute(fieldEntity, field) %}
+
                                                     {% if field is iterable %}
                                                         {{ field|length }}
                                                     {% elseif field.timestamp is defined %}
