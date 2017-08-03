@@ -10,6 +10,7 @@
                 <thead>
                 <tr>
                     <th>Id</th>
+                    <th>Crée le</th>
                     <th>Description</th>
                     <th>Context</th>
                 </tr>
@@ -18,6 +19,7 @@
                 {% for log in front_logs %}
                     <tr>
                         <td>{{ log.id }}</td>
+                        <td>{{ log.created | date('d/m/Y H:i:s') }}</td>
                         <td>{{ log.description }}</td>
                         <td>
                             {% for key,value in log.context %}

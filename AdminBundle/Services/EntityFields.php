@@ -192,7 +192,7 @@ class EntityFields
                     'required' => false,
                     'format' => 'dd/MM/yyyy',
                     'attr' => [
-                        'class' => 'control-animate datetimepicker'
+                        'class' => 'control-animate datepicker'
                     ]
                 ];
                 break;

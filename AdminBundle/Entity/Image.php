@@ -13,6 +13,11 @@ class Image
      */
     protected $image;
 
+    public function __toString()
+    {
+        return (string) $this->image->getFilename();
+    }
+
     /**
      * @return mixed
      */
