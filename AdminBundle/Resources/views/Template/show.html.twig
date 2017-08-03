@@ -31,19 +31,17 @@
 
                                             <b>
                                                 {% if fieldValue is iterable %}
-                                                    {{ fieldValue|length }}
+                                                    {{ field|length }}
                                                 {% elseif fieldValue.timestamp is defined %}
                                                     {{ fieldValue|date('d/m/Y H:i:s') }}
-                                                {% elseif fieldValue == 'true' %}
+                                                {% elseif fieldValue is sameas(true) %}
                                                     {{ "app.yes"|trans }}
-                                                {% elseif fieldValue == false %}
+                                                {% elseif fieldValue is sameas(false) %}
                                                     {{ "app.no"|trans }}
                                                 {% else %}
-                                                    {{ fieldValue }}
+                                                    {{ fieldValue|trans({}, className|lower) }}
                                                 {% endif %}
                                             </b>
-                                        {% elseif field.type is defined and field.type == 'boolean' %}
-                                            {{ "app.no"|trans }}
                                         {% else %}
                                             <label class="label label-default">{{ "app.noData"|trans }}</label>
                                         {% endif %}
