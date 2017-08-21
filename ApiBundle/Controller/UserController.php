@@ -206,7 +206,6 @@ abstract class UserController extends ApiController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $user->setUpdated(new \DateTime());
             $em->flush();
 
             return $this->serializeResponse(['details' => $user]);
