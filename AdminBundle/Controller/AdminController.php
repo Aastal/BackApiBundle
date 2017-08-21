@@ -181,8 +181,15 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
         $entity = $em->getRepository($this->entityRepository)->find($id);
 
+        $fields = $this->get('geoks_admin.entity_fields')->getFieldsName(get_class($entity));
+        $images = $this->get('geoks_admin.entity_fields')->getImageFields($entity);
+        $fieldsAssociations = $this->get('geoks_admin.entity_fields')->getFieldsAssociations(get_class($entity));
+
         return $this->render($this->getAdminBundle() . ':' . $this->className . ':show.html.twig', [
-            "entity" => $entity
+            "entity" => $entity,
+            "fields" => $fields,
+            "images" => $images,
+            "fields_associations" => $fieldsAssociations
         ]);
     }
 
@@ -488,7 +495,6 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $filenameWeb));
 
         return new JsonResponse(["success" => $filenameWeb]);
-
     }
 }
 

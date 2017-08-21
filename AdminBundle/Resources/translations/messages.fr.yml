@@ -7,6 +7,8 @@ app:
   logout: Se déconnecter
   user: Utilisateur
   users: Utilisateurs
+  image: Image
+  images: Images
   question: Question
   questions: Questions
   comment: Commentaire
@@ -28,6 +30,7 @@ app:
   show:
     attributes: Liste des attributs
     associations: Liste des relations
+    images: Liste des images
     return: Revenir à l'index
   logs: Logs
 

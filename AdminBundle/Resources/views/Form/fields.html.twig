@@ -117,7 +117,9 @@
 
 {% block entity_multiple_widget %}
     {% spaceless %}
+
         {% set i = 0 %}
+
         {% for child in form if child.vars.checked == 1 %}
             {% set i = i + 1 %}
         {% endfor %}

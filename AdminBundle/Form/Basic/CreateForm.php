@@ -73,9 +73,9 @@ class CreateForm extends AbstractType
                     }
                 }
 
-                if ($name == 'roles' && $container->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_SUPER_ADMIN")) {
+                if ($name == 'roles' && $container->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_SUPER_ADMIN") && !$container->get('geoks_admin.entity_fields')->checkAnnotation($reflection, $name, "Geoks\\ApiBundle\\Annotation\\FilePath", "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
                     $builder->add($name, $typeOptions['type'], $typeOptions['options']);
-                } elseif ($name != 'roles') {
+                } elseif ($name != 'roles' && !$container->get('geoks_admin.entity_fields')->checkAnnotation($reflection, $name, "Geoks\\ApiBundle\\Annotation\\FilePath", "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
                     $builder->add($name, $typeOptions['type'], $typeOptions['options']);
                 }
             }
