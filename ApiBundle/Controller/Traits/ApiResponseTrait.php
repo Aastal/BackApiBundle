@@ -5,6 +5,7 @@ namespace Geoks\ApiBundle\Controller\Traits;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Form;
+use Geoks\ApiBundle\Services\Serializer;
 
 trait ApiResponseTrait
 {
@@ -18,9 +19,12 @@ trait ApiResponseTrait
      */
     protected function serializeResponse($data, $status = 200)
     {
+        /** @var Serializer $serializer */
+        $serializer = $this->get('geoks.api.serializer');
+
         // Success
         if ($status == Response::HTTP_OK) {
-            return new JsonResponse($this->get('geoks.api.serializer')->serializeData($data), $status);
+            return new JsonResponse($serializer->serializeData($data), $status);
         }
 
         // Parse Error

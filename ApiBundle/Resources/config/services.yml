@@ -1,5 +1,6 @@
 parameters:
     geoks.user_provider.class: Geoks\ApiBundle\Security\User\EntityUserProvider
+    fos_user.security.interactive_login_listener.class: Geoks\UserBundle\EventListener\LastLoginListener
     sms.api.url: null
     sms.api.key: null
     stripe.public.key: null

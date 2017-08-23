@@ -97,7 +97,6 @@ class EntityUserProvider extends BaseClass
             $accessToken->setClient($this->client);
             $accessToken->setToken(uniqid(md5($user->getUsername())));
             $accessToken->setExpiresAt($expire->format('U'));
-            $accessToken->setScope('api');
 
             $this->em->persist($accessToken);
 
@@ -107,21 +106,11 @@ class EntityUserProvider extends BaseClass
 
             $this->accessToken = $accessToken;
 
+            $this->setTokenScope($user, $session);
+
             $user->setLastLogin(new \DateTime());
-        }
-
-        if ($session === true) {
-            $token = new UsernamePasswordToken(
-                $user,
-                null,
-                'secured_area',
-                $user->getRoles()
-            );
-
-            $this->tokenStorage->setToken($token);
-            $this->accessToken->setScope('admin');
         } else {
-            $this->accessToken->setScope('api');
+            $this->setTokenScope($user, $session);
         }
 
         $this->em->flush();
@@ -165,5 +154,26 @@ class EntityUserProvider extends BaseClass
         $this->createToken($user);
 
         return $user;
+    }
+
+    /**
+     * @param User $user
+     * @param boolean $session
+     */
+    private function setTokenScope($user, $session)
+    {
+        if ($session === true) {
+            $token = new UsernamePasswordToken(
+                $user,
+                null,
+                'secured_area',
+                $user->getRoles()
+            );
+
+            $this->tokenStorage->setToken($token);
+            $this->accessToken->setScope('admin');
+        } else {
+            $this->accessToken->setScope('api');
+        }
     }
 }

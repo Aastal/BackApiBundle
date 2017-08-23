@@ -368,7 +368,9 @@ abstract class User extends BaseUser
      */
     public function setPhone($phone)
     {
-        $this->phone = $phone;
+        if ($phone != $this->phone) {
+            $this->phone = $phone;
+        }
     }
 
     /**
