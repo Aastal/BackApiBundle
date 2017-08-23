@@ -39,6 +39,7 @@ admin:
   property_name: Nom
   property_type: Type
   import: Importer des données
+  import_image: Importer des images
 
 form:
   search: Rechercher

@@ -4,6 +4,7 @@ namespace Geoks\AdminBundle\Controller;
 
 use Geoks\AdminBundle\Controller\Interfaces\AdminControllerInterface;
 use Geoks\AdminBundle\Form\Export\ExportType;
+use Geoks\AdminBundle\Form\Import\ImportImageType;
 use Geoks\AdminBundle\Form\Import\ImportType;
 use Geoks\ApiBundle\Controller\Traits\ApiResponseTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -170,6 +171,10 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
         if (null !== $router->getRouteCollection()->get('geoks_admin_' . $namePluralize . '_import')) {
             $payload['import_form'] = $this->__importForm()->createView();
+        }
+
+        if (null !== $router->getRouteCollection()->get('geoks_admin_' . $namePluralize . '_import_image')) {
+            $payload['import_image_form'] = $this->__importImageForm()->createView();
         }
 
         return $this->render($this->getAdminBundle() . ':' . $this->className . ':index.html.twig', $payload);
@@ -358,6 +363,24 @@ abstract class AdminController extends Controller implements AdminControllerInte
         return $this->redirect($this->generateUrl('geoks_admin_' . $namePluralize . '_index'));
     }
 
+    public function importImageAction(Request $request)
+    {
+        $namePluralize = $this->get("geoks.utils.string_manager")->pluralize(lcfirst($this->className));
+
+        $form = $this->__importImageForm();
+        $form->handleRequest($request);
+
+        $result = $this->container->get('geoks_admin.import')->importImages($form, $this->getEntityRepository());
+
+        if ($result["success"] === true) {
+            $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'import');
+        } else {
+            $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'empty_or_wrong_value');
+        }
+
+        return $this->redirect($this->generateUrl('geoks_admin_' . $namePluralize . '_index'));
+    }
+
     public function searchAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
@@ -377,6 +400,24 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
         $form = $this->createForm(ImportType::class, null, [
             'action' => $this->generateUrl('geoks_admin_' . $namePluralize . '_import'),
+            'attr' => [
+                'id' => "admin.import." . lcfirst($this->className),
+                'class' => "form-horizontal"
+            ],
+            'method' => 'POST',
+            'class' => $this->entityRepository,
+            'translation_domain' => strtolower($this->className)
+        ]);
+
+        return $form;
+    }
+
+    private function __importImageForm()
+    {
+        $namePluralize = $this->get("geoks.utils.string_manager")->pluralize(lcfirst($this->className));
+
+        $form = $this->createForm(ImportImageType::class, null, [
+            'action' => $this->generateUrl('geoks_admin_' . $namePluralize . '_import_image'),
             'attr' => [
                 'id' => "admin.import." . lcfirst($this->className),
                 'class' => "form-horizontal"
@@ -490,4 +531,3 @@ abstract class AdminController extends Controller implements AdminControllerInte
         return new JsonResponse(["success" => $filenameWeb]);
     }
 }
-
