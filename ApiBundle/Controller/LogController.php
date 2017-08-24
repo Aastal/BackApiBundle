@@ -26,6 +26,7 @@ class LogController extends ApiController
 
         if ($form->isValid()) {
             $logger = $this->get('logger');
+
             $logger->error($log->getDescription(), $log->getContext());
 
             $em = $this->container->get('doctrine.orm.entity_manager');
