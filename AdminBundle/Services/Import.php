@@ -9,6 +9,7 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\DBAL\Types\DateTimeType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
+use Geoks\ApiBundle\Utils\StringUtils;
 use function GuzzleHttp\Psr7\str;
 use Metadata\ClassMetadata;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -29,14 +30,19 @@ class Import
     const REPLACE = 'replace';
 
     /**
-     * @var ContainerInterface
+     * @var StringUtils
      */
-    private $container;
+    private $stringUtils;
 
     /**
-     * @var ManagerRegistry
+     * @var EntityManager
      */
     private $em;
+
+    /**
+     * @var EntityFields
+     */
+    private $entityFields;
 
     /**
      * @var string
@@ -54,12 +60,29 @@ class Import
     private $fields;
 
     /**
-     * @param ContainerInterface $container
+     * @var array
      */
-    public function __construct(ContainerInterface $container)
+    private $imports;
+
+     /**
+     * @var string
+     */
+    private $kernelRoot;
+
+    /**
+     * @param EntityManager $em
+     * @param StringUtils $stringUtils
+     * @param EntityFields $entityFields
+     * @param array $imports
+     * @param string $kernelRoot
+     */
+    public function __construct(EntityManager $em, StringUtils $stringUtils, EntityFields $entityFields, $imports, $kernelRoot)
     {
-        $this->container = $container;
-        $this->em = $this->container->get('doctrine')->getManager();
+        $this->em = $em;
+        $this->stringUtils = $stringUtils;
+        $this->entityFields = $entityFields;
+        $this->imports = $imports;
+        $this->kernelRoot = $kernelRoot;
     }
 
     /**
@@ -147,8 +170,8 @@ class Import
 
                 foreach ($item as $key => &$value) {
                     if ($value) {
-                        if (!is_object($value) && $this->container->get('geoks.utils.string_manager')->validateDate($value)) {
-                            $value = $this->container->get('geoks.utils.string_manager')->validateDate($value);
+                        if (!is_object($value) && $this->stringUtils->validateDate($value)) {
+                            $value = $this->stringUtils->validateDate($value);
                         }
 
                         if ($this->fields) {
@@ -236,7 +259,7 @@ class Import
 
     private function insertByType($entities, $type, $dedupeField)
     {
-        $fieldsAssociations = $this->container->get('geoks_admin.entity_fields')->getFieldsAssociations($this->class);
+        $fieldsAssociations = $this->entityFields->getFieldsAssociations($this->class);
         $fieldsAssociations = new ArrayCollection($fieldsAssociations);
 
         if ($type == 'replace') {
@@ -300,14 +323,14 @@ class Import
         if ($oldEntity) {
 
             $changes = true;
-            $rows = $this->container->get('geoks_admin.entity_fields')->getFieldsName($this->class);
+            $rows = $this->entityFields->getFieldsName($this->class);
             $reflection = $this->em->getClassMetadata(get_class($entity))->getReflectionClass();
 
             foreach ($rows as $row) {
 
                 if ($row['fieldName'] != "created" &&
                     $row['fieldName'] != "updated" &&
-                    !$this->container->get('geoks_admin.entity_fields')->checkAnnotation($reflection, $row['fieldName'], "Geoks\\ApiBundle\\Annotation\\FilePath", "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")
+                    !$this->entityFields->checkAnnotation($reflection, $row['fieldName'], "Geoks\\ApiBundle\\Annotation\\FilePath", "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")
                 ) {
 
                     if (method_exists($entity, 'get' . ucfirst($row['fieldName']))) {
@@ -445,10 +468,12 @@ class Import
 
     private function manageException($entity)
     {
-        if ($this->container->hasParameter('geoks_admin.import.directories')) {
-            foreach ($this->container->getParameter('geoks_admin.import.directories') as $dir) {
-                foreach ($dir['exceptions'] as $exception) {
-                    $exceptionClass = new $dir['service']($this->container);
+        if (isset($this->imports['exceptions'])) {
+            foreach ($this->imports['exceptions'] as $dir) {
+                foreach ($dir['classes'] as $exception) {
+
+                    $class = $dir['directory'] . "\\" . $exception . "Exception";
+                    $exceptionClass = new $class($this->em, $this->kernelRoot);
                     $exceptionClass->{"manage" . ucfirst($exception)}($entity, $this->class);
                 }
             }

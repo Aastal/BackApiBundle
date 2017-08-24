@@ -38,30 +38,44 @@
         </div>
 
         <div id="navbar" class="navbar-collapse collapse">
-            {% if is_granted("ROLE_SUPER_ADMIN") and "geoks_adminPanel" not in app.request.attributes.get('_route') ? "active" %}
-                <ul class="nav navbar-nav navbar-left">
-                    <li><a href="{{ path('geoks_adminPanel_index') }}">{{ "app.admin-panel"|trans }}</a></li>
-                </ul>
-            {% elseif "geoks_adminPanel" in app.request.attributes.get('_route') ? "active" %}
-                <ul class="nav navbar-nav navbar-left">
-                    <li><a href="{{ path('geoks_adminPanel_logs') }}">{{ "app.logs"|trans }}</a></li>
-                </ul>
-            {% endif %}
-
             <ul class="nav navbar-nav navbar-right">
 
                 {% if "geoks_adminPanel" in app.request.attributes.get('_route') ? "active" %}
-                    <li><a href="{{ path('geoks_admin_index') }}">{{ "app.return_admin_page"|trans }}</a></li>
+                    <li>
+                        <a href="{{ path('geoks_admin_index') }}">{{ "app.return_admin_page"|trans }}</a>
+                    </li>
                 {% endif %}
 
-                <li><a href="{{ path('geoks_admin_logout') }}">{{ "app.logout"|trans }}</a></li>
+                <li>
+                    <a href="{{ path('geoks_admin_logout') }}">{{ "app.logout"|trans }}</a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-12 col-md-12 main">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="{{ "geoks_admin_index" == app.request.attributes.get('_route') ? "active" }}">
+                    <a href="{{ path('geoks_adminPanel_index') }}">{{ "app.admin-panel"|trans }}</a>
+                </li>
+                <li>
+                    <a href="{{ path('geoks_admin_logs_index') }}">{{ "app.logs"|trans }}</a>
+                </li>
+                <li>
+                    <hr>
+                </li>
+                <li>
+                    <a href="{{ path('geoks_admin_index') }}">{{ "app.return_admin_page"|trans }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             {% include 'GeoksAdminBundle:Form:flashbag-handler.html.twig' %}
 
             {% block body %}{% endblock %}

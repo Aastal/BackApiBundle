@@ -1,0 +1,9 @@
+{% extends 'GeoksAdminBundle::layout.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            {{ include('GeoksAdminBundle:Form:form_default.html.twig', {"form": form}) }}
+        </div>
+    </div>
+{% endblock %}

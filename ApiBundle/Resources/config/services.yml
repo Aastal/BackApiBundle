@@ -12,6 +12,9 @@ parameters:
     amazon.s3.secret: null
     amazon.s3.bucket: null
 
+    liip_imagine:
+        filter_sets: ~
+
 services:
     geoks.utils.string_manager:
         class: Geoks\ApiBundle\Utils\StringUtils
@@ -97,10 +100,18 @@ services:
 
     geoks.entity_subscriber:
         class: Geoks\ApiBundle\EventListener\JMSSerializer\EntitySubscriber
-        arguments: ["@service_container"]
+        arguments:
+            - "@geoks.utils.string_manager"
+            - "%vich_uploader.mappings%"
+            - "%liip_imagine.filter_sets%"
         tags:
             - { name: jms_serializer.event_subscriber }
 
     geoks.api.aws:
         class: Geoks\ApiBundle\Services\Aws
-        arguments: [ "@service_container" ]
+        arguments:
+            - "%amazon.s3.key%"
+            - "%amazon.s3.secret%"
+            - "%amazon.s3.region%"
+            - "%amazon.s3.version%"
+            - "%amazon.s3.bucket%"

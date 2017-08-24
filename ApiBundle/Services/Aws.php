@@ -10,30 +10,54 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Aws
 {
     /**
-     * @var ContainerInterface
+     * @var string
      */
-    private $container;
+    private $key;
 
-    public function __construct(ContainerInterface $container)
+    /**
+     * @var string
+     */
+    private $secret;
+
+    /**
+     * @var string
+     */
+    private $region;
+
+    /**
+     * @var string
+     */
+    private $version;
+
+    /**
+     * @var string
+     */
+    private $bucket;
+
+    public function __construct($key, $secret, $region, $version, $bucket)
     {
-        $this->container = $container;
+        $this->key = $key;
+        $this->secret = $secret;
+        $this->region = $region;
+        $this->version = $version;
+        $this->bucket = $bucket;
     }
 
     public function getS3Instance()
     {
         $config = array(
             'credentials' => [
-                'key' => $this->container->getParameter('amazon.s3.key'),
-                'secret' => $this->container->getParameter('amazon.s3.secret')
+                'key' => $this->key,
+                'secret' => $this->secret
             ],
-            'region' => $this->container->getParameter('amazon.s3.region'),
-            'version' => $this->container->getParameter('amazon.s3.version')
+            'region' => $this->region,
+            'version' => $this->version
         );
 
         $service = new S3Client($config);
         $service->registerStreamWrapper();
 
-        $client = new AwsS3($service, $this->container->getParameter('amazon.s3.bucket'));
+        $client = new AwsS3($service, $this->bucket);
         $fsaws = new Filesystem($client);
 
         return $fsaws;

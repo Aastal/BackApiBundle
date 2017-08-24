@@ -24,16 +24,4 @@ class AdminPanelDoc extends AdminPanelController
     {
         return parent::indexAction();
     }
-
-    /**
-     * @Route("/logs", name="geoks_adminPanel_logs")
-     * @Method({"GET"})
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function logsAction(Request $request)
-    {
-        return parent::logsAction($request);
-    }
 }

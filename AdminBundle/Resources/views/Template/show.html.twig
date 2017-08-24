@@ -31,7 +31,15 @@
 
                                             <b>
                                                 {% if fieldValue is iterable %}
-                                                    {{ field|length }}
+                                                    {% if fieldValue|length > 0 %}
+                                                        <ul class="nopadding-left">
+                                                            {% for v in fieldValue %}
+                                                                <li>{{ v }}</li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    {% else %}
+                                                        <label class="label label-default">{{ "app.noData"|trans }}</label>
+                                                    {% endif %}
                                                 {% elseif fieldValue.timestamp is defined %}
                                                     {{ fieldValue|date('d/m/Y H:i:s') }}
                                                 {% elseif fieldValue is sameas(true) %}
@@ -74,7 +82,15 @@
                                             {% set fieldValue = attribute(entity, fieldName) %}
                                             <b>
                                                 {% if fieldValue is iterable %}
-                                                    {{ fieldValue|length }}
+                                                    {% if fieldValue|length > 0 %}
+                                                        <ul class="nopadding-left">
+                                                            {% for v in fieldValue %}
+                                                                <li>{{ v }}</li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    {% else %}
+                                                        <label class="label label-default">{{ "app.noData"|trans }}</label>
+                                                    {% endif %}
                                                 {% elseif fieldValue.timestamp is defined %}
                                                     {{ fieldValue|date('d/m/Y H:i:s') }}
                                                 {% elseif fieldValue == 'true' %}

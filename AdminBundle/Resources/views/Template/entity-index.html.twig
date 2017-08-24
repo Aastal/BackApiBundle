@@ -12,7 +12,10 @@
 </div>
 
 <hr>
-<a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_create') }}">{{ "app.add"|trans }}</a>
+
+{% if route_exists('geoks_admin_' ~ namePluralize ~ '_create') %}
+    <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_create') }}">{{ "app.add"|trans }}</a>
+{% endif %}
 
 {% if route_exists('geoks_admin_' ~ namePluralize ~ '_import') %}
     <button type="button" class="btn btn-animate btn-light-blue"  data-toggle="modal" data-target="#import-data">{{ "admin.import"|trans }}</button>
@@ -119,9 +122,15 @@
                                         {% endfor %}
 
                                         <td>
-                                            <a class="btn btn-animate btn-info" href="{{ path('geoks_admin_' ~ namePluralize ~ '_show', {'id': entity.id}) }}">Voir</a>
-                                            <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_update', {'id': entity.id}) }}">Modifier</a>
-                                            <a class="btn btn-animate btn-danger" href="{{ path('geoks_admin_' ~ namePluralize ~ '_delete', {'id': entity.id}) }}">Supprimer</a>
+                                            {% if route_exists('geoks_admin_' ~ namePluralize ~ '_show') %}
+                                                <a class="btn btn-animate btn-info" href="{{ path('geoks_admin_' ~ namePluralize ~ '_show', {'id': entity.id}) }}">Voir</a>
+                                            {% endif %}
+                                            {% if route_exists('geoks_admin_' ~ namePluralize ~ '_update') %}
+                                                <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_update', {'id': entity.id}) }}">Modifier</a>
+                                            {% endif %}
+                                            {% if route_exists('geoks_admin_' ~ namePluralize ~ '_delete') %}
+                                                <a class="btn btn-animate btn-danger" href="{{ path('geoks_admin_' ~ namePluralize ~ '_delete', {'id': entity.id}) }}">Supprimer</a>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endif %}

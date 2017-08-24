@@ -32,6 +32,7 @@ app:
     associations: Liste des relations
     images: Liste des images
     return: Revenir à l'index
+  log: Log
   logs: Logs
 
 admin:

@@ -33,7 +33,7 @@ class GeoksAdminExtension extends Extension
 
         if (isset($config['import'])) {
             $container->setParameter('geoks_admin.import', $config['import']);
-            $container->setParameter('geoks_admin.import.directories', $config['import']['directories']);
+            $container->setParameter('geoks_admin.import.exceptions', $config['import']['exceptions']);
         } else {
             $container->setParameter('geoks_admin.import', null);
         }

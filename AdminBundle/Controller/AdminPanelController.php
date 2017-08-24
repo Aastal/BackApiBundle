@@ -4,6 +4,7 @@ namespace Geoks\AdminBundle\Controller;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Geoks\AdminBundle\Controller\Traits\AdminTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,6 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class AdminPanelController extends Controller
 {
+    use AdminTrait;
+
     /**
      * @return Response
      */
@@ -40,24 +43,6 @@ abstract class AdminPanelController extends Controller
 
         return $this->render("@GeoksAdmin/AdminPanel/index.html.twig", [
             'entities' => $entities
-        ]);
-    }
-
-    public function logsAction(Request $request)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $paginator  = $this->get('knp_paginator');
-
-        $entities = $em->getRepository('GeoksApiBundle:Log')->findBy(["type" => "front"]);
-
-        $pagination = $paginator->paginate(
-            $entities,
-            ((count($entities) / 10) < ($request->query->get('page', 1)-1)) ? 1 : $request->query->get('page', 1),
-            10, array('wrap-queries' => true)
-        );
-
-        return $this->render("@GeoksAdmin/AdminPanel/logs.html.twig", [
-            'pagination' => $pagination
         ]);
     }
 
