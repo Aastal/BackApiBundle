@@ -49,6 +49,11 @@ class Import
     private $images;
 
     /**
+     * @var array
+     */
+    private $fields;
+
+    /**
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -78,6 +83,47 @@ class Import
     }
 
     /**
+     * @param Form $form
+     * @param string $class
+     *
+     * @return array
+     */
+    public function importImages($form, $class)
+    {
+        $this->images = $form->get('images')->getData();
+        $this->class = $class;
+
+        if ($this->images && reset($this->images) instanceof UploadedFile) {
+            $this->importFields();
+
+            foreach ($this->images as $image) {
+
+                foreach ($this->fields as $key => $v) {
+                    if ($v['type'] === 'file') {
+
+                        /** @var ArrayCollection $entities */
+                        $entities = $this->em->getRepository($this->class)->findAll();
+
+                        foreach ($entities as $entity) {
+                            /** @var UploadedFile $image */
+                            $string = explode(".", $image->getClientOriginalName());
+                            $string = $string[0];
+
+                            if ($entity->{'get' . ucfirst($v['name'])}() == $string || $entity->{'get' . ucfirst($v['name'])}() == strtoupper($string)) {
+                                $entity->{'set' . ucfirst($key)}($image);
+                            }
+                        }
+                    }
+                }
+            }
+
+            $this->em->flush();
+        }
+
+        return ["success" => true];
+    }
+
+    /**
      * @param $data
      * @param $class
      * @param $type
@@ -89,25 +135,12 @@ class Import
         $entities = [];
         $this->class = $class;
 
-        $reader = new AnnotationReader();
-        $reflection = new \ReflectionClass($this->class);
-
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
 
         $normalizer = new ObjectNormalizer($classMetadataFactory);
         $serializer = new Serializer(array($normalizer));
 
-        $fields = [];
-        foreach ($reflection->getProperties() as $reflectionProperty) {
-            if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\AdminBundle\\Annotation\\ImportField")) {
-
-                if ((isset($annotation->type) && isset($annotation->name)) && $annotation->type == "file") {
-                    $fields[$annotation->name] = ['name' => $reflectionProperty->name, 'type' => "file"];
-                } elseif (isset($annotation->name)) {
-                    $fields[$annotation->name] = ['name' => $reflectionProperty->name, 'type' => "string"];
-                }
-            }
-        }
+        $this->importFields();
 
         if (!empty($data)) {
             foreach ($data as $item) {
@@ -118,8 +151,8 @@ class Import
                             $value = $this->container->get('geoks.utils.string_manager')->validateDate($value);
                         }
 
-                        if ($fields) {
-                            foreach ($fields as $k => $field) {
+                        if ($this->fields) {
+                            foreach ($this->fields as $k => $field) {
                                 if ($key == $field['name'] && $field['type'] == 'file') {
                                     $item[$k] = $value;
                                 } elseif ($key == $k && $field['type'] == 'string') {
@@ -131,8 +164,8 @@ class Import
                     } else {
                         $rc = new \ReflectionClass($this->class);
 
-                        if (!empty($fields) && array_key_exists($key, $fields)) {
-                            $setter = 'set' . ucfirst($fields[$key]['name']);
+                        if (!empty($this->fields) && array_key_exists($key, $this->fields)) {
+                            $setter = 'set' . ucfirst($this->fields[$key]['name']);
 
                             if ($rc->hasMethod($setter)) {
                                 if ($docs = $rc->getMethod($setter)->getDocComment()) {
@@ -152,7 +185,7 @@ class Import
                         $string = explode(".", $image->getClientOriginalName());
                         $string = $string[0];
 
-                        foreach ($fields as $key => $v) {
+                        foreach ($this->fields as $key => $v) {
                             if (isset($item[$key]) && $item[$key] == $string) {
                                 $item[$key] = $image;
                             }
@@ -160,7 +193,7 @@ class Import
                     }
                 }
 
-                foreach ($fields as $key => &$value) {
+                foreach ($this->fields as $key => &$value) {
                     if (isset($item[$key]) && !$item[$key] instanceof File && $value['type'] == 'file') {
                         $item[$key] = null;
                     }
@@ -420,5 +453,25 @@ class Import
                 }
             }
         }
+    }
+
+    private function importFields()
+    {
+        $reader = new AnnotationReader();
+        $reflection = new \ReflectionClass($this->class);
+
+        $fields = [];
+        foreach ($reflection->getProperties() as $reflectionProperty) {
+            if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\AdminBundle\\Annotation\\ImportField")) {
+
+                if ((isset($annotation->type) && isset($annotation->name)) && $annotation->type == "file") {
+                    $fields[$annotation->name] = ['name' => $reflectionProperty->name, 'type' => "file"];
+                } elseif (isset($annotation->name)) {
+                    $fields[$annotation->name] = ['name' => $reflectionProperty->name, 'type' => "string"];
+                }
+            }
+        }
+
+        $this->fields = $fields;
     }
 }

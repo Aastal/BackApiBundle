@@ -86,10 +86,9 @@ class EntitySubscriber implements EventSubscriber
                 foreach ($classReflection->getProperties() as $reflectionProperty) {
                     if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Geoks\\ApiBundle\\Annotation\\Base64Handle")) {
 
-                        $banWords = ["test", "Test", "TEST", "true", "True", "TRUE"];
                         $property = $entity->{'get' . $reflectionProperty->name}();
 
-                        if ((base64_encode(base64_decode($property, true)) === $property) && !in_array($property, $banWords)) {
+                        if ((base64_encode(base64_decode($property, true)) === $property)) {
                             $entity->{'set' . $reflectionProperty->name}(base64_decode($property));
                         }
                     }
