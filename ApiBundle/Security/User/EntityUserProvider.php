@@ -108,7 +108,7 @@ class EntityUserProvider extends BaseClass
 
             $this->setTokenScope($user, $session);
 
-            $user->setLastLogin(new \DateTime());
+            //$user->setLastLogin(new \DateTime());
         } else {
             $this->setTokenScope($user, $session);
         }
