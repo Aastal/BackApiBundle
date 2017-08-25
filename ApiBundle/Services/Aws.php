@@ -62,4 +62,9 @@ class Aws
 
         return $fsaws;
     }
+
+    public function getS3File($file)
+    {
+        return $this->getS3Instance()->get($file);
+    }
 }
