@@ -102,6 +102,7 @@ class CreateForm extends AbstractType
         foreach ($rowAssos as $name => $class) {
             if (!in_array($name, $banList)) {
 
+                var_dump($class);
                 $typeOptions['options'] = [
                     'label' => $this->entityName . "." . $name,
                     'class' => $class['targetEntity'],

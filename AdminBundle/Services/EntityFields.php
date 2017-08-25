@@ -37,11 +37,19 @@ class EntityFields
         $this->banFields = $banFields;
     }
 
+    /**
+     * @param $table
+     * @return string
+     */
     public function getEntityName($table)
     {
         return (new \ReflectionClass($table))->getShortName();
     }
 
+    /**
+     * @param $entity
+     * @return array
+     */
     public function getImageFields($entity)
     {
         $properties = [];
@@ -60,6 +68,11 @@ class EntityFields
         return $properties;
     }
 
+    /**
+     * @param $table
+     * @param bool $isRequired
+     * @return array
+     */
     public function getFieldsName($table, $isRequired = false)
     {
         $rowArr = [];
@@ -81,6 +94,11 @@ class EntityFields
         return $rowArr;
     }
 
+    /**
+     * @param $table
+     * @param $fields
+     * @return array
+     */
     public function getFieldsByName($table, $fields)
     {
         $rowArr = [];
@@ -96,6 +114,10 @@ class EntityFields
         return $rowArr;
     }
 
+    /**
+     * @param $table
+     * @return array
+     */
     public function getFieldsAssociations($table)
     {
         $rowAssos = [];
@@ -150,6 +172,12 @@ class EntityFields
         return $result;
     }
 
+    /**
+     * @param $entityName
+     * @param $name
+     * @param $type
+     * @return array
+     */
     public function switchType($entityName, $name, $type)
     {
         $r = [];
@@ -243,6 +271,9 @@ class EntityFields
         return $r;
     }
 
+    /**
+     * @return array
+     */
     public function fieldsBanList()
     {
         $autoBan = [

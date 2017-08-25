@@ -64,7 +64,7 @@ class Import
      */
     private $imports;
 
-     /**
+    /**
      * @var string
      */
     private $kernelRoot;
