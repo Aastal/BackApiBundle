@@ -274,13 +274,14 @@ class Import
         foreach ($entities as $entity) {
 
             $changes = $this->dedupeEntity($entity, $dedupeField);
-            $this->manageException($entity);
 
             if (!$changes) {
                 $this->em->persist($entity);
 
                 $this->findAssociations($fieldsAssociations, $entity);
             }
+
+            $this->manageException($entity);
         }
 
         $this->em->flush();
