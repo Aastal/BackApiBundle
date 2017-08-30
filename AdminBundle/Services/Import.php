@@ -277,7 +277,6 @@ class Import
 
             if (!$changes) {
                 $this->em->persist($entity);
-
                 $this->findAssociations($fieldsAssociations, $entity);
             }
 

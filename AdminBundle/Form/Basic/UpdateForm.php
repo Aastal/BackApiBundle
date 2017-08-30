@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManager;
 use Geoks\AdminBundle\Form\Custom\EntityMultipleType;
 use Geoks\AdminBundle\Form\Custom\HrType;
+use Geoks\AdminBundle\Services\EntityFields;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -44,20 +45,20 @@ class UpdateForm extends AbstractType
     {
         $this->changePassword = $options["change_password"];
 
-        /** @var ContainerInterface $container */
-        $container = $options["service_container"];
+        /** @var EntityFields $entityFields */
+        $entityFields = $options["entity_fields"];
         $table = $options["data_class"];
 
         /** @var Translator $translator */
-        $translator = $container->get('translator');
+        $translator = $options['translator'];
 
         $reader = new AnnotationReader();
         $reflection = new \ReflectionClass($table);
-        $banList = $container->get('geoks_admin.entity_fields')->fieldsBanList();
+        $banList = $entityFields->fieldsBanList();
 
-        $this->entityName = strtolower($container->get('geoks_admin.entity_fields')->getEntityName($table));
-        $rowArr = $container->get('geoks_admin.entity_fields')->getFieldsName($table);
-        $rowAssos = $container->get('geoks_admin.entity_fields')->getFieldsAssociations($table);
+        $this->entityName = strtolower($entityFields->getEntityName($table));
+        $rowArr = $entityFields->getFieldsName($table);
+        $rowAssos = $entityFields->getFieldsAssociations($table);
 
         $passwordExist = false;
 
@@ -69,7 +70,7 @@ class UpdateForm extends AbstractType
 
             if (isset($field["type"]) && !in_array($name, $banList)) {
 
-                $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);
+                $typeOptions = $entityFields->switchType($this->entityName, $name, $field["type"]);
 
                 if ((isset($field["nullable"]) && $field["nullable"]) || $field["type"] == 'boolean') {
                     $typeOptions['options']['required'] = false;
@@ -77,7 +78,7 @@ class UpdateForm extends AbstractType
                     $typeOptions['options']['required'] = true;
                 }
 
-                if ($annotation = $container->get('geoks_admin.entity_fields')->checkAnnotation($reflection, $name, "Geoks\\AdminBundle\\Annotation\\ChoiceList", "Geoks\\AdminBundle\\Annotation\\HasChoiceField")) {
+                if ($annotation = $entityFields->checkAnnotation($reflection, $name, "Geoks\\AdminBundle\\Annotation\\ChoiceList", "Geoks\\AdminBundle\\Annotation\\HasChoiceField")) {
                     $reflectionProperty = $reflection->getProperty($name);
 
                     if ($name == $reflectionProperty->name) {
@@ -90,9 +91,9 @@ class UpdateForm extends AbstractType
                     }
                 }
 
-                if ($name == 'roles' && $container->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_SUPER_ADMIN") && !$container->get('geoks_admin.entity_fields')->checkAnnotation($reflection, $name, "Geoks\\ApiBundle\\Annotation\\FilePath", "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
+                if ($name == 'roles' && $options['current_user']->getUser()->hasRole("ROLE_SUPER_ADMIN") && !$entityFields->checkAnnotation($reflection, $name, "Geoks\\ApiBundle\\Annotation\\FilePath", "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
                     $builder->add($name, $typeOptions['type'], $typeOptions['options']);
-                } elseif ($name != 'roles' && !$container->get('geoks_admin.entity_fields')->checkAnnotation($reflection, $name, "Geoks\\ApiBundle\\Annotation\\FilePath", "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
+                } elseif ($name != 'roles' && !$entityFields->checkAnnotation($reflection, $name, "Geoks\\ApiBundle\\Annotation\\FilePath", "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
                     $builder->add($name, $typeOptions['type'], $typeOptions['options']);
                 }
             }
@@ -208,6 +209,8 @@ class UpdateForm extends AbstractType
         ));
 
         $resolver->setRequired('change_password');
-        $resolver->setRequired('service_container');
+        $resolver->setRequired('entity_fields');
+        $resolver->setRequired('translator');
+        $resolver->setRequired('current_user');
     }
 }

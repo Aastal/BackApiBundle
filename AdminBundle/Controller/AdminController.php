@@ -279,7 +279,9 @@ abstract class AdminController extends Controller implements AdminControllerInte
             'method' => 'POST',
             'translation_domain' => strtolower($this->className),
             'data_class' => $this->entityRepository,
-            'service_container' => $this->get('service_container')
+            'entity_fields' => $this->get('geoks_admin.entity_fields'),
+            'translator' => $this->get('translator'),
+            'current_user' => $this->getUser()
         ]);
 
         $form->handleRequest($request);
@@ -324,8 +326,10 @@ abstract class AdminController extends Controller implements AdminControllerInte
             'method' => 'PATCH',
             'translation_domain' => strtolower($this->className),
             'data_class' => $this->entityRepository,
-            'service_container' => $this->get('service_container'),
-            'change_password' => $changePassword
+            'change_password' => $changePassword,
+            'entity_fields' => $this->get('geoks_admin.entity_fields'),
+            'translator' => $this->get('translator'),
+            'current_user' => $this->getUser()
         ]);
 
         $form->remove('password');
