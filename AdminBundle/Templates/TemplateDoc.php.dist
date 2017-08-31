@@ -53,7 +53,7 @@ class TemplateDoc extends TemplateController
 
     /**
      * @Route("/{id}/update", name="geoks_admin_template_update", options={"expose"=true})
-     * @Method({"GET", "PATCH", "PUT"})
+     * @Method({"GET", "PATCH", "POST"})
      *
      * @param Request $request
      * @param integer $id

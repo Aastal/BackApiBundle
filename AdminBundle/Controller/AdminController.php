@@ -322,8 +322,9 @@ abstract class AdminController extends Controller implements AdminControllerInte
                 'id' => "app." . lcfirst($this->className),
                 'class' => "form-horizontal"
             ],
+
             'action' => $this->generateUrl(sprintf('geoks_admin_' . $this->getNamePluralize() . '_update'), ['id' => $id]),
-            'method' => 'PATCH',
+            'method' => 'POST',
             'translation_domain' => strtolower($this->className),
             'data_class' => $this->entityRepository,
             'change_password' => $changePassword,
@@ -334,26 +335,23 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
         $form->remove('password');
 
-        if ($request->isMethod('PATCH')) {
+        $form->handleRequest($request);
 
-            $form->submit($request->request->get($form->getName()), false);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
 
-            if ($form->isSubmitted()) {
-                if ($form->isValid()) {
-
-                    if ($changePassword) {
-                        $entity->setPassword($this->encodeUserPassword($entity, $entity->getPlainPassword()));
-                    }
-
-                    $em->flush();
-
-                    $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'update');
-
-                    return $this->redirect($this->generateUrl('geoks_admin_' . $this->getNamePluralize() . '_index'));
+                if ($changePassword) {
+                    $entity->setPassword($this->encodeUserPassword($entity, $entity->getPlainPassword()));
                 }
 
-                $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'update');
+                $em->flush();
+
+                $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'update');
+
+                return $this->redirect($this->generateUrl('geoks_admin_' . $this->getNamePluralize() . '_index'));
             }
+
+            $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'update');
         }
 
         return $this->render($this->getEntityView() . ':form.html.twig', [

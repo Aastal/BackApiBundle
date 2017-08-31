@@ -12,8 +12,7 @@ parameters:
     amazon.s3.secret: null
     amazon.s3.bucket: null
 
-    liip_imagine:
-        filter_sets: ~
+    liip_imagine.filter_sets: null
 
 services:
     geoks.utils.string_manager:
@@ -67,6 +66,14 @@ services:
 
     geoks.uploader:
         class: Geoks\ApiBundle\Services\FileUploader
+        arguments:
+            - "@doctrine.orm.default_entity_manager"
+            - "@kernel"
+            - "@geoks.utils.string_manager"
+            - "@geoks.utils.image"
+            - "@geoks.api.aws"
+            - "%liip_imagine.filter_sets%"
+            - "%vich_uploader.mappings%"
 
     geoks.api.stripe:
         class: Geoks\ApiBundle\Services\StripePayment

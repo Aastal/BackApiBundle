@@ -77,6 +77,7 @@ class CreateForm extends AbstractType
                 if ($name == 'roles' && $options['current_user']->hasRole("ROLE_SUPER_ADMIN") && !$entityFields->checkAnnotation($reflection, $name, "Geoks\\ApiBundle\\Annotation\\FilePath", "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
                     $builder->add($name, $typeOptions['type'], $typeOptions['options']);
                 } elseif ($name != 'roles' && !$entityFields->checkAnnotation($reflection, $name, "Geoks\\ApiBundle\\Annotation\\FilePath", "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
+
                     $builder->add($name, $typeOptions['type'], $typeOptions['options']);
                 }
             }
@@ -90,6 +91,7 @@ class CreateForm extends AbstractType
                             'label' => $this->entityName . '.' . $reflectionProperty->name,
                             'required' => false,
                             'allow_delete' => true,
+                            'translation_domain' => $this->entityName,
                             'download_link' => true,
                             'attr' => [
                                 'class' => 'control-animate'
