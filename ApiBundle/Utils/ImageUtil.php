@@ -30,6 +30,9 @@ class ImageUtil
                 throw new \Exception("Wrong image format");
             }
 
+            imagealphablending($image_p, false);
+            imagesavealpha($image_p, true);
+
             imagecopyresampled($image_p, $imageFrom, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
 
             if ($image->getMimeType() == "image/jpeg") {

@@ -43,7 +43,7 @@ abstract class SecurityController extends ApiController
     /**
      * @return string
      */
-    public function getClassName()
+    protected function getClassName()
     {
         return (new \ReflectionClass($this->userRepository))->getShortName();
     }
@@ -51,7 +51,7 @@ abstract class SecurityController extends ApiController
     /**
      * @return string
      */
-    public function getUserRepository()
+    protected function getUserRepository()
     {
         if ($this->userRepository) {
             return $this->userRepository;
@@ -63,7 +63,7 @@ abstract class SecurityController extends ApiController
     /**
      * @return string
      */
-    public function getFormCreate()
+    protected function getFormCreate()
     {
         return $this->formCreate;
     }
@@ -71,7 +71,7 @@ abstract class SecurityController extends ApiController
     /**
      * @return string
      */
-    public function getAdminViews()
+    protected function getAdminViews()
     {
         return $this->adminViews;
     }
@@ -95,16 +95,17 @@ abstract class SecurityController extends ApiController
         $password = $request->get('password');
 
         if ($request->getMethod() == "GET") {
-            return $this->serializeResponse($this->get('translator')->trans('geoks.error.access_token'), Response::HTTP_BAD_REQUEST);
+            return $this->serializeResponse('geoks.error.access_token', Response::HTTP_BAD_REQUEST);
         }
 
         if ($email !== null && $password !== null) {
             $em = $this->getDoctrine()->getManager();
 
+            /** @var User $user */
             $user = $em->getRepository($this->getUserRepository())->findOneByEmail($email);
 
             if (!$user) {
-                return $this->serializeResponse($this->get('translator')->trans('geoks.user.login.wrong'), Response::HTTP_FORBIDDEN);
+                return $this->serializeResponse('geoks.user.login.wrong', Response::HTTP_FORBIDDEN);
             }
 
             if ($this->checkUserPassword($user, $password)) {
@@ -117,13 +118,13 @@ abstract class SecurityController extends ApiController
                         "access_token" => $this->get('geoks.user_provider')->getAccessToken()
                     ]);
                 } else {
-                    return $this->serializeResponse($this->get('translator')->trans('geoks.user.disabled'), Response::HTTP_FORBIDDEN);
+                    return $this->serializeResponse('geoks.user.disabled', Response::HTTP_FORBIDDEN);
                 }
             } else {
-                return $this->serializeResponse($this->get('translator')->trans('geoks.user.login.wrong'), Response::HTTP_FORBIDDEN);
+                return $this->serializeResponse('geoks.user.login.wrong', Response::HTTP_FORBIDDEN);
             }
         } else {
-            return $this->serializeResponse($this->get('translator')->trans('geoks.missing_param'), Response::HTTP_BAD_REQUEST);
+            return $this->serializeResponse('geoks.missing_param', Response::HTTP_BAD_REQUEST);
         }
 
     }
@@ -172,13 +173,13 @@ abstract class SecurityController extends ApiController
             ]);
         }
 
-        return $this->serializeResponse($this->get('translator')->trans('geoks.user.notFound'), Response::HTTP_NOT_FOUND);
+        return $this->serializeResponse('geoks.user.notFound', Response::HTTP_NOT_FOUND);
     }
 
     public function logoutAction()
     {
         if (!$this->getUser()) {
-            return $this->serializeResponse($this->get('translator')->trans('geoks.user.notFound'), Response::HTTP_NOT_FOUND);
+            return $this->serializeResponse('geoks.user.notFound', Response::HTTP_NOT_FOUND);
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -186,7 +187,7 @@ abstract class SecurityController extends ApiController
         $this->getUser()->setGcmToken(null);
         $em->flush();
 
-        return $this->serializeResponse($this->get('translator')->trans('geoks.user.logout'));
+        return $this->serializeResponse('geoks.user.logout');
     }
 
     public function forgottenPasswordAction($email)
@@ -200,7 +201,7 @@ abstract class SecurityController extends ApiController
             $token = $this->container->getParameter('fos_user.resetting.token_ttl');
 
             if ($user->isPasswordRequestNonExpired($token)) {
-                return $this->serializeResponse($this->get('translator')->trans('geoks.user.email.nonExpired'), Response::HTTP_ALREADY_REPORTED);
+                return $this->serializeResponse('geoks.user.email.nonExpired', Response::HTTP_ALREADY_REPORTED);
             }
 
             if (null === $user->getConfirmationToken()) {
@@ -219,7 +220,7 @@ abstract class SecurityController extends ApiController
             ]);
         }
 
-        return $this->serializeResponse($this->get('translator')->trans('geoks.user.email.invalid'), Response::HTTP_BAD_REQUEST);
+        return $this->serializeResponse('geoks.user.email.invalid', Response::HTTP_BAD_REQUEST);
     }
 
     public function setNewPasswordAction(Request $request, $token)
@@ -230,12 +231,12 @@ abstract class SecurityController extends ApiController
         $user = $em->getRepository($this->getUserRepository())->findOneByConfirmationToken($token);
 
         if (!$user) {
-            return $this->serializeResponse($this->get('translator')->trans('geoks.user.token.notFound'), Response::HTTP_NOT_FOUND);
+            return $this->serializeResponse('geoks.user.token.notFound', Response::HTTP_NOT_FOUND);
         }
 
         if ($token == $user->getConfirmationToken()) {
             if (!$user->isPasswordRequestNonExpired($this->container->getParameter('fos_user.resetting.token_ttl'))) {
-                return $this->serializeResponse($this->get('translator')->trans('geoks.user.password.expired'), Response::HTTP_BAD_REQUEST);
+                return $this->serializeResponse('geoks.user.password.expired', Response::HTTP_BAD_REQUEST);
             }
 
             $form = $this->createForm(ResetPasswordForm::class);
@@ -255,7 +256,7 @@ abstract class SecurityController extends ApiController
             return $this->serializeResponse($form, Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->serializeResponse($this->get('translator')->trans('geoks.user.password.badToken'), Response::HTTP_BAD_REQUEST);
+        return $this->serializeResponse('geoks.user.password.badToken', Response::HTTP_BAD_REQUEST);
     }
 
     public function subscribeAction(Request $request)
@@ -269,7 +270,8 @@ abstract class SecurityController extends ApiController
             $form = $this->createForm($this->getFormCreate(), $user, [
                 'method' => 'POST',
                 'data_class' => $this->getUserRepository(),
-                'service_container' => $this->get('service_container')
+                'service_container' => $this->get('service_container'),
+                'fields' => array_keys($request->request->all())
             ]);
         } else {
             $form = $this->createForm($this->getFormCreate(), $user, [
@@ -284,6 +286,11 @@ abstract class SecurityController extends ApiController
 
             $user->addRole('ROLE_USER');
             $user->setEnabled(true);
+
+            $encoder = $this->container->get('security.password_encoder');
+            $encoded = $encoder->encodePassword($user, $user->getPassword());
+
+            $user->setPassword($encoded);
 
             $em->persist($user);
             $em->flush();

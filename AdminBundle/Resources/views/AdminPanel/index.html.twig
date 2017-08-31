@@ -16,7 +16,7 @@
     <div class="row">
         {% for key, e in entities %}
             {% if e.groups is not empty or e.properties is not empty %}
-                <div class="col-md-offset-2 col-md-8">
+                <div class="col-md-12">
                     <div class="panel-group" id="{{ key }}" role="tablist" aria-multiselectable="true">
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="heading{{ key }}">

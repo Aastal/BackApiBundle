@@ -1,0 +1,6 @@
+log:
+  id: ID
+  created: Crée le
+  description: Description
+  context: Context
+  type: Type

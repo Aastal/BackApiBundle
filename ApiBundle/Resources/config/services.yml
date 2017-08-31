@@ -1,5 +1,6 @@
 parameters:
     geoks.user_provider.class: Geoks\ApiBundle\Security\User\EntityUserProvider
+    fos_user.security.interactive_login_listener.class: Geoks\UserBundle\EventListener\LastLoginListener
     sms.api.url: null
     sms.api.key: null
     stripe.public.key: null
@@ -10,6 +11,9 @@ parameters:
     amazon.s3.key: null
     amazon.s3.secret: null
     amazon.s3.bucket: null
+
+    liip_imagine:
+        filter_sets: ~
 
 services:
     geoks.utils.string_manager:
@@ -27,9 +31,6 @@ services:
     # Old version #
     geoks.api.regex_utils:
         class: Geoks\ApiBundle\Utils\RegexUtils
-
-    geoks.api.pluralization:
-        class: Geoks\ApiBundle\Services\Pluralization
 
     geoks.api.geo:
         class: Geoks\ApiBundle\Services\Geo
@@ -92,17 +93,25 @@ services:
         tags:
             - { name: "liip_imagine.cache.resolver", resolver: "amazon_s3" }
 
-    geoks.entity_pre_persist:
-        class: Geoks\ApiBundle\EventListener\Base64HandleSubscriber
+    geoks.entity_doctrine_subscriber:
+        class: Geoks\ApiBundle\EventListener\Doctrine\EntitySubscriber
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 
     geoks.entity_subscriber:
-        class: Geoks\ApiBundle\EventListener\EntitySubscriber
-        arguments: ["@service_container"]
+        class: Geoks\ApiBundle\EventListener\JMSSerializer\EntitySubscriber
+        arguments:
+            - "@geoks.utils.string_manager"
+            - "%vich_uploader.mappings%"
+            - "%liip_imagine.filter_sets%"
         tags:
             - { name: jms_serializer.event_subscriber }
 
     geoks.api.aws:
         class: Geoks\ApiBundle\Services\Aws
-        arguments: [ "@service_container" ]
+        arguments:
+            - "%amazon.s3.key%"
+            - "%amazon.s3.secret%"
+            - "%amazon.s3.region%"
+            - "%amazon.s3.version%"
+            - "%amazon.s3.bucket%"

@@ -8,16 +8,25 @@
 </div>
 
 <div class="resultNb">
-    <span class="badge">{{ numberOfResults }} résultats</span>
+    <span class="badge">{{ entities.getTotalItemCount }} résultats</span>
 </div>
 
 <hr>
-<a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_create') }}">{{ "app.add"|trans }}</a>
+
+{% if route_exists('geoks_admin_' ~ namePluralize ~ '_create') %}
+    <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_create') }}">{{ "app.add"|trans }}</a>
+{% endif %}
 
 {% if route_exists('geoks_admin_' ~ namePluralize ~ '_import') %}
     <button type="button" class="btn btn-animate btn-light-blue"  data-toggle="modal" data-target="#import-data">{{ "admin.import"|trans }}</button>
 
     {{ include('GeoksAdminBundle:Form:import.html.twig', {'form' : import_form}) }}
+{% endif %}
+
+{% if route_exists('geoks_admin_' ~ namePluralize ~ '_import_image') %}
+    <button type="button" class="btn btn-animate btn-light-info"  data-toggle="modal" data-target="#import-images">{{ "admin.import_image"|trans }}</button>
+
+    {{ include('GeoksAdminBundle:Form:import-image.html.twig', {'form' : import_image_form}) }}
 {% endif %}
 
 <!-- Launch Modal -->
@@ -87,21 +96,21 @@
                                                     {% set fieldEntity = attribute(entity, fieldName) %}
 
                                                     {% set field = field[1]|replace({'_': ""}) %}
-                                                {% else  %}
+                                                {% else %}
                                                     {% set fieldEntity = entity %}
                                                     {% set field = field|replace({'_': ""}) %}
                                                 {% endif %}
 
-                                                {% if attribute(fieldEntity, field) is defined and attribute(fieldEntity, field) %}
+                                                {% if attribute(fieldEntity, field) is defined and attribute(fieldEntity, field) is not null %}
                                                     {% set field = attribute(fieldEntity, field) %}
 
                                                     {% if field is iterable %}
                                                         {{ field|length }}
                                                     {% elseif field.timestamp is defined %}
                                                         {{ field|date('d/m/Y H:i:s') }}
-                                                    {% elseif field == 'true' %}
+                                                    {% elseif field is same as(true) %}
                                                         {{ "app.yes"|trans }}
-                                                    {% elseif field == 'false' %}
+                                                    {% elseif field is same as(false) %}
                                                         {{ "app.no"|trans }}
                                                     {% else %}
                                                         {{ field|trans({}, name|lower) }}
@@ -113,9 +122,15 @@
                                         {% endfor %}
 
                                         <td>
-                                            <a class="btn btn-animate btn-info" href="{{ path('geoks_admin_' ~ namePluralize ~ '_show', {'id': entity.id}) }}">Voir</a>
-                                            <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_update', {'id': entity.id}) }}">Modifier</a>
-                                            <a class="btn btn-animate btn-danger" href="{{ path('geoks_admin_' ~ namePluralize ~ '_delete', {'id': entity.id}) }}">Supprimer</a>
+                                            {% if route_exists('geoks_admin_' ~ namePluralize ~ '_show') %}
+                                                <a class="btn btn-animate btn-info" href="{{ path('geoks_admin_' ~ namePluralize ~ '_show', {'id': entity.id}) }}">Voir</a>
+                                            {% endif %}
+                                            {% if route_exists('geoks_admin_' ~ namePluralize ~ '_update') %}
+                                                <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_update', {'id': entity.id}) }}">Modifier</a>
+                                            {% endif %}
+                                            {% if route_exists('geoks_admin_' ~ namePluralize ~ '_delete') %}
+                                                <a class="btn btn-animate btn-danger" href="{{ path('geoks_admin_' ~ namePluralize ~ '_delete', {'id': entity.id}) }}">Supprimer</a>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endif %}

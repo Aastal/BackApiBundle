@@ -20,7 +20,8 @@ class GenerateEntityCrudCommand extends ContainerAwareCommand
     {
         $this
             ->setName('generate:geoks:crud')
-            ->setDescription('generate entities CRUD');
+            ->setDescription('generate entities CRUD')
+            ->addArgument('class', InputArgument::OPTIONAL, 'Generate the class CRUD');
     }
 
     /**
@@ -32,7 +33,6 @@ class GenerateEntityCrudCommand extends ContainerAwareCommand
         $fs = new Filesystem();
 
         $em = $this->getContainer()->get('doctrine')->getManager();
-        $meta = $em->getMetadataFactory()->getAllMetadata();
 
         // Admin Default views
         $fs->copy(
@@ -77,114 +77,131 @@ class GenerateEntityCrudCommand extends ContainerAwareCommand
             $kernel->getRootDir() . '/../src/AppBundle/Controller/SecurityController.php'
         );
 
-        // Foreach entity create the geoks crud
-        foreach ($meta as $m) {
+        if ($class = $input->getArgument('class')) {
+            $meta = $em->getMetadataFactory()->getMetadataFor($class);
 
-            /** @var ClassMetadata $m */
-            $name = $m->getReflectionClass()->getShortName();
+            $this->generateByMeta($meta);
+        } else {
+            $meta = $em->getMetadataFactory()->getAllMetadata();
 
-            // Check if the entity is in the project
-            if (strpos($m->getName(), "AppBundle") !== false) {
+            // Foreach entity create the geoks crud
+            foreach ($meta as $m) {
+                $this->generateByMeta($m);
+            }
+        }
+    }
 
-                // Admin Doc Part
+    /**
+     * @param \Doctrine\Common\Persistence\Mapping\ClassMetadata $m
+     */
+    private function generateByMeta($m)
+    {
+        $kernel = $this->getContainer()->get('kernel');
+        $fs = new Filesystem();
+
+        $name = $m->getReflectionClass()->getShortName();
+
+        // Check if the entity is in the project
+        if (strpos($m->getName(), "AppBundle") !== false) {
+
+            // Admin Doc Part
+            $fs->copy(
+                $kernel->getRootDir() . '/../src/Geoks/AdminBundle/Templates/TemplateDoc.php.dist',
+                $kernel->getRootDir() . '/../src/AdminBundle/Controller/ApiDocs/' . $name . 'Doc.php'
+            );
+
+            $content = file_get_contents($kernel->getRootDir() . '/../src/AdminBundle/Controller/ApiDocs/' . $name . 'Doc.php');
+            $content = str_replace("Template", $name, $content);
+
+            $namePluralize = $this->getContainer()->get('geoks.utils.string_manager')->pluralize($name);
+
+            $content = str_replace("template", lcfirst($namePluralize), $content);
+
+            file_put_contents($kernel->getRootDir() . '/../src/AdminBundle/Controller/ApiDocs/' . $name . 'Doc.php', $content);
+
+            // Admin Controller Part
+            $fs->copy(
+                $kernel->getRootDir() . '/../src/Geoks/AdminBundle/Templates/TemplateController.php.dist',
+                $kernel->getRootDir() . '/../src/AdminBundle/Controller/' . $name . 'Controller.php'
+            );
+
+            $content = file_get_contents($kernel->getRootDir() . '/../src/AdminBundle/Controller/' . $name . 'Controller.php');
+            $content = str_replace("Template", $name, $content);
+
+            file_put_contents($kernel->getRootDir() . '/../src/AdminBundle/Controller/' . $name . 'Controller.php', $content);
+
+            // Admin Resources Part
+            $fs->copy(
+                $kernel->getRootDir() . '/../src/Geoks/AdminBundle/Templates/views/Template/form.html.twig',
+                $kernel->getRootDir() . '/../src/AdminBundle/Resources/views/' . $name . '/form.html.twig'
+            );
+
+            $fs->copy(
+                $kernel->getRootDir() . '/../src/Geoks/AdminBundle/Templates/views/Template/index.html.twig',
+                $kernel->getRootDir() . '/../src/AdminBundle/Resources/views/' . $name . '/index.html.twig'
+            );
+
+            $fs->copy(
+                $kernel->getRootDir() . '/../src/Geoks/AdminBundle/Templates/views/Template/show.html.twig',
+                $kernel->getRootDir() . '/../src/AdminBundle/Resources/views/' . $name . '/show.html.twig'
+            );
+
+            // Check if class User or not and do so
+            if ($m->getReflectionClass()->getShortName() != 'User') {
+
+                // App Part ApiDocs
                 $fs->copy(
-                    $kernel->getRootDir() . '/../src/Geoks/AdminBundle/Templates/TemplateDoc.php.dist',
-                    $kernel->getRootDir() . '/../src/AdminBundle/Controller/ApiDocs/' . $name . 'Doc.php'
+                    $kernel->getRootDir() . '/../src/Geoks/ApiBundle/Templates/TemplateDoc.php.dist',
+                    $kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php'
                 );
 
-                $content = file_get_contents($kernel->getRootDir() . '/../src/AdminBundle/Controller/ApiDocs/' . $name . 'Doc.php');
+                $content = file_get_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php');
+                $namePluralize = $this->getContainer()->get('geoks.utils.string_manager')->pluralize($name);
+
+                $content = str_replace("TemplateSection", $namePluralize, $content);
                 $content = str_replace("Template", $name, $content);
-
-                $namePluralize = $this->getContainer()->get('geoks.api.pluralization')->pluralize($name);
-
                 $content = str_replace("template", lcfirst($namePluralize), $content);
 
-                file_put_contents($kernel->getRootDir() . '/../src/AdminBundle/Controller/ApiDocs/' . $name . 'Doc.php', $content);
+                file_put_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php', $content);
 
-                // Admin Controller Part
+                // App Controller Part
                 $fs->copy(
-                    $kernel->getRootDir() . '/../src/Geoks/AdminBundle/Templates/TemplateController.php.dist',
-                    $kernel->getRootDir() . '/../src/AdminBundle/Controller/' . $name . 'Controller.php'
+                    $kernel->getRootDir() . '/../src/Geoks/ApiBundle/Templates/TemplateController.php.dist',
+                    $kernel->getRootDir() . '/../src/AppBundle/Controller/' . $name . 'Controller.php'
                 );
 
-                $content = file_get_contents($kernel->getRootDir() . '/../src/AdminBundle/Controller/' . $name . 'Controller.php');
+                $content = file_get_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/' . $name . 'Controller.php');
                 $content = str_replace("Template", $name, $content);
 
-                file_put_contents($kernel->getRootDir() . '/../src/AdminBundle/Controller/' . $name . 'Controller.php', $content);
+                file_put_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/' . $name . 'Controller.php', $content);
+            } else {
 
-                // Admin Resources Part
+                // App Part ApiDocs
                 $fs->copy(
-                    $kernel->getRootDir() . '/../src/Geoks/AdminBundle/Templates/views/Template/form.html.twig',
-                    $kernel->getRootDir() . '/../src/AdminBundle/Resources/views/' . $name . '/form.html.twig'
+                    $kernel->getRootDir() . '/../src/Geoks/ApiBundle/Templates/UserDoc.php.dist',
+                    $kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php'
                 );
 
+                $content = file_get_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php');
+
+                $content = str_replace("Template", $name, $content);
+                $content = str_replace("template", lcfirst($namePluralize), $content);
+
+                file_put_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php', $content);
+
+                // App Controller Part
                 $fs->copy(
-                    $kernel->getRootDir() . '/../src/Geoks/AdminBundle/Templates/views/Template/index.html.twig',
-                    $kernel->getRootDir() . '/../src/AdminBundle/Resources/views/' . $name . '/index.html.twig'
+                    $kernel->getRootDir() . '/../src/Geoks/ApiBundle/Templates/UserController.php.dist',
+                    $kernel->getRootDir() . '/../src/AppBundle/Controller/' . $name . 'Controller.php'
                 );
 
-                $fs->copy(
-                    $kernel->getRootDir() . '/../src/Geoks/AdminBundle/Templates/views/Template/show.html.twig',
-                    $kernel->getRootDir() . '/../src/AdminBundle/Resources/views/' . $name . '/show.html.twig'
-                );
+                $content = file_get_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/' . $name . 'Controller.php');
+                $content = str_replace("Template", $name, $content);
 
-                // Check if class User or not and do so
-                if ($m->getReflectionClass()->getShortName() != 'User') {
-
-                    // App Part ApiDocs
-                    $fs->copy(
-                        $kernel->getRootDir() . '/../src/Geoks/ApiBundle/Templates/TemplateDoc.php.dist',
-                        $kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php'
-                    );
-
-                    $content = file_get_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php');
-                    $namePluralize = $this->getContainer()->get('geoks.api.pluralization')->pluralize($name);
-
-                    $content = str_replace("TemplateSection", $namePluralize, $content);
-                    $content = str_replace("Template", $name, $content);
-                    $content = str_replace("template", lcfirst($namePluralize), $content);
-
-                    file_put_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php', $content);
-
-                    // App Controller Part
-                    $fs->copy(
-                        $kernel->getRootDir() . '/../src/Geoks/ApiBundle/Templates/TemplateController.php.dist',
-                        $kernel->getRootDir() . '/../src/AppBundle/Controller/' . $name . 'Controller.php'
-                    );
-
-                    $content = file_get_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/' . $name . 'Controller.php');
-                    $content = str_replace("Template", $name, $content);
-
-                    file_put_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/' . $name . 'Controller.php', $content);
-                } else {
-
-                    // App Part ApiDocs
-                    $fs->copy(
-                        $kernel->getRootDir() . '/../src/Geoks/ApiBundle/Templates/UserDoc.php.dist',
-                        $kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php'
-                    );
-
-                    $content = file_get_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php');
-
-                    $content = str_replace("Template", $name, $content);
-                    $content = str_replace("template", lcfirst($namePluralize), $content);
-
-                    file_put_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/ApiDocs/' . $name . 'Doc.php', $content);
-
-                    // App Controller Part
-                    $fs->copy(
-                        $kernel->getRootDir() . '/../src/Geoks/ApiBundle/Templates/UserController.php.dist',
-                        $kernel->getRootDir() . '/../src/AppBundle/Controller/' . $name . 'Controller.php'
-                    );
-
-                    $content = file_get_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/' . $name . 'Controller.php');
-                    $content = str_replace("Template", $name, $content);
-
-                    file_put_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/' . $name . 'Controller.php', $content);
-                }
-
-                exec("php bin/console generate:doctrine:entities AppBundle:" . $m->getReflectionClass()->getShortName());
+                file_put_contents($kernel->getRootDir() . '/../src/AppBundle/Controller/' . $name . 'Controller.php', $content);
             }
+
+            exec("php bin/console generate:doctrine:entities AppBundle:" . $m->getReflectionClass()->getShortName());
         }
     }
 }

@@ -76,7 +76,7 @@ abstract class User extends BaseUser
     /**
      * @var string
      *
-     * @Assert\Choice(choices = {"male", "female"}, message = "Choose a valid gender.")
+     * @Assert\Choice(choices = {"male", "female", "m", "f"}, message = "Choose a valid gender.")
      *
      * @Expose
      * @Groups({"details", "list"})
@@ -90,6 +90,8 @@ abstract class User extends BaseUser
 
     /**
      * @var PhoneNumber
+     *
+     * @AssertPhoneNumber(type="MOBILE", defaultRegion="FR")
      */
     protected $phone;
 
@@ -130,7 +132,6 @@ abstract class User extends BaseUser
      * @ChoiceList(choices = {"ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"})
      */
     protected $roles;
-
 
     /**
      * @var File
@@ -367,7 +368,9 @@ abstract class User extends BaseUser
      */
     public function setPhone($phone)
     {
-        $this->phone = $phone;
+        if ($phone != $this->phone) {
+            $this->phone = $phone;
+        }
     }
 
     /**

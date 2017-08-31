@@ -4,22 +4,44 @@ namespace Geoks\AdminBundle\Twig;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\Column;
+use Geoks\AdminBundle\Services\EntityFields;
+use Geoks\ApiBundle\Utils\StringUtils;
 use JMS\Serializer\Annotation\Groups;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
 
 class AdminExtension extends \Twig_Extension
 {
     /**
-     * @var ContainerInterface
+     * @var EntityManager
      */
-    private $container;
+    private $em;
 
-    public function __construct(ContainerInterface $container)
+    /**
+     * @var Router
+     */
+    private $router;
+
+    /**
+     * @var StringUtils
+     */
+    private $stringManager;
+
+    /**
+     * @var EntityFields
+     */
+    private $entityFields;
+
+    public function __construct(EntityManager $em, Router $router, $stringManager, $entityFields)
     {
-        $this->container = $container;
+        $this->em = $em;
+        $this->router = $router;
+        $this->stringManager = $stringManager;
+        $this->entityFields = $entityFields;
     }
 
     public function getFunctions()
@@ -60,19 +82,19 @@ class AdminExtension extends \Twig_Extension
             if ($annotation = $reader->getPropertyAnnotation($property, "JMS\\Serializer\\Annotation\\Groups")) {
 
                 foreach ($annotation->groups as $group) {
-                    $groups[$group][] = $this->container->get('geoks.utils.string_manager')->fromCamelCase($property->name);
+                    $groups[$group][] = $this->stringManager->fromCamelCase($property->name);
                 }
             }
         }
 
-        $associations = $this->container->get('geoks_admin.entity_fields')->getFieldsAssociations($reflection->name);
+        $associations = $this->entityFields->getFieldsAssociations($reflection->name);
 
         foreach ($associations as $association) {
             $association = new \ReflectionProperty($reflection->name, $association["fieldName"]);
 
             if ($annotation = $reader->getPropertyAnnotation($association, "JMS\\Serializer\\Annotation\\Groups")) {
                 foreach ($annotation->groups as $group) {
-                    $groups[$group][] = $this->container->get('geoks.utils.string_manager')->fromCamelCase($association->name);
+                    $groups[$group][] = $this->stringManager->fromCamelCase($association->name);
                 }
             }
         }
@@ -82,7 +104,7 @@ class AdminExtension extends \Twig_Extension
 
     /**
      * @param \ReflectionProperty $object
-     * @return null|object
+     * @return null|array
      */
     public function getPropertyType($object)
     {
@@ -95,12 +117,12 @@ class AdminExtension extends \Twig_Extension
 
     public function getEntity($repository, $id)
     {
-        return $this->container->get('doctrine')->getManager()->getRepository($repository)->find($id);
+        return $this->em->getRepository($repository)->find($id);
     }
 
     public function getNamePluralize($object)
     {
-        $object = $this->container->get('geoks.api.pluralization')->pluralize($object);
+        $object = $this->stringManager->pluralize($object);
 
         return $object;
     }
@@ -112,18 +134,16 @@ class AdminExtension extends \Twig_Extension
 
     public function getFieldsName($table)
     {
-        return $this->container->get('geoks_admin.entity_fields')->getFieldsName($table);
+        return $this->entityFields->getFieldsName($table);
     }
 
     public function getFieldsAssociations($table)
     {
-        return $this->container->get('geoks_admin.entity_fields')->getFieldsAssociations($table);
+        return $this->entityFields->getFieldsAssociations($table);
     }
 
     public function routeExists($name)
     {
-        $router = $this->container->get('router');
-
-        return (null === $router->getRouteCollection()->get($name)) ? false : true;
+        return (null === $this->router->getRouteCollection()->get($name)) ? false : true;
     }
 }

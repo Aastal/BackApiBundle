@@ -181,7 +181,7 @@ class Serializer
         if ($this->pluralize) {
             $this->entityReflection = new \ReflectionClass($value);
             $name = $this->entityReflection->getShortName();
-            $name = strtolower($this->container->get('geoks.api.pluralization')->pluralize($name));
+            $name = strtolower($this->container->get('geoks.utils.string_manager')->pluralize($name));
         } else {
             $this->entityReflection = new \ReflectionClass($value);
             $name = $this->entityReflection->getShortName();

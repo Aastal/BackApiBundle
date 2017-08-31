@@ -2,9 +2,18 @@
 
 namespace Geoks\ApiBundle\Controller\Traits;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query;
+use Geoks\AdminBundle\Form\Export\ExportType;
+use Geoks\UserBundle\Entity\User;
+use Knp\Component\Pager\Paginator;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Form;
+use Geoks\ApiBundle\Services\Serializer;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 
 trait ApiResponseTrait
 {
@@ -18,9 +27,12 @@ trait ApiResponseTrait
      */
     protected function serializeResponse($data, $status = 200)
     {
+        /** @var Serializer $serializer */
+        $serializer = $this->get('geoks.api.serializer');
+
         // Success
         if ($status == Response::HTTP_OK) {
-            return new JsonResponse($this->get('geoks.api.serializer')->serializeData($data), $status);
+            return new JsonResponse($serializer->serializeData($data), $status);
         }
 
         // Parse Error
@@ -49,9 +61,12 @@ trait ApiResponseTrait
      */
     protected function simpleSerializeResponse($data, $status = 200)
     {
+        /** @var Serializer $serializer */
+        $serializer = $this->get('geoks.api.serializer');
+
         // Success
         if ($status == Response::HTTP_OK) {
-            return new JsonResponse($this->get('geoks.api.serializer')->simpleSerializeData($data), $status);
+            return new JsonResponse($serializer->simpleSerializeData($data), $status);
         }
 
         // Parse Error
@@ -100,12 +115,13 @@ trait ApiResponseTrait
 
     /**
      *
-     * @param $user
+     * @param User $user
      * @param string $password
      * @return boolean
      */
     protected function checkUserPassword($user, $password)
     {
+        /** @var EncoderFactory $factory */
         $factory = $this->get('security.encoder_factory');
         $encoder = $factory->getEncoder($user);
 
@@ -123,6 +139,7 @@ trait ApiResponseTrait
      */
     protected function encodeUserPassword($user, $raw)
     {
+        /** @var UserPasswordEncoder $encoder */
         $encoder = $this->get('security.password_encoder');
 
         return $encoder->encodePassword($user, $raw);

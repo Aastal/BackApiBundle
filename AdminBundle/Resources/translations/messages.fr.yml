@@ -7,10 +7,10 @@ app:
   logout: Se déconnecter
   user: Utilisateur
   users: Utilisateurs
+  image: Image
+  images: Images
   question: Question
   questions: Questions
-  idea: Idée
-  ideas: Idées
   comment: Commentaire
   comments: Commentaires
   index: Accueil
@@ -30,7 +30,10 @@ app:
   show:
     attributes: Liste des attributs
     associations: Liste des relations
+    images: Liste des images
     return: Revenir à l'index
+  log: Log
+  logs: Logs
 
 admin:
   properties: Propriétées
@@ -38,6 +41,7 @@ admin:
   property_name: Nom
   property_type: Type
   import: Importer des données
+  import_image: Importer des images
 
 form:
   search: Rechercher

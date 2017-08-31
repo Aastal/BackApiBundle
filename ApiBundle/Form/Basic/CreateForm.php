@@ -39,18 +39,25 @@ class CreateForm extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var ContainerInterface $container */
         $container = $options["service_container"];
         $table = $options["data_class"];
+        $fields = $options["fields"];
 
         $reader = new AnnotationReader();
         $reflection = new \ReflectionClass($table);
         $banList = $container->get('geoks_admin.entity_fields')->fieldsBanList();
 
         $this->entityName = strtolower($container->get('geoks_admin.entity_fields')->getEntityName($table));
-        $rowArr = $container->get('geoks_admin.entity_fields')->getFieldsName($table);
+
+        $rowArrRequired = $container->get('geoks_admin.entity_fields')->getFieldsName($table, true);
+        $rowArr = $container->get('geoks_admin.entity_fields')->getFieldsByName($table, $fields);
+
+        $row = array_merge($rowArrRequired, $rowArr);
+
         $rowAssos = $container->get('geoks_admin.entity_fields')->getFieldsAssociations($table);
 
-        foreach ($rowArr as $name => $field) {
+        foreach ($row as $name => $field) {
             if ($field["type"] != 'array' && !in_array($name, $banList)) {
                 $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);
 
@@ -61,18 +68,6 @@ class CreateForm extends AbstractType
                 }
 
                 $builder->add($name, $typeOptions['type'], $typeOptions['options']);
-
-                if ($field["type"] == 'boolean') {
-                    $this->field = $field;
-
-                    $builder
-                        ->get($name)
-                        ->addEventListener(FormEvents::SUBMIT, function(FormEvent $event) {
-                            if (isset($this->field['options']['default'])) {
-                                $event->setData($this->field['options']['default']);
-                            }
-                        });
-                }
             }
         }
 
@@ -139,5 +134,6 @@ class CreateForm extends AbstractType
         ));
 
         $resolver->setRequired('service_container');
+        $resolver->setRequired('fields');
     }
 }

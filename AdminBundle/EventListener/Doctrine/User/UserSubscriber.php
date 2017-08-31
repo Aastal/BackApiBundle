@@ -1,17 +1,17 @@
 <?php
-namespace Geoks\AdminBundle\EventListener\User;
+namespace Geoks\AdminBundle\EventListener\Doctrine\User;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Geoks\UserBundle\Entity\User;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 
 class UserSubscriber implements EventSubscriber
 {
     /**
-     * @var ContainerInterface
+     * @var UserPasswordEncoder
      */
-    private $container;
+    private $passwordEncoder;
 
     /**
      * @return array
@@ -24,9 +24,9 @@ class UserSubscriber implements EventSubscriber
         );
     }
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(UserPasswordEncoder $passwordEncoder)
     {
-        $this->container = $container;
+        $this->passwordEncoder = $passwordEncoder;
     }
 
     public function preUpdate(LifecycleEventArgs $args)
@@ -38,15 +38,17 @@ class UserSubscriber implements EventSubscriber
     {
         $user = $args->getEntity();
 
-        if ($user instanceof User) {
+        if (is_subclass_of($user, 'Geoks\UserBundle\Entity\User') || $user instanceof User) {
+
             if (!$user->getUsername()) {
                 $user->setUsername($user->getEmail());
                 $user->setUsernameCanonical($user->getEmail());
             }
 
             if ($user->getPassword() && strlen($user->getSalt()) == 0) {
-                $encoder = $this->container->get('security.password_encoder');
-                $encoded = $encoder->encodePassword($user, $user->getPassword());
+
+                $encoded = $this->passwordEncoder->encodePassword($user, $user->getPassword());
+
                 $user->setPassword($encoded);
             }
         }
@@ -56,10 +58,9 @@ class UserSubscriber implements EventSubscriber
     {
         $user = $args->getEntity();
 
-        if ($user instanceof User) {
+        if (is_subclass_of($user, 'Geoks\UserBundle\Entity\User') || $user instanceof User) {
             if ($user->getPlainPassword() && strlen($user->getSalt()) == 0) {
-                $encoder = $this->container->get('security.password_encoder');
-                $encoded = $encoder->encodePassword($user, $user->getPlainPassword());
+                $encoded = $this->passwordEncoder->encodePassword($user, $user->getPlainPassword());
 
                 $user->setPassword($encoded);
             }

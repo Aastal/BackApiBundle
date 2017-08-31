@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -22,34 +23,70 @@ class EntityFields
     private $em;
 
     /**
-     * @var ContainerInterface
+     * @var array
      */
-    private $container;
+    private $banFields;
 
     /**
-     * @param ContainerInterface $container
+     * @param EntityManager $em
+     * @param array $banFields
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(EntityManager $em, $banFields)
     {
-        $this->container = $container;
-        $this->em = $container->get('doctrine')->getManager();
+        $this->em = $em;
+        $this->banFields = $banFields;
     }
 
+    /**
+     * @param $table
+     * @return string
+     */
     public function getEntityName($table)
     {
         return (new \ReflectionClass($table))->getShortName();
     }
 
-    public function getFieldsName($table)
+    /**
+     * @param $entity
+     * @return array
+     */
+    public function getImageFields($entity)
+    {
+        $properties = [];
+        $reader = new AnnotationReader();
+
+        $cm = $this->em->getClassMetadata(get_class($entity))->getReflectionClass();
+
+        if ($reader->getClassAnnotation($cm, "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
+
+            foreach ($cm->getProperties() as $reflectionProperty) {
+                if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Vich\\UploaderBundle\\Mapping\\Annotation\\UploadableField")) {
+                    $properties[$reflectionProperty->getName()] = $annotation;
+                }
+            }
+        }
+        return $properties;
+    }
+
+    /**
+     * @param $table
+     * @param bool $isRequired
+     * @return array
+     */
+    public function getFieldsName($table, $isRequired = false)
     {
         $rowArr = [];
-        $excArr = ['id', 'salt'];
 
         $cm = $this->em->getClassMetadata($table);
         $rows = $cm->getFieldNames();
+        $rows = array_diff($rows, ['id', 'salt']);
 
         foreach ($rows as $row) {
-            if (!in_array($row, $excArr)) {
+            if ($isRequired) {
+                if (!$cm->isNullable($row) && $cm->getFieldMapping($row)["type"] != "boolean") {
+                    $rowArr[$row] = $cm->getFieldMapping($row);
+                }
+            } else {
                 $rowArr[$row] = $cm->getFieldMapping($row);
             }
         }
@@ -57,6 +94,30 @@ class EntityFields
         return $rowArr;
     }
 
+    /**
+     * @param $table
+     * @param $fields
+     * @return array
+     */
+    public function getFieldsByName($table, $fields)
+    {
+        $rowArr = [];
+
+        $cm = $this->em->getClassMetadata($table);
+
+        foreach ($fields as $field) {
+            if ($cm->hasField($field)) {
+                $rowArr[$field] = $cm->getFieldMapping($field);
+            }
+        }
+
+        return $rowArr;
+    }
+
+    /**
+     * @param $table
+     * @return array
+     */
     public function getFieldsAssociations($table)
     {
         $rowAssos = [];
@@ -111,6 +172,12 @@ class EntityFields
         return $result;
     }
 
+    /**
+     * @param $entityName
+     * @param $name
+     * @param $type
+     * @return array
+     */
     public function switchType($entityName, $name, $type)
     {
         $r = [];
@@ -140,13 +207,23 @@ class EntityFields
                 $r['type'] = CheckboxType::class;
                 $r['options'] = [
                     'label' => $fieldName,
-                    'required' => true,
                     'attr' => [
                         'class' => 'checkbox-animate'
                     ]
                 ];
                 break;
             case 'date':
+                $r['type'] = DateType::class;
+                $r['options'] = [
+                    'label' => $fieldName,
+                    'widget' => 'single_text',
+                    'required' => false,
+                    'format' => 'dd/MM/yyyy',
+                    'attr' => [
+                        'class' => 'control-animate datepicker'
+                    ]
+                ];
+                break;
             case 'datetime':
                 $r['type'] = DateTimeType::class;
                 $r['options'] = [
@@ -194,16 +271,18 @@ class EntityFields
         return $r;
     }
 
+    /**
+     * @return array
+     */
     public function fieldsBanList()
     {
-        $customList = $this->container->getParameter('geoks_admin.ban_fields');
         $autoBan = [
             "created", "created_at", "updated", "updated_at", "passwordRequestedAt", "credentialsExpireAt", "confirmationToken",
             "usernameCanonical", "emailCanonical", "lastLogin", "expired", "expired_at", "credentialsExpired", "token",
             "twoStepVerificationCode", "gcm_token", "expiresAt", "credentialsExpired", "timezone", "createdAt", "updatedAt"
         ];
 
-        $banList = array_merge($customList, $autoBan);
+        $banList = array_merge($this->banFields, $autoBan);
 
         return $banList;
     }

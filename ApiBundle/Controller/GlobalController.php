@@ -37,7 +37,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
     /**
      * @return string
      */
-    public function getClassName()
+    protected function getClassName()
     {
         return $this->className;
     }
@@ -45,7 +45,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
     /**
      * @return string
      */
-    public function getEntityRepository()
+    protected function getEntityRepository()
     {
         return $this->entityRepository;
     }
@@ -53,7 +53,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
     /**
      * @return string
      */
-    public function getFormCreate()
+    protected function getFormCreate()
     {
         return $this->formCreate;
     }
@@ -61,7 +61,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
     /**
      * @return string
      */
-    public function getFormUpdate()
+    protected function getFormUpdate()
     {
         return $this->formUpdate;
     }
@@ -125,6 +125,22 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         }
 
         return $this->serializeResponse(['details' => $entity]);
+    }
+
+    public function getOneCustomAction($id, $group)
+    {
+        if (!$this->getUser()) {
+            return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository($this->getEntityRepository())->find($id);
+
+        if (!$entity) {
+            return $this->serializeResponse("geoks.entity.notFound", Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->serializeResponse([$group => $entity]);
     }
 
     public function getAllByUserAction()
@@ -246,7 +262,8 @@ abstract class GlobalController extends ApiController implements GlobalControlle
             ],
             'method' => 'POST',
             'data_class' => $this->getEntityRepository(),
-            'service_container' => $this->get('service_container')
+            'service_container' => $this->get('service_container'),
+            'fields' => array_keys($request->request->all())
         ]);
 
         $form->handleRequest($request);
@@ -389,7 +406,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
             return $this->serializeResponse("geoks.entity.notFound", Response::HTTP_NOT_FOUND);
         }
 
-        if (!$this->isGranted('ROLE_ADMIN')) {
+        if (!$this->isGranted('ROLE_ADMIN') && (method_exists($entity, 'getUser') && $entity->getUser() != $this->getUser())) {
             return $this->serializeResponse("geoks.user.forbidden", Response::HTTP_FORBIDDEN);
         }
 
@@ -398,6 +415,4 @@ abstract class GlobalController extends ApiController implements GlobalControlle
 
         return $this->serializeResponse(["success" => "geoks.entity.deleted"]);
     }
-
-
 }
