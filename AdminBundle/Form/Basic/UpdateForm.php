@@ -91,7 +91,7 @@ class UpdateForm extends AbstractType
                     }
                 }
 
-                if ($name == 'roles' && $options['current_user']->getUser()->hasRole("ROLE_SUPER_ADMIN") && !$entityFields->checkAnnotation($reflection, $name, "Geoks\\ApiBundle\\Annotation\\FilePath", "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
+                if ($name == 'roles' && $options['current_user']->hasRole("ROLE_SUPER_ADMIN") && !$entityFields->checkAnnotation($reflection, $name, "Geoks\\ApiBundle\\Annotation\\FilePath", "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
                     $builder->add($name, $typeOptions['type'], $typeOptions['options']);
                 } elseif ($name != 'roles' && !$entityFields->checkAnnotation($reflection, $name, "Geoks\\ApiBundle\\Annotation\\FilePath", "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
                     $builder->add($name, $typeOptions['type'], $typeOptions['options']);
