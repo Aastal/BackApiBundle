@@ -209,7 +209,7 @@ abstract class SecurityController extends ApiController
             }
 
             $user->setPasswordRequestedAt(new \DateTime());
-            $this->container->get('fos_user.user_manager')->updateUser($user);
+            $this->container->get('fos_user.user_manager.default')->updateUser($user);
 
             $mailer = $this->get('geoks.api.mailer');
             $mailer->send('forgotten_password', $user);
@@ -261,7 +261,7 @@ abstract class SecurityController extends ApiController
 
     public function subscribeAction(Request $request)
     {
-        $userManager = $this->get('fos_user.user_manager');
+        $userManager = $this->get('fos_user.user_manager.default');
 
         /** @var User $user */
         $user = $userManager->createUser();

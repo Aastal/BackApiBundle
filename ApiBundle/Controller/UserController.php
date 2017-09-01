@@ -278,7 +278,7 @@ abstract class UserController extends ApiController
     public function changeUserPasswordAction(Request $request)
     {
         $user = $this->getUser();
-        $userManager = $this->container->get('fos_user.user_manager');
+        $userManager = $this->container->get('fos_user.user_manager.default');
 
         $form = $this->createForm(ChangePasswordForm::class);
         $form->handleRequest($request);
@@ -307,11 +307,11 @@ abstract class UserController extends ApiController
     public function updateUserPictureAction(Request $request)
     {
         if (!$this->getUser()) {
-            return $this->serializeResponse(["error" => $this->get('translator')->trans("weave.user.notConnected")], Response::HTTP_FORBIDDEN);
+            return $this->serializeResponse(["error" => $this->get('translator')->trans("geoks.user.notConnected")], Response::HTTP_FORBIDDEN);
         }
 
         if (!$request->files->get('imageFile')) {
-            return $this->serializeResponse(["error" => $this->get('translator')->trans("weave.imageFile.notFound")], Response::HTTP_BAD_REQUEST);
+            return $this->serializeResponse(["error" => $this->get('translator')->trans("geoks.imageFile.notFound")], Response::HTTP_BAD_REQUEST);
         }
 
         /** @var File $image */
