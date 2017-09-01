@@ -31,7 +31,7 @@ class CleanPasswordCommand extends ContainerAwareCommand
         /** @var EntityManager $em */
         $em = $this->getContainer()->get('doctrine.orm.default_entity_manager');
 
-        $user = $em->getRepository('AppBundle:Client')->find($input->getArgument('id'));
+        $user = $em->getRepository('AppBundle:User')->find($input->getArgument('id'));
 
         $encoder = $this->getContainer()->get('security.password_encoder');
         $encoded = $encoder->encodePassword($user, $user->getPassword());
