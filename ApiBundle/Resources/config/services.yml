@@ -12,8 +12,7 @@ parameters:
     amazon.s3.secret: null
     amazon.s3.bucket: null
 
-    liip_imagine:
-        filter_sets: ~
+    liip_imagine.filter_sets: ~
 
 services:
     geoks.utils.string_manager:
