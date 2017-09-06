@@ -2,17 +2,9 @@
 
 namespace Geoks\AdminBundle\Services;
 
-use AppBundle\Entity\Directory;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\Common\Util\ClassUtils;
-use Doctrine\DBAL\Types\DateTimeType;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMException;
 use Geoks\ApiBundle\Utils\StringUtils;
-use function GuzzleHttp\Psr7\str;
-use Metadata\ClassMetadata;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -21,8 +13,6 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Validator\Constraints\Date;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class Import
 {
@@ -273,14 +263,15 @@ class Import
 
         foreach ($entities as $entity) {
 
-            $changes = $this->dedupeEntity($entity, $dedupeField);
+            $oldEntity = $this->dedupeEntity($entity, $dedupeField);
 
-            if (!$changes) {
+            if (!$oldEntity) {
                 $this->em->persist($entity);
                 $this->findAssociations($fieldsAssociations, $entity);
+                $this->manageException($entity);
+            } else {
+                $this->manageException($oldEntity);
             }
-
-            $this->manageException($entity);
         }
 
         $this->em->flush();
@@ -289,7 +280,6 @@ class Import
 
     private function dedupeEntity($entity, $dedupeField)
     {
-        $changes = false;
         $oldEntity = null;
 
         if ($dedupeField && is_array($dedupeField)) {
@@ -322,16 +312,11 @@ class Import
 
         if ($oldEntity) {
 
-            $changes = true;
             $rows = $this->entityFields->getFieldsName($this->class);
-            $reflection = $this->em->getClassMetadata(get_class($entity))->getReflectionClass();
 
             foreach ($rows as $row) {
 
-                if ($row['fieldName'] != "created" &&
-                    $row['fieldName'] != "updated" &&
-                    !$this->entityFields->checkAnnotation($reflection, $row['fieldName'], "Geoks\\ApiBundle\\Annotation\\FilePath", "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")
-                ) {
+                if ($row['fieldName'] != "created" && $row['fieldName'] != "updated") {
 
                     if (method_exists($entity, 'get' . ucfirst($row['fieldName']))) {
                         $newData = $entity->{'get' . ucfirst($row['fieldName'])}();
@@ -348,7 +333,7 @@ class Import
             }
         }
 
-        return $changes;
+        return $oldEntity;
     }
 
     /**
