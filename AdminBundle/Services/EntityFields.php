@@ -187,6 +187,7 @@ class EntityFields
             case 'phone_number':
                 $r['type'] = PhoneNumberType::class;
                 $r['options'] = [
+                    'label' => $fieldName,
                     'default_region' => 'FR',
                     'format' => PhoneNumberFormat::INTERNATIONAL,
                     'attr' => [
