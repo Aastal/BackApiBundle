@@ -205,7 +205,7 @@ class UpdateForm extends AbstractType
     {
         $resolver->setDefaults(array(
             'csrf_protection' => false,
-            'allow_extra_fields' => true,
+            'allow_extra_fields' => true
         ));
 
         $resolver->setRequired('change_password');
