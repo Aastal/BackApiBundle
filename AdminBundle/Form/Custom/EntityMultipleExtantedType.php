@@ -5,7 +5,7 @@ namespace Geoks\AdminBundle\Form\Custom;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EntityMultipleType extends EntityType
+class EntityMultipleExtantedType extends EntityType
 {
     /**
      * @param OptionsResolver $resolver
@@ -17,6 +17,6 @@ class EntityMultipleType extends EntityType
 
     public function getBlockPrefix()
     {
-        return 'entity_multiple';
+        return 'entity_multiple_extanted';
     }
 }

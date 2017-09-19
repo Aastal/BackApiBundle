@@ -2,12 +2,15 @@
 
 namespace Geoks\ApiBundle\Entity;
 
+use Geoks\AdminBundle\Annotation\ChoiceList;
+use Geoks\AdminBundle\Annotation\HasChoiceField;
 use Ivory\Serializer\Mapping\Annotation\Expose;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 
 /**
  * @ExclusionPolicy("none")
+ * @HasChoiceField()
  */
 class Log
 {
@@ -25,6 +28,7 @@ class Log
      * @var string
      *
      * @Assert\Choice(choices={"front", "back"})
+     * @ChoiceList(choices = {"front", "back"})
      */
     private $type;
 

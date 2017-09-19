@@ -73,6 +73,12 @@ class AppMailer
                 'fromName' => $senderName,
                 'subject' => $lc . '.user.password.recovery'
             ),
+            'forgotten_password_link' => array(
+                'to' => 'USEREMAIL',
+                'fromEmail' => $sender,
+                'fromName' => $senderName,
+                'subject' => $lc . '.user.password.recovery'
+            ),
             'login_lock' => array(
                 'to' => 'USEREMAIL',
                 'fromEmail' => $sender,
@@ -154,13 +160,26 @@ class AppMailer
         switch($name)
         {
             default:
+
                 /** @var User $entity */
-                return [
-                    "USEREMAIL" => $entity->getEmail(),
-                    "FIRSTNAME" => $entity->getFirstname(),
-                    "LASTNAME"  => $entity->getLastname(),
-                    "TOKEN"     => $entity->getConfirmationToken(),
-                ];
+                if ($this->container->hasParameter('base_url')) {
+
+                    return [
+                        "USEREMAIL" => $entity->getEmail(),
+                        "FIRSTNAME" => $entity->getFirstname(),
+                        "LASTNAME"  => $entity->getLastname(),
+                        "TOKEN"     => $entity->getConfirmationToken(),
+                        "LINK"      => $this->container->getParameter('base_url') . '/change-password?token=' . $entity->getConfirmationToken()
+                    ];
+                } else {
+                    return [
+                        "USEREMAIL" => $entity->getEmail(),
+                        "FIRSTNAME" => $entity->getFirstname(),
+                        "LASTNAME"  => $entity->getLastname(),
+                        "TOKEN"     => $entity->getConfirmationToken()
+                    ];
+                }
+
                 break;
         }
     }

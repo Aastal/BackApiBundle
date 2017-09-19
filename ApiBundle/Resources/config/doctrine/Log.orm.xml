@@ -18,7 +18,7 @@
 
         <field name="type" type="string" column="type" nullable="true"/>
         <field name="description" type="string" column="description" nullable="true"/>
-        <field name="context" type="array" column="context" nullable="false"/>
+        <field name="context" type="array" column="context" nullable="true"/>
     </entity>
 
 </doctrine-mapping>
