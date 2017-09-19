@@ -31,6 +31,12 @@ class GeoksAdminExtension extends Extension
             $container->setParameter('geoks_admin.ban_fields', null);
         }
 
+        if (isset($config['multiple_fields'])) {
+            $container->setParameter('geoks_admin.multiple_fields', $config['multiple_fields']);
+        } else {
+            $container->setParameter('geoks_admin.multiple_fields', null);
+        }
+
         if (isset($config['import'])) {
             $container->setParameter('geoks_admin.import', $config['import']);
             $container->setParameter('geoks_admin.import.exceptions', $config['import']['exceptions']);

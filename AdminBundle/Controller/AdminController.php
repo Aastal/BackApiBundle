@@ -94,16 +94,13 @@ abstract class AdminController extends Controller implements AdminControllerInte
     protected function getEntityView()
     {
         $fs = new Filesystem();
-        $root = null;
 
         if ($fs->exists($this->getParameter('kernel.root_dir') . "/../src/" . $this->getAdminBundle() . '/Resources/views/' . $this->className)) {
             $root = $this->getAdminBundle() . ':' . $this->className;
         } elseif ($fs->exists($this->getParameter('kernel.root_dir') . "/../src/Geoks/AdminBundle/Resources/views/" . $this->className)) {
             $root = 'Geoks' . $this->getAdminBundle() . ':' . $this->className;
-        }
-
-        if (!$root) {
-            throw new \Exception("No Template for class : " . $this->className);
+        } else {
+            $root = 'Geoks' . $this->getAdminBundle() . ':Default';
         }
 
         return $root;

@@ -28,13 +28,20 @@ class EntityFields
     private $banFields;
 
     /**
+     * @var array
+     */
+    private $multipleFields;
+
+    /**
      * @param EntityManager $em
      * @param array $banFields
+     * @param array $multipleFields
      */
-    public function __construct(EntityManager $em, $banFields)
+    public function __construct(EntityManager $em, $banFields, $multipleFields)
     {
         $this->em = $em;
         $this->banFields = $banFields;
+        $this->multipleFields = $multipleFields;
     }
 
     /**
@@ -112,6 +119,11 @@ class EntityFields
         }
 
         return $rowArr;
+    }
+
+    public function findById($repository, $id)
+    {
+        return $this->em->getRepository($repository)->find($id);
     }
 
     /**
@@ -286,5 +298,10 @@ class EntityFields
         $banList = array_merge($this->banFields, $autoBan);
 
         return $banList;
+    }
+
+    public function getMultipleFields()
+    {
+        return $this->multipleFields;
     }
 }

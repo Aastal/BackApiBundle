@@ -4,6 +4,7 @@ namespace Geoks\AdminBundle\Form\Basic;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Geoks\AdminBundle\Form\Custom\EntityMultipleType;
 use Geoks\AdminBundle\Services\EntityFields;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -17,6 +18,8 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -116,7 +119,7 @@ class CreateForm extends AbstractType
                     $typeOptions['options']['required'] = true;
                 }
 
-                if ($class["type"] == 8) {
+                if ($class["type"] === 8) {
                     $typeOptions['options']['expanded'] = true;
                     $typeOptions['options']['multiple'] = true;
                     $typeOptions['options']['attr']['class'] = 'multiple';
@@ -124,7 +127,34 @@ class CreateForm extends AbstractType
 
                     $builder->add($name, EntityMultipleType::class, $typeOptions['options']);
 
-                } elseif ($class["type"] != 4) {
+                } elseif ($class["type"] === 4 && in_array($name, $entityFields->getMultipleFields())) {
+
+                    $typeOptions['options']['multiple'] = true;
+                    $typeOptions['options']['attr']['class'] = 'multiple';
+                    $typeOptions['options']['label_attr']['class'] = 'label-multiple';
+                    $typeOptions['options']['query_builder'] = function (EntityRepository $er) use ($builder) {
+                        return $er->createQueryBuilder('a')
+                            ->where('a.' . $this->entityName  . ' IS NULL');
+                    };
+
+                    $builder
+                        ->add($name, EntityMultipleType::class, $typeOptions['options'])
+                        ->get($name)->addEventListener(
+                            FormEvents::POST_SUBMIT,
+                            function (FormEvent $event) use ($name, $entityFields, $class) {
+                                $data = $event->getData();
+                                $parent = $event->getForm()->getParent()->getData();
+
+                                if ($data) {
+                                    foreach ($data as $d) {
+                                        $obj = $entityFields->findById($class['targetEntity'], $d);
+                                        $obj->{'set' . ucfirst($this->entityName)}($parent);
+                                    }
+                                }
+                            }
+                        );
+                    ;
+                } else {
                     $builder->add($name, EntityType::class, $typeOptions['options']);
                 }
             }
