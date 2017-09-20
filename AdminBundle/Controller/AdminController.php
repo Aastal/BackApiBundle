@@ -424,7 +424,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
         return new JsonResponse($entities);
     }
 
-    private function __importForm()
+    protected function __importForm()
     {
         $form = $this->createForm(ImportType::class, null, [
             'action' => $this->generateUrl('geoks_admin_' . $this->getNamePluralize() . '_import'),
@@ -440,7 +440,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
         return $form;
     }
 
-    private function __importImageForm()
+    protected function __importImageForm()
     {
         $form = $this->createForm(ImportImageType::class, null, [
             'action' => $this->generateUrl('geoks_admin_' . $this->getNamePluralize() . '_import_image'),
