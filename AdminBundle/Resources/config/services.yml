@@ -58,7 +58,7 @@ services:
 
     geoks_admin.entity_fields:
         class: Geoks\AdminBundle\Services\EntityFields
-        arguments: [ "@doctrine.orm.entity_manager", "%geoks_admin.ban_fields%" ]
+        arguments: [ "@doctrine.orm.entity_manager", "%geoks_admin.ban_fields%", "%geoks_admin.multiple_fields%" ]
 
     geoks.user.subscriber:
         class: Geoks\AdminBundle\EventListener\Doctrine\User\UserSubscriber

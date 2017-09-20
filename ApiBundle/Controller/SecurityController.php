@@ -95,7 +95,7 @@ abstract class SecurityController extends ApiController
         $password = $request->get('password');
 
         if ($request->getMethod() == "GET") {
-            return $this->serializeResponse('geoks.error.access_token', Response::HTTP_BAD_REQUEST);
+            return $this->serializeResponse('geoks.user.access_token', Response::HTTP_METHOD_NOT_ALLOWED);
         }
 
         if ($email !== null && $password !== null) {

@@ -115,7 +115,7 @@
     {% endspaceless %}
 {% endblock choice_widget_expanded %}
 
-{% block entity_multiple_widget %}
+{% block entity_multiple_extanded_widget %}
     {% spaceless %}
 
         {% set i = 0 %}
@@ -145,6 +145,46 @@
                         <li>
                             {{ form_widget(child, { 'attr': { 'hidden': 'hidden' } }) }}
                             <button role="button" class="btn btn-default btn-list-remove">{{ child.vars.label|trans({}, translation_domain) }}</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                {{ form_errors(form) }}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock entity_multiple_extanded_widget %}
+
+{% block entity_multiple_widget %}
+    {% spaceless %}
+
+        {% set i = 0 %}
+
+        {% for child in form if child.value in form.vars.value %}
+            {% set i = i + 1 %}
+        {% endfor %}
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <select title="{{ form.vars.label|trans({}, translation_domain) }}" name="{{ form.vars.name }}" id="{{ form.vars.id }}" class="control-animate">
+                <option value></option>
+                {% for child in form.vars.choices if child.value not in form.vars.value %}
+                    <option value="{{ child.value }}">{{ child.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-multiple">
+                <div class="header-multiple">
+                    <label class="selected-multiple">{{ "form.choiced"|trans }} :</label>
+                    <span class="glyphicon glyphicon-chevron-{% if i <= 10 or i == 0 %}up{% else %}down{% endif %} btn-list-display"></span>
+                </div>
+
+                <ul class="multiple" {% if i > 10 %}style="display: none;"{% endif %}>
+                    {% for child in form.vars.choices if child.value in form.vars.value %}
+                        <li>
+                            <input type="checkbox" id="{{ form.vars.name }}_{{ child.value }}" name="{{ form.vars.full_name }}" hidden="hidden" value="{{ child.value }}" checked="checked">
+                            <button role="button" class="btn btn-default btn-list-remove">{{ child.label|trans({}, translation_domain) }}</button>
                         </li>
                     {% endfor %}
                 </ul>

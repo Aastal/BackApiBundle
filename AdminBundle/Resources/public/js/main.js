@@ -64,8 +64,8 @@ $(document).on('click', '#changePassword', function () {
             function validatePassword () {
                 globalTimeout = setTimeout(function () {
                     globalTimeout = null;
-                    if (password.val() != confirm_password.val() && confirm_password.val()) {
-                        if (globalTimeout != null) {
+                    if (password.val() !== confirm_password.val() && confirm_password.val()) {
+                        if (globalTimeout !== null) {
                             clearTimeout(globalTimeout);
                         }
 
@@ -109,21 +109,20 @@ $(document).on('click', '#changePassword', function () {
  */
 function searchAjax(target, url, text, returnObj) {
     var form = "";
+    target = target.replace('#', '');
 
-    if (!$(target).length) {
-        target = target.replace('#', '');
-        var targetEntity = target;
+    var targetEntity = target.split("_");
+    targetEntity = targetEntity[targetEntity.length - 1];
 
-        if ($("#geoks_admin_create_" + target).length) {
-            form = "geoks_admin_create";
-        }
-
-        if ($("#geoks_admin_update_" + target).length) {
-            form = "geoks_admin_update";
-        }
-
-        target = "#" + form + "_" + target;
+    if ($("#geoks_admin_create_" + targetEntity).length) {
+        form = "geoks_admin_create";
     }
+
+    if ($("#geoks_admin_update_" + targetEntity).length) {
+        form = "geoks_admin_update";
+    }
+
+    target = "#" + form + "_" + targetEntity;
 
     var select2 = $(target).select2({
         placeholder: text,
@@ -199,7 +198,7 @@ function searchAjax(target, url, text, returnObj) {
         if (!$(target + "_" + id).length) {
             $(target).parent().parent().find('.multiple').append(
                 "<li>" +
-                "<input type='checkbox' id=" + target.replace("#", "") + "_" + id + " name=" + form + "[" + targetEntity + "][] hidden='hidden' value='" + id +"' checked='checked'>" +
+                "<input type='checkbox' id=" + target.replace('#', '') + "_" + id + " name=" + form + "[" + targetEntity + "][] hidden='hidden' value='" + id +"' checked='checked'>" +
                 "<button role='button' class='btn btn-default btn-list-remove'>" + text + "</button>" +
                 "</li>"
             );

@@ -4,6 +4,8 @@ namespace Geoks\AdminBundle\Form\Basic;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
+use Geoks\AdminBundle\Form\Custom\EntityMultipleExtantedType;
 use Geoks\AdminBundle\Form\Custom\EntityMultipleType;
 use Geoks\AdminBundle\Form\Custom\HrType;
 use Geoks\AdminBundle\Services\EntityFields;
@@ -135,15 +137,57 @@ class UpdateForm extends AbstractType
                     $typeOptions['options']['required'] = true;
                 }
 
-                if ($class["type"] == 8) {
+                if ($class["type"] === 8) {
                     $typeOptions['options']['expanded'] = true;
                     $typeOptions['options']['multiple'] = true;
                     $typeOptions['options']['attr']['class'] = 'multiple';
                     $typeOptions['options']['label_attr']['class'] = 'label-multiple';
 
-                    $builder->add($name, EntityMultipleType::class, $typeOptions['options']);
+                    $builder->add($name, EntityMultipleExtantedType::class, $typeOptions['options']);
 
-                } elseif ($class["type"] != 4) {
+                } elseif ($class["type"] === 4 && in_array($name, $entityFields->getMultipleFields())) {
+
+                    $typeOptions['options']['multiple'] = true;
+                    $typeOptions['options']['attr']['class'] = 'multiple';
+                    $typeOptions['options']['label_attr']['class'] = 'label-multiple';
+                    $typeOptions['options']['query_builder'] = function (EntityRepository $er) use ($builder) {
+                        return $er->createQueryBuilder('a')
+                            ->where('a.' . $this->entityName  . ' IS NULL OR a.' . $this->entityName . ' = ' . $builder->getData()->getId());
+                    };
+
+                    $builder
+                        ->add($name, EntityMultipleType::class, $typeOptions['options'])
+                        ->get($name)->addEventListener(
+                            FormEvents::PRE_SUBMIT,
+                            function (FormEvent $event) use ($name, $entityFields, $class) {
+                                $data = $event->getData();
+                                $parent = $event->getForm()->getParent()->getData();
+
+                                if (!$data) {
+                                    foreach ($parent->{'get' . ucfirst($name)}()->toArray() as $d) {
+                                        $obj = $entityFields->findById($class['targetEntity'], $d);
+                                        $obj->{'set' . ucfirst($this->entityName)}(null);
+                                    }
+                                } else {
+                                    $diff = array_diff($data, $parent->{'get' . ucfirst($name)}()->toArray());
+
+                                    if ($diff) {
+                                        foreach ($data as $d) {
+
+                                            $obj = $entityFields->findById($class['targetEntity'], $d);
+
+                                            if (in_array($d, $data)) {
+                                                $obj->{'set' . ucfirst($this->entityName)}($parent);
+                                            } else {
+                                                $obj->{'set' . ucfirst($this->entityName)}(null);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        );
+                    ;
+                } else {
                     $builder->add($name, EntityType::class, $typeOptions['options']);
                 }
             }
@@ -207,7 +251,7 @@ class UpdateForm extends AbstractType
     {
         $resolver->setDefaults(array(
             'csrf_protection' => false,
-            'allow_extra_fields' => true,
+            'allow_extra_fields' => true
         ));
 
         $resolver->setRequired('change_password');

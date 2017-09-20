@@ -1,0 +1,18 @@
+{% extends ['AdminBundle::layout.html.twig', 'GeoksAdminBundle::layout.html.twig'] %}
+
+{% form_theme filter_form 'GeoksAdminBundle:Form:fields.html.twig' %}
+
+{% block body %}
+
+    {% set fields = {'id': 'id'} %}
+    {% set first = entities|first %}
+    {% set fields = fields|merge(fields(class_repository(first) ~ '\\' ~ class(first))) %}
+
+    {{ include('GeoksAdminBundle:Template:entity-index.html.twig', {
+        "entities": entities,
+        "filter_form": filter_form,
+        "numberOfResults": numberOfResults,
+        "fields": fields|keys
+    }) }}
+
+{% endblock %}
