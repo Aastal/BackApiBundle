@@ -189,6 +189,11 @@ class UpdateForm extends AbstractType
                     ;
                 } elseif ($class["type"] === 2) {
                     $builder->add($name, EntityType::class, $typeOptions['options']);
+
+                    $typeOptions['options']['query_builder'] = function (EntityRepository $er) use ($builder) {
+                        return $er->createQueryBuilder('a')
+                            ->where('a.' . $this->entityName . ' != ' . $builder->getData()->getId());
+                    };
                 }
             }
         }
