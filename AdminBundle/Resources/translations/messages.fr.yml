@@ -57,10 +57,12 @@ form:
   choiced: Selectionné(s)
   display_list: Afficher la liste
   hide_list: Cacher la liste
+  label:
+    delete: Supprimer
   success:
-    create: Entitée créée
-    update: Entitée modifiée
-    delete: Entitée supprimé
+    create: Entité créée
+    update: Entité modifiée
+    delete: Entité supprimée
     import: Import réussi
   fail:
     create: Erreur lors de la création de l'entitée

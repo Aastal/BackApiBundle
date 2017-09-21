@@ -63,6 +63,7 @@
             </div>
         </div>
     </div>
+
     {% if fields_associations %}
         <div class="col-md-6">
             <div class="box box-info">
@@ -85,7 +86,13 @@
                                                     {% if fieldValue|length > 0 %}
                                                         <ul class="nopadding-left">
                                                             {% for v in fieldValue %}
-                                                                <li>{{ v }}</li>
+                                                                {% if route_exists('geoks_admin_' ~ name_pluralize(class(v))|lower ~ '_show', {'id': v.id})  %}
+                                                                    <li>
+                                                                        <a href="{{ path('geoks_admin_' ~ name_pluralize(class(v))|lower ~ '_show', {'id': v.id}) }}">{{ v }}</a>
+                                                                    </li>
+                                                                {% else %}
+                                                                    <li>{{ v }}</li>
+                                                                {% endif %}
                                                             {% endfor %}
                                                         </ul>
                                                     {% else %}
@@ -96,7 +103,11 @@
                                                 {% elseif fieldValue == 'true' %}
                                                     {{ "app.yes"|trans }}
                                                 {% else %}
-                                                    {{ fieldValue }}
+                                                    {% if route_exists('geoks_admin_' ~ name_pluralize(class(fieldValue))|lower ~ '_show', {'id': fieldValue.id})  %}
+                                                        <a href="{{ path('geoks_admin_' ~ name_pluralize(class(fieldValue))|lower ~ '_show', {'id': fieldValue.id}) }}">{{ fieldValue }}</a>
+                                                    {% else %}
+                                                        {{ fieldValue }}
+                                                    {% endif %}
                                                 {% endif %}
                                             </b>
                                         {% elseif field.type is defined and field.type == 'boolean' %}

@@ -206,14 +206,24 @@
                 <div class="col-lg-12 col-md-12">
 
                     <a href="#" class="btn-link" data-toggle="modal" data-target="#imgFullscreen">
-                        <img src="{{ download_uri }}" alt="img" width="100%" class="img-thumbnail">
+                        {% if ".MP4" in download_uri or ".mp4" in download_uri or ".avi" in download_uri or ".AVI" in download_uri
+                        or ".mov" in download_uri  or ".MOV" in download_uri or ".mpg" in download_uri or ".MPG" in download_uri %}
+                            <video controls width="100%" src="{{ download_uri }}">Movie</video>
+                        {% else %}
+                            <img src="{{ download_uri }}" alt="img" width="100%" class="img-thumbnail">
+                        {% endif %}
                     </a>
 
                     <div class="modal fade" id="imgFullscreen" tabindex="-1" role="dialog" aria-labelledby="imgFullscreenLabel">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-body">
-                                    <img src="{{ download_uri }}" alt="img" width="100%" class="img-thumbnail">
+                                    {% if ".MP4" in download_uri or ".mp4" in download_uri or ".avi" in download_uri or ".AVI" in download_uri
+                                    or ".mov" in download_uri  or ".MOV" in download_uri or ".mpg" in download_uri or ".MPG" in download_uri %}
+                                        <video controls width="100%" src="{{ download_uri }}">Movie</video>
+                                    {% else %}
+                                        <img src="{{ download_uri }}" alt="img" width="100%" class="img-thumbnail">
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

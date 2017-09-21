@@ -187,7 +187,7 @@ class UpdateForm extends AbstractType
                             }
                         );
                     ;
-                } else {
+                } elseif ($class["type"] === 2) {
                     $builder->add($name, EntityType::class, $typeOptions['options']);
                 }
             }
