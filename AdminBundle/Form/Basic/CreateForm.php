@@ -134,9 +134,9 @@ class CreateForm extends AbstractType
                     $typeOptions['options']['multiple'] = true;
                     $typeOptions['options']['attr']['class'] = 'multiple';
                     $typeOptions['options']['label_attr']['class'] = 'label-multiple';
-                    $typeOptions['options']['query_builder'] = function (EntityRepository $er) use ($builder) {
+                    $typeOptions['options']['query_builder'] = function (EntityRepository $er) use ($builder, $class) {
                         return $er->createQueryBuilder('a')
-                            ->where('a.' . $this->entityName  . ' IS NULL');
+                            ->where('a.' . $class['mappedBy']  . ' IS NULL');
                     };
 
                     $builder
@@ -159,9 +159,9 @@ class CreateForm extends AbstractType
                 } elseif ($class["type"] === 2) {
                     $builder->add($name, EntityType::class, $typeOptions['options']);
 
-                    $typeOptions['options']['query_builder'] = function (EntityRepository $er) use ($builder) {
+                    $typeOptions['options']['query_builder'] = function (EntityRepository $er) use ($builder, $class) {
                         return $er->createQueryBuilder('a')
-                            ->where('a.' . $this->entityName . ' != ' . $builder->getData()->getId());
+                            ->where('a.' . $class['mappedBy'] . ' != ' . $builder->getData()->getId());
                     };
                 }
             }
