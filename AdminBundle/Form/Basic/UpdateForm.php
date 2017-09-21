@@ -145,14 +145,14 @@ class UpdateForm extends AbstractType
 
                     $builder->add($name, EntityMultipleExtantedType::class, $typeOptions['options']);
 
-                } elseif ($class["type"] === 4 && in_array($name, $entityFields->getMultipleFields())) {
+                } elseif ($class["type"] === 4 && in_array($name, $entityFields->getMultipleFields()) && $class['mappedBy']) {
 
                     $typeOptions['options']['multiple'] = true;
                     $typeOptions['options']['attr']['class'] = 'multiple';
                     $typeOptions['options']['label_attr']['class'] = 'label-multiple';
                     $typeOptions['options']['query_builder'] = function (EntityRepository $er) use ($builder, $class) {
                         return $er->createQueryBuilder('a')
-                            ->where('a.' . $class['mappedBy']  . ' IS NULL OR a.' . $this->entityName . ' = ' . $builder->getData()->getId());
+                            ->where('a.' . $class['mappedBy']  . ' IS NULL OR a.' . $class['mappedBy'] . ' = ' . $builder->getData()->getId());
                     };
 
                     $builder

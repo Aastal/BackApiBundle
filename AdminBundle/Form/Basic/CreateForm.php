@@ -129,7 +129,7 @@ class CreateForm extends AbstractType
 
                     $builder->add($name, EntityMultipleType::class, $typeOptions['options']);
 
-                } elseif ($class["type"] === 4 && in_array($name, $entityFields->getMultipleFields())) {
+                } elseif ($class["type"] === 4 && in_array($name, $entityFields->getMultipleFields()) && $class['mappedBy']) {
 
                     $typeOptions['options']['multiple'] = true;
                     $typeOptions['options']['attr']['class'] = 'multiple';
