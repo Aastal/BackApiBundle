@@ -17,6 +17,10 @@ class StringUtils
         return $string;
     }
 
+    /**
+     * @param $input
+     * @return string
+     */
     public function fromCamelCase($input)
     {
         preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
@@ -29,6 +33,10 @@ class StringUtils
         return implode('_', $ret);
     }
 
+    /**
+     * @param $date
+     * @return string
+     */
     public function validateDate($date)
     {
         $d = \DateTime::createFromFormat('d/m/Y H:i:s', $date);
@@ -64,6 +72,10 @@ class StringUtils
         return false;
     }
 
+    /**
+     * @param string $string
+     * @return string
+     */
     public function removeAccents($string)
     {
         $alphabet = [
@@ -81,6 +93,10 @@ class StringUtils
         return $string;
     }
 
+    /**
+     * @param string $word
+     * @return string
+     */
     public function pluralize($word)
     {
         $endLetter = substr($word, -1);
@@ -125,5 +141,42 @@ class StringUtils
         }
 
         return $word;
+    }
+
+    /**
+     * @param string $str
+     * @return string
+     */
+    public function str2bin($str)
+    {
+        $bin = '';
+        $length = strlen($str);
+
+        for ($i = 0; $i < $length; $i++) {
+
+            $convert = decbin(ord($str[$i]));
+            $convert = strrev(str_pad(strrev($convert), 8, '0'));
+
+            $bin .= $convert;
+        }
+
+        return $bin;
+    }
+
+    /**
+     * @param string $bin
+     * @return string
+     */
+    public function bin2str($bin)
+    {
+        $str = '';
+        $split = str_split($bin, 8);
+        $count = count($split);
+
+        for ($i = 0; $i < $count; $i++) {
+            $str .= chr(bindec($split[$i]));
+        }
+
+        return $str;
     }
 }

@@ -205,22 +205,32 @@
             {% if download_uri is defined and download_uri %}
                 <div class="col-lg-12 col-md-12">
 
-                    <a href="#" class="btn-link" data-toggle="modal" data-target="#imgFullscreen">
-                        {% if ".MP4" in download_uri or ".mp4" in download_uri or ".avi" in download_uri or ".AVI" in download_uri
-                        or ".mov" in download_uri  or ".MOV" in download_uri or ".mpg" in download_uri or ".MPG" in download_uri %}
-                            <video controls width="100%" src="{{ download_uri }}">Movie</video>
-                        {% else %}
-                            <img src="{{ download_uri }}" alt="img" width="100%" class="img-thumbnail">
-                        {% endif %}
-                    </a>
+                    {% set i = random(9999) %}
 
-                    <div class="modal fade" id="imgFullscreen" tabindex="-1" role="dialog" aria-labelledby="imgFullscreenLabel">
+                    {% if ".MP4" in download_uri or ".mp4" in download_uri or ".avi" in download_uri or ".AVI" in download_uri
+                    or ".mov" in download_uri  or ".MOV" in download_uri or ".mpg" in download_uri or ".MPG" in download_uri %}
+                        <a href="#" class="btn-link" data-toggle="modal" data-target="#imgFullscreen{{ i }}">
+                            <video controls width="100%" src="{{ download_uri }}">Movie</video>
+                        </a>
+                    {% elseif '.pdf' in download_uri or '.PDF' in download_uri %}
+                        <embed src="{{ download_uri }}" width="100%" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
+                            <button type="button" class="btn btn-animate btn-light-blue" data-toggle="modal" data-target="#imgFullscreen{{ i }}">Voir</button>
+                        </embed>
+                    {% else %}
+                        <a href="#" class="btn-link" data-toggle="modal" data-target="#imgFullscreen{{ i }}">
+                            <img src="{{ download_uri }}" alt="img" width="100%" class="img-thumbnail">
+                        </a>
+                    {% endif %}
+
+                    <div class="modal fade" id="imgFullscreen{{ i }}" tabindex="-1" role="dialog" aria-labelledby="imgFullscreenLabel">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-body">
                                     {% if ".MP4" in download_uri or ".mp4" in download_uri or ".avi" in download_uri or ".AVI" in download_uri
                                     or ".mov" in download_uri  or ".MOV" in download_uri or ".mpg" in download_uri or ".MPG" in download_uri %}
                                         <video controls width="100%" src="{{ download_uri }}">Movie</video>
+                                    {% elseif '.pdf' in download_uri or '.PDF' in download_uri %}
+                                        <embed src="{{ download_uri }}" width="100%" height="500" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html"></embed>
                                     {% else %}
                                         <img src="{{ download_uri }}" alt="img" width="100%" class="img-thumbnail">
                                     {% endif %}
@@ -232,7 +242,11 @@
             {% endif %}
 
             {% if form.delete is defined %}
-                <div class="col-lg-12 col-md-12 form-delete" align="right">
+                <div class="col-lg-6 col-md-6 form-download">
+                    <a href="{{ download_uri }}">{{ "app.download"|trans }}</a>
+                </div>
+
+                <div class="col-lg-6 col-md-6 form-delete" align="right">
                     {{ form_widget(form.delete, {'attr': {'class': 'checkbox-animate'} }) }} {{ form_label(form.delete) }}
                 </div>
             {% endif %}

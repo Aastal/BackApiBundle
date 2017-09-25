@@ -146,8 +146,20 @@
                                             {% set fieldValue = attribute(entity, value.fileNameProperty) %}
 
                                             {% if fieldValue %}
-                                                <img src="{{ vich_uploader_asset(entity, key) }}" alt="{{ fieldValue }}"
-                                                     class="img-thumbnail" width="40%">
+                                                {% if ".MP4" in vich_uploader_asset(entity, key) or ".mp4" in vich_uploader_asset(entity, key) or ".avi" in vich_uploader_asset(entity, key) or ".AVI" in vich_uploader_asset(entity, key)
+                                                or ".mov" in vich_uploader_asset(entity, key)  or ".MOV" in vich_uploader_asset(entity, key) or ".mpg" in vich_uploader_asset(entity, key) or ".MPG" in vich_uploader_asset(entity, key) %}
+                                                    <video controls width="100%" src="{{ vich_uploader_asset(entity, key) }}">Movie</video>
+                                                {% elseif '.pdf' in vich_uploader_asset(entity, key) or '.PDF' in vich_uploader_asset(entity, key) %}
+                                                    <embed src="{{ vich_uploader_asset(entity, key) }}" width="100%" height="500" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html"></embed>
+                                                {% else %}
+                                                    <img src="{{ vich_uploader_asset(entity, key) }}" alt="{{ fieldValue }}"
+                                                         class="img-thumbnail" width="40%">
+                                                {% endif %}
+
+                                                <div class="col-lg-12 col-md-12 form-download">
+                                                    <br>
+                                                    <a href="{{ vich_uploader_asset(entity, key) }}"><button class="btn btn-animate btn-light-blue">{{ "app.see"|trans }}</button></a>
+                                                </div>
                                             {% endif %}
                                         {% else %}
                                             <label class="label label-default">{{ "app.noData"|trans }}</label>

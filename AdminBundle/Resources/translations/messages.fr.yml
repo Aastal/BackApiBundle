@@ -3,6 +3,7 @@ app:
   no: Non
   noCare: Peu importe
   noData: Aucune donnée
+  see: Voir
   login: Se connecter
   logout: Se déconnecter
   user: Utilisateur
@@ -34,6 +35,7 @@ app:
     return: Revenir à l'index
   log: Log
   logs: Logs
+  download: Télécharger
 
 admin:
   properties: Propriétées

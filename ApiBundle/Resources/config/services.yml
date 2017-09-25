@@ -122,3 +122,4 @@ services:
             - "%amazon.s3.region%"
             - "%amazon.s3.version%"
             - "%amazon.s3.bucket%"
+            - "%kernel.root_dir%"

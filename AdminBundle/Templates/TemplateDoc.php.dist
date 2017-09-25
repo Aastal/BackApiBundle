@@ -44,7 +44,7 @@ class TemplateDoc extends TemplateController
      * @Method({"GET", "POST"})
      *
      * @param Request $request
-     * @return JsonResponse
+     * @return Response
      */
     public function createAction(Request $request)
     {
