@@ -149,6 +149,7 @@ function searchAjax(target, url, text, returnObj) {
                             };
 
                             var resultText = '';
+
                             returnObj.forEach(function (data) {
                                 resultText += obj[data] + ' ';
                             });

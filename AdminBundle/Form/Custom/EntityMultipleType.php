@@ -3,9 +3,10 @@
 namespace Geoks\AdminBundle\Form\Custom;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EntityMultipleType extends EntityType
+class EntityMultipleType extends AbstractType
 {
     /**
      * @param OptionsResolver $resolver
@@ -18,5 +19,10 @@ class EntityMultipleType extends EntityType
     public function getBlockPrefix()
     {
         return 'entity_multiple';
+    }
+
+    public function getParent()
+    {
+        return EntityType::class;
     }
 }

@@ -115,9 +115,8 @@
     {% endspaceless %}
 {% endblock choice_widget_expanded %}
 
-{% block entity_multiple_extanded_widget %}
+{% block entity_expanded_widget %}
     {% spaceless %}
-
         {% set i = 0 %}
 
         {% for child in form if child.vars.checked == 1 %}
@@ -152,8 +151,9 @@
                 {{ form_errors(form) }}
             </div>
         </div>
+
     {% endspaceless %}
-{% endblock entity_multiple_extanded_widget %}
+{% endblock entity_expanded_widget %}
 
 {% block entity_multiple_widget %}
     {% spaceless %}
@@ -216,6 +216,8 @@
                         <embed src="{{ download_uri }}" width="100%" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
                             <button type="button" class="btn btn-animate btn-light-blue" data-toggle="modal" data-target="#imgFullscreen{{ i }}">Voir</button>
                         </embed>
+                    {% elseif '.docx' in download_uri  or '.doc' in download_uri %}
+                        <iframe src='https://view.officeapps.live.com/op/embed.aspx?src={{ download_uri }}' width='100%' height='500px' frameborder='0'>Document</iframe>
                     {% else %}
                         <a href="#" class="btn-link" data-toggle="modal" data-target="#imgFullscreen{{ i }}">
                             <img src="{{ download_uri }}" alt="img" width="100%" class="img-thumbnail">
@@ -231,6 +233,8 @@
                                         <video controls width="100%" src="{{ download_uri }}">Movie</video>
                                     {% elseif '.pdf' in download_uri or '.PDF' in download_uri %}
                                         <embed src="{{ download_uri }}" width="100%" height="500" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html"></embed>
+                                    {% elseif '.docx' in download_uri  or '.doc' in download_uri %}
+                                        <iframe src='https://view.officeapps.live.com/op/embed.aspx?src={{ download_uri }}' width='100%' height='500px' frameborder='0'>Document</iframe>
                                     {% else %}
                                         <img src="{{ download_uri }}" alt="img" width="100%" class="img-thumbnail">
                                     {% endif %}

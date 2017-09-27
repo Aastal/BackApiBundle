@@ -3,26 +3,20 @@
 namespace Geoks\AdminBundle\Form\Basic;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Geoks\AdminBundle\Form\Custom\EntityExpandedType;
 use Geoks\AdminBundle\Form\Custom\EntityMultipleType;
 use Geoks\AdminBundle\Services\EntityFields;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class CreateForm extends AbstractType
@@ -122,12 +116,13 @@ class CreateForm extends AbstractType
                 }
 
                 if ($class["type"] === 8) {
+
                     $typeOptions['options']['expanded'] = true;
                     $typeOptions['options']['multiple'] = true;
                     $typeOptions['options']['attr']['class'] = 'multiple';
                     $typeOptions['options']['label_attr']['class'] = 'label-multiple';
 
-                    $builder->add($name, EntityMultipleType::class, $typeOptions['options']);
+                    $builder->add($name, EntityExpandedType::class, $typeOptions['options']);
 
                 } elseif ($class["type"] === 4 && in_array($name, $entityFields->getMultipleFields()) && $class['mappedBy']) {
 
@@ -163,6 +158,8 @@ class CreateForm extends AbstractType
                         return $er->createQueryBuilder('a')
                             ->where('a.' . $class['mappedBy'] . ' != ' . $builder->getData()->getId());
                     };
+                } elseif ($class["type"] === 1 && $class['inversedBy'] !== null) {
+                    $builder->add($name, EntityType::class, $typeOptions['options']);
                 }
             }
         }

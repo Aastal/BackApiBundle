@@ -2,30 +2,23 @@
 
 namespace Geoks\AdminBundle\Form\Basic;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Geoks\AdminBundle\Form\Custom\EntityMultipleExtantedType;
-use Geoks\AdminBundle\Form\Custom\EntityMultipleType;
-use Geoks\AdminBundle\Form\Custom\HrType;
 use Geoks\AdminBundle\Services\EntityFields;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\AbstractType;
+use Geoks\AdminBundle\Form\Custom\HrType;
 use Vich\UploaderBundle\Form\Type\VichFileType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Geoks\AdminBundle\Form\Custom\EntityExpandedType;
+use Geoks\AdminBundle\Form\Custom\EntityMultipleType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class UpdateForm extends AbstractType
 {
@@ -143,7 +136,7 @@ class UpdateForm extends AbstractType
                     $typeOptions['options']['attr']['class'] = 'multiple';
                     $typeOptions['options']['label_attr']['class'] = 'label-multiple';
 
-                    $builder->add($name, EntityMultipleExtantedType::class, $typeOptions['options']);
+                    $builder->add($name, EntityExpandedType::class, $typeOptions['options']);
 
                 } elseif ($class["type"] === 4 && in_array($name, $entityFields->getMultipleFields()) && $class['mappedBy']) {
 
@@ -185,7 +178,7 @@ class UpdateForm extends AbstractType
                                     }
                                 }
                             }
-                        );
+                        )
                     ;
                 } elseif ($class["type"] === 2) {
                     $builder->add($name, EntityType::class, $typeOptions['options']);
@@ -194,6 +187,8 @@ class UpdateForm extends AbstractType
                         return $er->createQueryBuilder('a')
                             ->where('a.' . $class['mappedBy'] . ' != ' . $builder->getData()->getId());
                     };
+                } elseif ($class["type"] === 1 && $class['inversedBy'] !== null) {
+                    $builder->add($name, EntityType::class, $typeOptions['options']);
                 }
             }
         }

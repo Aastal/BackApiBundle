@@ -6,7 +6,7 @@
 
     {% set fields = {'id': 'id'} %}
     {% set first = entities|first %}
-    {% set fields = fields|merge(fields(class_repository(first) ~ '\\' ~ class(first))) %}
+    {% set fields = fields(table) %}
 
     {{ include('GeoksAdminBundle:Template:entity-index.html.twig', {
         "entities": entities,

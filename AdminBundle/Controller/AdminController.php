@@ -203,6 +203,8 @@ abstract class AdminController extends Controller implements AdminControllerInte
             $payload['import_image_form'] = $this->__importImageForm()->createView();
         }
 
+        $payload['table'] = $this->getEntityRepository();
+
         return $this->render($this->getEntityView() . ':index.html.twig', $payload);
     }
 
@@ -210,7 +212,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository($this->entityRepository)->find($id);
+        $entity = $em->getRepository($this->getEntityRepository())->find($id);
 
         $fields = $this->get('geoks_admin.entity_fields')->getFieldsName(get_class($entity));
         $images = $this->get('geoks_admin.entity_fields')->getImageFields($entity);
@@ -275,7 +277,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
             'action' => $this->generateUrl(sprintf('geoks_admin_' . $this->getNamePluralize() . '_create')),
             'method' => 'POST',
             'translation_domain' => strtolower($this->className),
-            'data_class' => $this->entityRepository,
+            'data_class' => $this->getEntityRepository(),
             'entity_fields' => $this->get('geoks_admin.entity_fields'),
             'translator' => $this->get('translator'),
             'current_user' => $this->getUser()
@@ -306,7 +308,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository($this->entityRepository)->find($id);
+        $entity = $em->getRepository($this->getEntityRepository())->find($id);
 
         $changePassword = false;
 
@@ -323,7 +325,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
             'action' => $this->generateUrl(sprintf('geoks_admin_' . $this->getNamePluralize() . '_update'), ['id' => $id]),
             'method' => 'POST',
             'translation_domain' => strtolower($this->className),
-            'data_class' => $this->entityRepository,
+            'data_class' => $this->getEntityRepository(),
             'change_password' => $changePassword,
             'entity_fields' => $this->get('geoks_admin.entity_fields'),
             'translator' => $this->get('translator'),
@@ -360,7 +362,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
     public function deleteAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository($this->entityRepository)->find($id);
+        $entity = $em->getRepository($this->getEntityRepository())->find($id);
 
         if (!$entity) {
             $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'delete');
@@ -416,7 +418,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository($this->entityRepository)->search($request->get('data'));
+        $entities = $em->getRepository($this->getEntityRepository())->search($request->get('data'));
 
         return new JsonResponse($entities);
     }
@@ -430,7 +432,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
                 'class' => "form-horizontal"
             ],
             'method' => 'POST',
-            'class' => $this->entityRepository,
+            'class' => $this->getEntityRepository(),
             'translation_domain' => strtolower($this->className)
         ]);
 
@@ -446,7 +448,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
                 'class' => "form-horizontal"
             ],
             'method' => 'POST',
-            'class' => $this->entityRepository,
+            'class' => $this->getEntityRepository(),
             'translation_domain' => strtolower($this->className)
         ]);
 
@@ -462,7 +464,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $em = $this->getDoctrine()->getManager();
 
         foreach ($request->get("ids") as $id) {
-            $entity = $em->getRepository($this->entityRepository)->find($id);
+            $entity = $em->getRepository($this->getEntityRepository())->find($id);
             $em->remove($entity);
         }
 
@@ -477,7 +479,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
         $em = $this->getDoctrine()->getManager();
 
         foreach ($request->get("datas") as $id) {
-            $entities[] = $em->getRepository($this->entityRepository)->find($id);
+            $entities[] = $em->getRepository($this->getEntityRepository())->find($id);
         }
 
         $dumper = $this->get('geoks_admin.export');
