@@ -160,7 +160,7 @@
 
         {% set i = 0 %}
 
-        {% for child in form if child.value in form.vars.value %}
+        {% for child in form.vars.value %}
             {% set i = i + 1 %}
         {% endfor %}
 
@@ -183,7 +183,7 @@
                 <ul class="multiple" {% if i > 10 %}style="display: none;"{% endif %}>
                     {% for child in form.vars.choices if child.value in form.vars.value %}
                         <li>
-                            <input type="checkbox" id="{{ form.vars.name }}_{{ child.value }}" name="{{ form.vars.full_name }}" hidden="hidden" value="{{ child.value }}" checked="checked">
+                            <input type="checkbox" id="{{ form.vars.id }}_{{ child.value }}" name="{{ form.vars.full_name }}[]" hidden="hidden" value="{{ child.value }}" checked="checked">
                             <button role="button" class="btn btn-default btn-list-remove">{{ child.label|trans({}, translation_domain) }}</button>
                         </li>
                     {% endfor %}
