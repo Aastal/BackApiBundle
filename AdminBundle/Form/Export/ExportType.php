@@ -49,7 +49,7 @@ class ExportType extends AbstractType
             ]);
 
         foreach ($rowArr as $name => $field) {
-            if ($field["type"] != 'array' && !in_array($name, $banList)) {
+            if ($field["type"] != 'array' && !in_array($name, $banList) && $name != "password") {
                 $typeOptions = $container->get('geoks_admin.entity_fields')->switchType($this->entityName, $name, $field["type"]);
 
                 if ($field["type"] == 'boolean') {
@@ -60,9 +60,9 @@ class ExportType extends AbstractType
                     ];
 
                     $typeOptions['options']['choices'] = [
-                        null => $translator->trans("app.noCare"),
-                        1 => $translator->trans("app.yes"),
-                        0 => $translator->trans("app.no")
+                        $translator->trans("app.noCare") => null,
+                        $translator->trans("app.yes") => 1,
+                        $translator->trans("app.no") => 0
                     ];
                 }
 
