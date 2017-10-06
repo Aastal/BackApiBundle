@@ -43,8 +43,8 @@
                 <h4 class="modal-title" id="myModalLabel">Actions Groupées</h4>
             </div>
             <div class="modal-body">
-                <button type="button" onclick="multipleDelete()" class="btn btn-danger" data-dismiss="modal">{{ "app.delete"|trans }}</button>
-                <button type="button" onclick="multipleExport()" class="btn btn-primary" data-dismiss="modal">{{ "app.export"|trans }}</button>
+                <button id="btn-multiple-delete" disabled type="button" onclick="multipleDelete()" class="btn btn-danger disabled" data-dismiss="modal">{{ "app.delete"|trans }}</button>
+                <button id="btn-multiple-export" disabled type="button" onclick="multipleExport()" class="btn btn-primary disabled" data-dismiss="modal">{{ "app.export"|trans }}</button>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ "app.exit"|trans }}</button>
@@ -59,6 +59,7 @@
             <div class="box-header">
                 <h3 class="box-title">{{ ('app.' ~ namePluralize)|lower|trans }}</h3>
             </div>
+
             <div id="box-data" class="box-body">
                 <div class="table-responsive">
                     <table class="table no-margin">

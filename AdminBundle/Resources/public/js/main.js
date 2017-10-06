@@ -265,7 +265,7 @@ function uploadCheck(input) {
 $(document).on('change', '#geoks_import_type', function () {
     var warning = $(".warning");
 
-    if (this.value == "replace") {
+    if (this.value === "replace") {
         warning.show();
         warning.parent().find('.btn-blue').attr('disabled', 'disabled');
     } else {
@@ -281,6 +281,17 @@ $(document).on('change', '#check-import', function () {
         warning.parent().find('.btn-blue').removeAttr('disabled');
     } else {
         warning.parent().find('.btn-blue').attr('disabled', 'disabled');
+    }
+});
+
+$(document).on('click', '#box-data .checkbox-animate', function () {
+    var btnDelete = $('#btn-multiple-delete');
+    var btnExport = $('#btn-multiple-export');
+
+
+    if (btnDelete.hasClass('disabled')) {
+        btnDelete.removeClass('disabled').removeAttr('disabled');
+        btnExport.removeClass('disabled').removeAttr('disabled');
     }
 });
 
