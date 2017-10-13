@@ -261,7 +261,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
             }
         }
 
-        return $this->render($this->getEntityView() . ':Security:login.html.twig');
+        return $this->render($this->getEntityView() . 'Security:login.html.twig');
     }
 
     public function createAction(Request $request)
