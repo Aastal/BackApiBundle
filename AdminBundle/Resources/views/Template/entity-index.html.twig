@@ -113,8 +113,6 @@
                                                         {{ "app.yes"|trans }}
                                                     {% elseif field is same as(false) %}
                                                         {{ "app.no"|trans }}
-                                                    {% elseif field matches '{^(http:\/\/|https:\/\/).*}' %}
-                                                        <a href="{{ field }}">{{ field }}</a>
                                                     {% else %}
                                                         {{ field|trans({}, name|lower) }}
                                                     {% endif %}

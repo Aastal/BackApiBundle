@@ -261,7 +261,7 @@ abstract class SecurityController extends ApiController
 
     public function subscribeAction(Request $request)
     {
-        $userManager = $this->get('fos_user.user_manager.default');
+        $userManager = $this->get('fos_user.user_manager');
 
         /** @var User $user */
         $user = $userManager->createUser();
