@@ -20,6 +20,7 @@ app:
   add: Ajouter
   exit: Quitter
   action_group: Actions Groupées
+  select_all: Tout sélectionner
   last_users: Derniers utilisateurs
   admin-panel: Admin Panel
   return_admin_page: Retourner à la page d'administration
