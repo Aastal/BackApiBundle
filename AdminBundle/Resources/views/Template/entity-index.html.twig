@@ -29,10 +29,16 @@
     {{ include('GeoksAdminBundle:Form:import-image.html.twig', {'form' : import_image_form}) }}
 {% endif %}
 
-<!-- Launch Modal -->
-<button type="button" class="btn btn-animate btn-blue" data-toggle="modal" data-target="#myModal">
-    {{ "app.action_group"|trans }}
-</button>
+<div class="pull-right">
+    <!-- Launch Modal -->
+    <button type="button" class="btn btn-animate btn-blue" data-toggle="modal" data-target="#myModal">
+        {{ "app.action_group"|trans }}
+    </button>
+    |
+    <button type="button" class="btn btn-animate btn-light-info" id="selectAll" data-check="false">
+        {{ "app.select_all"|trans }}
+    </button>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
