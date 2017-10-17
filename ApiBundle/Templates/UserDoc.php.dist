@@ -28,9 +28,9 @@ class UserDoc extends UserController
      *
      * @return JsonResponse
      */
-    public function getAll()
+    public function getAllAction()
     {
-        return parent::getAll();
+        return parent::getAllAction();
     }
 
     /**
@@ -47,9 +47,9 @@ class UserDoc extends UserController
      *
      * @return JsonResponse
      */
-    public function me()
+    public function meAction()
     {
-        return parent::me();
+        return parent::meAction();
     }
 
     /**
@@ -67,9 +67,9 @@ class UserDoc extends UserController
      * @param integer $id
      * @return JsonResponse
      */
-    public function getOne($id)
+    public function getOneAction($id)
     {
-        return parent::getOne($id);
+        return parent::getOneAction($id);
     }
 
     /**
@@ -88,9 +88,9 @@ class UserDoc extends UserController
      * @param integer $id
      * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function updateAction(Request $request, $id)
     {
-        return parent::update($request, $id);
+        return parent::updateAction($request, $id);
     }
 
     /**
@@ -108,9 +108,9 @@ class UserDoc extends UserController
      * @param integer $id
      * @return JsonResponse
      */
-    public function delete($id = null)
+    public function deleteAction($id = null)
     {
-        return parent::delete($id);
+        return parent::deleteAction($id);
     }
 
     /**
