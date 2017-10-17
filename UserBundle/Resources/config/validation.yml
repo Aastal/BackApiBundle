@@ -17,12 +17,6 @@ Geoks\UserBundle\Entity\User:
                 message: "geoks.user.email.assert.notNull"
             - Email:
                 message: "geoks.user.email.assert.type"
-        firstname:
-            - NotNull:
-                message: "geoks.user.firstname.assert.notNull"
-        lastname:
-            - NotNull:
-                message: "geoks.user.lastname.assert.notNull"
         plainPassword:
             - Length:
                 min: 4
