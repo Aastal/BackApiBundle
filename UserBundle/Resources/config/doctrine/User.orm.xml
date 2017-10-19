@@ -22,8 +22,8 @@
         <field name="dateOfBirth" column="date_of_birth" type="date" nullable="true" />
 
         <!-- Text -->
-        <field name="firstname" column="firstname" type="string" length="255" />
-        <field name="lastname" column="lastname" type="string" length="255" />
+        <field name="firstname" column="firstname" type="string" length="255" nullable="true"/>
+        <field name="lastname" column="lastname" type="string" length="255" nullable="true"/>
         <field name="gender" column="gender" type="string" length="255" nullable="true" />
         <field name="facebookUid" column="facebook_uid" type="string" length="255" nullable="true" />
         <field name="facebookName" column="facebook_name" type="string" length="255" nullable="true" />

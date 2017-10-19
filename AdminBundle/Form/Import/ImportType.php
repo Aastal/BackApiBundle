@@ -25,8 +25,8 @@ class ImportType extends AbstractType
             ->add('type', ChoiceType::class, [
                 'label' => "Type d'import",
                 'choices' => [
-                    'incremental' => "Incrémentale",
-                    'replace' => "Annule & Remplace"
+                    "Incrémentale" => 'incremental',
+                    "Annule & Remplace" => 'replace'
                 ],
                 'attr' => [
                     'class' => 'control-animate'

@@ -29,10 +29,16 @@
     {{ include('GeoksAdminBundle:Form:import-image.html.twig', {'form' : import_image_form}) }}
 {% endif %}
 
-<!-- Launch Modal -->
-<button type="button" class="btn btn-animate btn-blue" data-toggle="modal" data-target="#myModal">
-    {{ "app.action_group"|trans }}
-</button>
+<div class="pull-right">
+    <!-- Launch Modal -->
+    <button type="button" class="btn btn-animate btn-blue" data-toggle="modal" data-target="#myModal">
+        {{ "app.action_group"|trans }}
+    </button>
+    |
+    <button type="button" class="btn btn-animate btn-light-info" id="selectAll" data-check="false">
+        {{ "app.select_all"|trans }}
+    </button>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -42,12 +48,40 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Actions Groupées</h4>
             </div>
+
             <div class="modal-body">
-                <button id="btn-multiple-delete" disabled type="button" onclick="multipleDelete()" class="btn btn-danger disabled" data-dismiss="modal">{{ "app.delete"|trans }}</button>
+                <button id="btn-multiple-delete" disabled type="button" onclick="multipleDelete(false)" class="btn btn-danger disabled" data-dismiss="modal">{{ "app.delete"|trans }}</button>
                 <button id="btn-multiple-export" disabled type="button" onclick="multipleExport()" class="btn btn-primary disabled" data-dismiss="modal">{{ "app.export"|trans }}</button>
+                <button id="btn-delete-all" type="button" onclick="multipleDelete(true)" class="btn btn-danger pull-right" data-dismiss="modal">{{ "app.delete_all"|trans }}</button>
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ "app.exit"|trans }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Warning -->
+<div class="modal fade" id="myModalWarning" tabindex="-1" role="dialog" aria-labelledby="myModalLabelWarning">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabelWarning">Avertissement</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <p>
+                        Attention : Cette action entrainera <b>la suppression de l'intégralité de la table</b>. <br>
+                        Êtes-vous sûr ?
+                    </p>
+                </div>
+
+                <div class="text-center">
+                    <button id="confirm-delete" class="btn btn-animate btn-light-danger">{{ "app.yes"|trans }}</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-animate btn-light-blue">{{ "app.no"|trans }}</button>
+                </div>
             </div>
         </div>
     </div>
@@ -115,8 +149,6 @@
                                                         {{ "app.yes"|trans }}
                                                     {% elseif field is same as(false) %}
                                                         {{ "app.no"|trans }}
-                                                    {% elseif field matches '{^(http:\/\/|https:\/\/).*}' %}
-                                                        <a href="{{ field }}">{{ field }}</a>
                                                     {% else %}
                                                         {{ field|trans({}, name|lower) }}
                                                     {% endif %}

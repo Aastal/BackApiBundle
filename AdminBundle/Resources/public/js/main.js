@@ -288,14 +288,36 @@ $(document).on('click', '#box-data .checkbox-animate', function () {
     var btnDelete = $('#btn-multiple-delete');
     var btnExport = $('#btn-multiple-export');
 
-
     if (btnDelete.hasClass('disabled')) {
         btnDelete.removeClass('disabled').removeAttr('disabled');
         btnExport.removeClass('disabled').removeAttr('disabled');
     }
 });
 
-function multipleDelete() {
+$(document).on('click', "#selectAll", function () {
+    var btnDelete = $('#btn-multiple-delete');
+    var btnExport = $('#btn-multiple-export');
+
+    if ($(this).data("check") === false) {
+        $(this).data("check", true);
+        $(this).text("Tout désélectionner");
+
+        $('.checkbox-animate').prop("checked", true);
+
+        btnDelete.removeClass('disabled').removeAttr('disabled');
+        btnExport.removeClass('disabled').removeAttr('disabled');
+    } else {
+        $(this).data("check", false);
+        $(this).text("Tout sélectionner");
+
+        $('.checkbox-animate').prop("checked", false);
+
+        btnDelete.addClass('disabled').attr('disabled');
+        btnExport.addClass('disabled').attr('disabled');
+    }
+});
+
+function multipleDelete(all) {
     var ids = [];
     var entityName = $('#entity-name').text();
 
@@ -305,10 +327,29 @@ function multipleDelete() {
         }
     });
 
+    var data = {ids : ids, all: all};
+
+    if (all !== true) {
+        data = {ids : ids};
+
+        deleteAction(data, entityName);
+    } else {
+        $('#myModalWarning').modal();
+    }
+}
+
+$(document).on('click', '#confirm-delete', function () {
+    var entityName = $('#entity-name').text();
+    var data = {ids : null, all: true};
+
+    deleteAction(data, entityName);
+});
+
+function deleteAction(data, entityName) {
     $.ajax({
         type: "POST",
         url: Routing.generate('delete_' + entityName + '_entities'),
-        data: { ids : ids },
+        data: data,
 
         success: function() {
             window.location.reload();

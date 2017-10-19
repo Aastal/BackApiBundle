@@ -123,10 +123,10 @@ abstract class SecurityController extends ApiController
             } else {
                 return $this->serializeResponse('geoks.user.login.wrong', Response::HTTP_FORBIDDEN);
             }
-        } else {
-            return $this->serializeResponse('geoks.missing_param', Response::HTTP_BAD_REQUEST);
         }
 
+
+        return $this->serializeResponse('geoks.missing_param', Response::HTTP_BAD_REQUEST);
     }
 
     public function loginOptionsAction()
@@ -261,10 +261,57 @@ abstract class SecurityController extends ApiController
 
     public function subscribeAction(Request $request)
     {
-        $userManager = $this->get('fos_user.user_manager.default');
+        $userManager = $this->get('fos_user.user_manager');
 
         /** @var User $user */
         $user = $userManager->createUser();
+
+        if ($this->getFormCreate() == CreateForm::class) {
+            $form = $this->createForm($this->getFormCreate(), $user, [
+                'method' => 'POST',
+                'data_class' => $this->getUserRepository(),
+                'service_container' => $this->get('service_container'),
+                'fields' => array_keys($request->request->all())
+            ]);
+        } else {
+            $form = $this->createForm($this->getFormCreate(), $user, [
+                'method' => 'POST'
+            ]);
+        }
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            $user->addRole('ROLE_USER');
+            $user->setEnabled(true);
+
+            $encoder = $this->container->get('security.password_encoder');
+            $encoded = $encoder->encodePassword($user, $user->getPassword());
+
+            $user->setPassword($encoded);
+
+            $em->persist($user);
+            $em->flush();
+
+            $this->get('geoks.user_provider')->loadUserByUsername($user->getUsername());
+
+            return $this->serializeResponse([
+                "details" => $user,
+                "access_token" => $this->get('geoks.user_provider')->getAccessToken()
+            ]);
+        }
+
+        return $this->serializeResponse($form, Response::HTTP_BAD_REQUEST);
+    }
+
+    public function subscribeCustomAction(Request $request)
+    {
+        $class = $this->getUserRepository();
+
+        /** @var User $user */
+        $user = new $class();
 
         if ($this->getFormCreate() == CreateForm::class) {
             $form = $this->createForm($this->getFormCreate(), $user, [
