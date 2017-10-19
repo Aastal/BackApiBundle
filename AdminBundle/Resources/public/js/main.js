@@ -317,7 +317,7 @@ $(document).on('click', "#selectAll", function () {
     }
 });
 
-function multipleDelete() {
+function multipleDelete(all) {
     var ids = [];
     var entityName = $('#entity-name').text();
 
@@ -327,10 +327,29 @@ function multipleDelete() {
         }
     });
 
+    var data = {ids : ids, all: all};
+
+    if (all !== true) {
+        data = {ids : ids};
+
+        deleteAction(data, entityName);
+    } else {
+        $('#myModalWarning').modal();
+    }
+}
+
+$(document).on('click', '#confirm-delete', function () {
+    var entityName = $('#entity-name').text();
+    var data = {ids : null, all: true};
+
+    deleteAction(data, entityName);
+});
+
+function deleteAction(data, entityName) {
     $.ajax({
         type: "POST",
         url: Routing.generate('delete_' + entityName + '_entities'),
-        data: { ids : ids },
+        data: data,
 
         success: function() {
             window.location.reload();
