@@ -77,7 +77,9 @@
                                     </th>
                                 {% endfor %}
 
-                                <th>Actions</th>
+                                <th>Voir</th>
+                                <th>Modifier</th>
+                                <th>Supprimer</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -128,9 +130,13 @@
                                             {% if route_exists('geoks_admin_' ~ namePluralize ~ '_show') %}
                                                 <a class="btn btn-animate btn-info" href="{{ path('geoks_admin_' ~ namePluralize ~ '_show', {'id': entity.id}) }}">Voir</a>
                                             {% endif %}
+                                        </td>
+                                        <td>
                                             {% if route_exists('geoks_admin_' ~ namePluralize ~ '_update') %}
                                                 <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_update', {'id': entity.id}) }}">Modifier</a>
                                             {% endif %}
+                                        </td>
+                                        <td>
                                             {% if route_exists('geoks_admin_' ~ namePluralize ~ '_delete') %}
                                                 <a class="btn btn-animate btn-danger" href="{{ path('geoks_admin_' ~ namePluralize ~ '_delete', {'id': entity.id}) }}">Supprimer</a>
                                             {% endif %}
