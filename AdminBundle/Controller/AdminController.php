@@ -463,9 +463,18 @@ abstract class AdminController extends Controller implements AdminControllerInte
 
         $em = $this->getDoctrine()->getManager();
 
-        foreach ($request->get("ids") as $id) {
-            $entity = $em->getRepository($this->getEntityRepository())->find($id);
-            $em->remove($entity);
+        if ($request->get('all')) {
+            $entities = $em->getRepository($this->getEntityRepository())->findAll();
+
+            foreach ($entities as $entity) {
+                $em->remove($entity);
+            }
+
+        } else {
+            foreach ($request->get("ids") as $id) {
+                $entity = $em->getRepository($this->getEntityRepository())->find($id);
+                $em->remove($entity);
+            }
         }
 
         $em->flush();

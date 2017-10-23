@@ -17,6 +17,7 @@ app:
   index: Accueil
   export: Exporter
   delete: Supprimer
+  delete_all: Supprimer toutes les données de la table
   add: Ajouter
   exit: Quitter
   action_group: Actions Groupées
