@@ -2,10 +2,7 @@
   "name": "geoks-dev",
   "version": "1.0.0",
   "description": "geoks-dev",
-  "repository": {
-    "type": "git",
-    "url": "git@git.geoks-dev.fr:geoks-dev/symfony-bundle.git"
-  },
+  "repository": "git@git.geoks-dev.fr:geoks-dev/symfony-bundle.git",
   "author": "Geoks",
   "license": "ISC",
   "dependencies": {

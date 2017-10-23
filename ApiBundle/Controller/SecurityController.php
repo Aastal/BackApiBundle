@@ -129,6 +129,7 @@ abstract class SecurityController extends ApiController
 
     }
 
+
     public function loginOptionsAction()
     {
         return $this->serializeResponse(
