@@ -6,9 +6,17 @@
   "author": "Geoks",
   "license": "ISC",
   "dependencies": {
-    "bower": "^1.8.0",
     "jpegoptim-bin": "^3.0.0",
     "nodejs": "0.0.0",
-    "uglifyjs": "^2.4.10"
+    "uglifyjs": "^2.4.10",
+    "bootstrap-sass": "^3.3.7",
+    "jquery": "^1.9",
+    "jquery-ui": "latest",
+    "jquery-countTo": "latest",
+    "select2": "^4.0.3",
+    "roboto-fontface": "^0.6.0",
+    "datetimepicker": "latest",
+    "select2-bootstrap-theme": "^0.1.0-beta.9",
+    "open-sans-fontface": "^1.4.2"
   }
 }
