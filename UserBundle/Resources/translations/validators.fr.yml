@@ -1,0 +1,7 @@
+geoks:
+    user:
+        assert:
+            lastname:
+                wrong: Votre nom est incorrect
+            firstname:
+                wrong: Votre prénom est incorrect

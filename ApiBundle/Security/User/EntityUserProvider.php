@@ -132,7 +132,7 @@ class EntityUserProvider extends BaseClass
         /** @var User $user */
         $user = $this->findUser(array('username' => $username));
 
-        $this->accessToken = $this->em->getRepository('GeoksApiBundle:AccessToken')->findOneBy(array('user' => $user));
+        $this->accessToken = $this->em->getRepository('GeoksApiBundle:AccessToken')->findOneBy(array('user' => $user->getId()));
 
         $this->createToken($user, $session);
 
