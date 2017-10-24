@@ -51,6 +51,14 @@ abstract class GlobalController extends ApiController implements GlobalControlle
     }
 
     /**
+     * @param string $entityRepository
+     */
+    public function setEntityRepository($entityRepository)
+    {
+        $this->entityRepository = $entityRepository;
+    }
+
+    /**
      * @return string
      */
     protected function getFormCreate()
