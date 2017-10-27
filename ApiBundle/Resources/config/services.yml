@@ -17,6 +17,7 @@ parameters:
 services:
     geoks.utils.string_manager:
         class: Geoks\ApiBundle\Utils\StringUtils
+        arguments: [ "%geoks_api.class_pluralize%" ]
 
     geoks.utils.image:
         class: Geoks\ApiBundle\Utils\ImageUtil
