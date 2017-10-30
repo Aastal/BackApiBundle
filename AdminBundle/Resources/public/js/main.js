@@ -11,12 +11,12 @@ $(document).on('click', '.confirm-submit', function () {
     return confirm("Voulez-vous vraiment envoyer ?");
 });
 
-$('.datetimepicker').datetimepicker({
+$('.datetimepicker').DateTimePicker({
     format: 'd/m/Y H:i',
     lang: '{{ locale }}'
 });
 
-$('.datepicker').datetimepicker({
+$('.datepicker').DateTimePicker({
     format: 'd/m/Y',
     lang: '{{ locale }}'
 });
