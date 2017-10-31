@@ -121,6 +121,14 @@
     {% endspaceless %}
 {% endblock choice_widget_expanded %}
 
+{% block entity_expanded_label %}
+    {% spaceless %}
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            {{ form_label(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock %}
+
 {% block entity_expanded_widget %}
     {% spaceless %}
         {% set i = 0 %}
@@ -130,7 +138,7 @@
         {% endfor %}
 
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <select title="{{ form.vars.label|trans({}, translation_domain) }}" name="{{ form.vars.full_name }}" id="{{ form.vars.id }}" class="control-animate">
+            <select title="{{ form.vars.label|trans({}, translation_domain) }}" name="{{ form.vars.full_name }}" id="{{ form.vars.id }}" class="control-animate control-multiple">
                 <option value></option>
                 {% for child in form if child.vars.checked == 0 %}
                     <option value="{{ child.vars.value }}">{{ child.vars.label }}</option>
@@ -157,7 +165,6 @@
                 {{ form_errors(form) }}
             </div>
         </div>
-
     {% endspaceless %}
 {% endblock entity_expanded_widget %}
 

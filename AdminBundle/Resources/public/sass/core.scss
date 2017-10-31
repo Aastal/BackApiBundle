@@ -1,5 +1,3 @@
-@import "vars";
-
 body {
   font-family: "Roboto Regular", sans-serif;
 }
@@ -677,21 +675,27 @@ select.control-animate {
     outline: none;
   }
 
+  &:hover {
+    color: #fff;
+  }
+
   &.btn-primary {
-    background-color: $primary-color;
+    background-color: $btn-color;
+    border-color: $btn-color;
 
     &:checked,
     &:hover {
-      background-color: $primary-color;
+      background-color: $btn-color;
     }
   }
 
   &.btn-light-default {
-    background-color: $secondary-color;
+    background-color: $btn-lite-color;
+    border-color: $btn-lite-color;
 
     &:checked,
     &:hover {
-      background-color: #bdbdbd;
+      background-color: $btn-color;
     }
   }
   &.btn-light-info {
@@ -726,10 +730,6 @@ select.control-animate {
     &:hover {
       background-color: #03A9F4;
     }
-  }
-
-  &:hover {
-    color: #fff;
   }
 }
 

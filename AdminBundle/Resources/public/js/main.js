@@ -122,7 +122,11 @@ function searchAjax(target, url, text, returnObj) {
         form = "geoks_admin_update";
     }
 
-    target = "#" + form + "_" + targetEntity;
+    if (form !== "") {
+        target = "#" + form + "_" + targetEntity;
+    } else {
+        target = "#" + targetEntity;
+    }
 
     var select2 = $(target).select2({
         placeholder: text,

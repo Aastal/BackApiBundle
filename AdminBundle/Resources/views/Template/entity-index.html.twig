@@ -14,7 +14,7 @@
 <hr>
 
 {% if route_exists('geoks_admin_' ~ namePluralize ~ '_create') %}
-    <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_create') }}">{{ "app.add"|trans }}</a>
+    <a class="btn btn-animate btn-primary" href="{{ path('geoks_admin_' ~ namePluralize ~ '_create') }}">{{ "app.add"|trans }}</a>
 {% endif %}
 
 {% if route_exists('geoks_admin_' ~ namePluralize ~ '_import') %}
@@ -31,7 +31,7 @@
 
 <div class="pull-right">
     <!-- Launch Modal -->
-    <button type="button" class="btn btn-animate btn-blue" data-toggle="modal" data-target="#myModal">
+    <button type="button" class="btn btn-animate btn-primary" data-toggle="modal" data-target="#myModal">
         {{ "app.action_group"|trans }}
     </button>
     |
@@ -165,7 +165,7 @@
                                         </td>
                                         <td>
                                             {% if route_exists('geoks_admin_' ~ namePluralize ~ '_update') %}
-                                                <a class="btn btn-animate btn-blue" href="{{ path('geoks_admin_' ~ namePluralize ~ '_update', {'id': entity.id}) }}">Modifier</a>
+                                                <a class="btn btn-animate btn-primary" href="{{ path('geoks_admin_' ~ namePluralize ~ '_update', {'id': entity.id}) }}">Modifier</a>
                                             {% endif %}
                                         </td>
                                         <td>

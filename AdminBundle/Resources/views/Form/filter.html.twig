@@ -30,11 +30,11 @@
 
                         <div class="col-md-12">
                             <br/>
-                            <button class='btn btn-animate btn-light-blue' type="submit">{{ "form.search"|trans }}</button>
+                            <button class='btn btn-animate btn-light-default' type="submit">{{ "form.search"|trans }}</button>
                             <button class='btn btn-animate btn-light-info' type="reset">{{ "form.empty_filter"|trans }}</button>
 
                             {% if form.export is defined %}
-                                {{ form_widget(form.export, { 'attr': { 'class': 'btn btn-animate btn-light-blue pull-right export' } }) }}
+                                {{ form_widget(form.export, { 'attr': { 'class': 'btn btn-animate btn-light-default pull-right export' } }) }}
                             {% endif %}
                         </div>
                     </div>
