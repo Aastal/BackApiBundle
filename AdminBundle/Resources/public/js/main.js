@@ -122,6 +122,10 @@ function searchAjax(target, url, text, returnObj) {
         form = "geoks_admin_update";
     }
 
+    if ($("#geoks_filter_" + targetEntity).length) {
+        form = "geoks_filter";
+    }
+
     if (form !== "") {
         target = "#" + form + "_" + targetEntity;
     } else {

@@ -115,7 +115,7 @@ class CreateForm extends AbstractType
                     $typeOptions['options']['required'] = true;
                 }
 
-                if ($class["type"] === 8) {
+                if ($class["type"] === 8 && in_array($name, $entityFields->getMultipleFields())) {
 
                     $typeOptions['options']['expanded'] = true;
                     $typeOptions['options']['multiple'] = true;
@@ -151,14 +151,14 @@ class CreateForm extends AbstractType
                             }
                         );
                     ;
-                } elseif ($class["type"] === 2) {
+                } elseif ($class["type"] === 2 && in_array($name, $entityFields->getMultipleFields())) {
                     $builder->add($name, EntityType::class, $typeOptions['options']);
 
                     $typeOptions['options']['query_builder'] = function (EntityRepository $er) use ($builder, $class) {
                         return $er->createQueryBuilder('a')
                             ->where('a.' . $class['mappedBy'] . ' != ' . $builder->getData()->getId());
                     };
-                } elseif ($class["type"] === 1 && $class['inversedBy'] !== null) {
+                } elseif ($class["type"] === 1 && $class['inversedBy'] !== null && in_array($name, $entityFields->getMultipleFields())) {
                     $builder->add($name, EntityType::class, $typeOptions['options']);
                 }
             }

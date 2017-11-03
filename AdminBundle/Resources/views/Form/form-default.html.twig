@@ -116,9 +116,13 @@
                 <div class="col-md-12">
                     <h3 align="center">{{ "form.required"|trans }}</h3>
 
-                    {% for child in form.children if (child.vars.required is defined and child.vars.required == true) and (child.vars.attr.class is defined and "multiple" not in child.vars.attr.class or child.vars.attr.class is not defined) %}
-                        {{ form_row(child) }}
-                    {% endfor %}
+                    <div class="row">
+                        <div class="col-md-10">
+                            {% for child in form.children if (child.vars.required is defined and child.vars.required == true) and (child.vars.attr.class is defined and "multiple" not in child.vars.attr.class or child.vars.attr.class is not defined) %}
+                                {{ form_row(child) }}
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             {% endif %}
 

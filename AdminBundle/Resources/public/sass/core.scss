@@ -488,7 +488,7 @@ select.control-animate {
 
 @keyframes inputHighlighter {
   from {
-    background: #36a7df;
+    background: $primary-color;
   }
   to {
     width: 0;
@@ -586,7 +586,7 @@ select.control-animate {
   }
 
   &.box-filter {
-    border-top-color: #FF9800;
+    border-top-color: $primary-color;
   }
 
   &.box-event {
@@ -594,6 +594,7 @@ select.control-animate {
   }
 
   .box-header {
+    outline: none;
     font-size: 18px;
     margin: 0;
     padding: 10px;
@@ -604,7 +605,12 @@ select.control-animate {
     .glyphicon-chevron-up {
       top: 3px;
       margin-right: 5px;
+
+      &:before {
+        color: $primary-color;
+      }
     }
+
     .box-title {
       display: inline-block;
       font-size: 18px;
@@ -680,12 +686,22 @@ select.control-animate {
   }
 
   &.btn-primary {
-    background-color: $btn-color;
-    border-color: $btn-color;
+    background-color: $btn-primary-color;
+    border-color: $btn-primary-color;
 
     &:checked,
     &:hover {
-      background-color: $btn-color;
+      background-color: $btn-primary-color;
+    }
+  }
+
+  &.btn-default {
+    background-color: #ccc;
+    border-color: #ccc;
+
+    &:checked,
+    &:hover {
+      background-color: #eee;
     }
   }
 
@@ -695,17 +711,28 @@ select.control-animate {
 
     &:checked,
     &:hover {
-      background-color: $btn-color;
+      background-color: $btn-lite-color;
     }
   }
-  &.btn-light-info {
-    background-color: #FF9800;
+
+  &.btn-info {
+    background-color: $btn-info-color;
 
     &:checked,
     &:hover {
-      background-color: #FFB74D;
+      background-color: $btn-info-color;
     }
   }
+
+  &.btn-light-info {
+    background-color: $btn-info-color;
+
+    &:checked,
+    &:hover {
+      background-color: $btn-info-color;
+    }
+  }
+
   &.btn-light-blue {
     background-color: #03a9f4;
 
@@ -714,6 +741,16 @@ select.control-animate {
       background-color: #4fc3f7;
     }
   }
+
+  &.btn-light-green {
+    background-color: #4CAF50;
+
+    &:checked,
+    &:hover {
+      background-color: #81C784;
+    }
+  }
+
   &.btn-light-danger {
     background-color: #e53935;
 
