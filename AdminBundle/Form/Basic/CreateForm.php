@@ -151,7 +151,7 @@ class CreateForm extends AbstractType
                             }
                         );
                     ;
-                } elseif ($class["type"] === 2 && in_array($name, $entityFields->getMultipleFields())) {
+                } elseif ($class["type"] === 2) {
                     $builder->add($name, EntityType::class, $typeOptions['options']);
 
                     $typeOptions['options']['query_builder'] = function (EntityRepository $er) use ($builder, $class) {
