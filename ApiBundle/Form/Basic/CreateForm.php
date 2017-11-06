@@ -29,11 +29,6 @@ class CreateForm extends AbstractType
     private $entityName;
 
     /**
-     * @var string
-     */
-    private $field;
-
-    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */

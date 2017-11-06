@@ -806,3 +806,18 @@ footer {
   padding-top: 4%;
   margin-top: 4%;
 }
+
+$spaceamounts: (5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 75, 100);
+$sides: (top, bottom, left, right);
+
+@each $space in $spaceamounts {
+  @each $side in $sides {
+    .block-margin-#{$side}-#{$space} {
+      margin-#{$side}: #{$space}px;
+    }
+
+    .block-padding-#{$side}-#{$space} {
+      padding-#{$side}: #{$space}px;
+    }
+  }
+}

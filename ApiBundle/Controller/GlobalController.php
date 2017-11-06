@@ -180,7 +180,7 @@ abstract class GlobalController extends ApiController implements GlobalControlle
      * @param array $criteria
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getAllByCriteriaAction(array $criteria)
+    public function getAllByCriteriaAction(array $criteria = [])
     {
         if (!$this->getUser()) {
             return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
