@@ -10,11 +10,11 @@
         {% endif %}
 
         {% if route_exists('geoks_admin_' ~ namePluralize ~ '_update') %}
-            <a class="btn btn-animate btn-primary" href="{{ path('geoks_admin_' ~ namePluralize|lower|first ~ namePluralize|slice(1) ~ '_update', {'id': entity.id}) }}">Modifier</a>
+            <a class="btn btn-animate btn-primary" href="{{ path('geoks_admin_' ~ namePluralize|lower|first ~ namePluralize|lower|slice(1) ~ '_update', {'id': entity.id}) }}">Modifier</a>
         {% endif %}
 
         {% if route_exists('geoks_admin_' ~ namePluralize ~ '_delete') %}
-            <a class="btn btn-animate btn-danger" href="{{ path('geoks_admin_' ~ namePluralize|lower|first ~ namePluralize|slice(1) ~ '_delete', {'id': entity.id}) }}">Supprimer</a>
+            <a class="btn btn-animate btn-danger" href="{{ path('geoks_admin_' ~ namePluralize|lower|first ~ namePluralize|lower|slice(1) ~ '_delete', {'id': entity.id}) }}">Supprimer</a>
         {% endif %}
     </div>
 </div>
