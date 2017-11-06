@@ -17,5 +17,8 @@
     "datetimepicker": "latest",
     "select2-bootstrap-theme": "^0.1.0-beta.9",
     "open-sans-fontface": "^1.4.2"
+  },
+  "scripts": {
+    "newinstall": "yarn install --modules-folder ../../web/vendors"
   }
 }

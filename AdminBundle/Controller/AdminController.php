@@ -305,7 +305,7 @@ abstract class AdminController extends Controller implements AdminControllerInte
         ]);
     }
 
-    public function updateAction(Request $request, $id)
+    public function updateUserAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository($this->getEntityRepository())->find($id);
@@ -342,6 +342,49 @@ abstract class AdminController extends Controller implements AdminControllerInte
                 if ($changePassword) {
                     $entity->setPassword($this->encodeUserPassword($entity, $entity->getPlainPassword()));
                 }
+
+                $em->flush();
+
+                $this->container->get('geoks.flashbag.handler')->setFormFlashBag(true, 'update');
+
+                return $this->redirect($this->generateUrl('geoks_admin_' . $this->getNamePluralize() . '_index'));
+            }
+
+            $this->container->get('geoks.flashbag.handler')->setFormFlashBag(false, 'update');
+        }
+
+        return $this->render($this->getEntityView() . ':form.html.twig', [
+            'form' => $form->createView(),
+            'entity' => $entity
+        ]);
+    }
+
+    public function updateAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository($this->getEntityRepository())->find($id);
+
+        $form = $this->createForm($this->getFormUpdate(), $entity, [
+            'attr' => [
+                'id' => "app." . lcfirst($this->className),
+                'class' => "form-horizontal"
+            ],
+
+            'action' => $this->generateUrl(sprintf('geoks_admin_' . $this->getNamePluralize() . '_update'), ['id' => $id]),
+            'method' => 'POST',
+            'translation_domain' => strtolower($this->className),
+            'data_class' => $this->getEntityRepository(),
+            'entity_fields' => $this->get('geoks_admin.entity_fields'),
+            'translator' => $this->get('translator'),
+            'current_user' => $this->getUser()
+        ]);
+
+        $form->remove('password');
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
 
                 $em->flush();
 

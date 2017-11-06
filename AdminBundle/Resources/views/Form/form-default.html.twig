@@ -96,7 +96,7 @@
                         {{ form_row(child) }}
 
                         {% if (loop.index)%2 == 0 %}
-                                </div>
+                            </div>
 
                             {% if b > 3 %}
                                 <div class="col-md-6">
@@ -116,9 +116,13 @@
                 <div class="col-md-12">
                     <h3 align="center">{{ "form.required"|trans }}</h3>
 
-                    {% for child in form.children if (child.vars.required is defined and child.vars.required == true) and (child.vars.attr.class is defined and "multiple" not in child.vars.attr.class or child.vars.attr.class is not defined) %}
-                        {{ form_row(child) }}
-                    {% endfor %}
+                    <div class="row">
+                        <div class="col-md-10">
+                            {% for child in form.children if (child.vars.required is defined and child.vars.required == true) and (child.vars.attr.class is defined and "multiple" not in child.vars.attr.class or child.vars.attr.class is not defined) %}
+                                {{ form_row(child) }}
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             {% endif %}
 
@@ -161,7 +165,7 @@
         <div class="col-md-12">
             <hr>
             <div class="box-footer">
-                <button id="submit" class="btn btn-animate btn-blue {% if confirm is defined %}confirm-submit{% endif %}" type="submit">{{ "form.submit"|trans }}</button>
+                <button id="submit" class="btn btn-animate btn-primary {% if confirm is defined %}confirm-submit{% endif %}" type="submit">{{ "form.submit"|trans }}</button>
                 <a href="{{ path('geoks_admin_' ~ namePluralize ~ '_index') }}" class="btn btn-animate btn-warning">{{ "form.cancel"|trans }}</a>
             </div>
         </div>

@@ -11,12 +11,12 @@ $(document).on('click', '.confirm-submit', function () {
     return confirm("Voulez-vous vraiment envoyer ?");
 });
 
-$('.datetimepicker').datetimepicker({
+$('.datetimepicker').DateTimePicker({
     format: 'd/m/Y H:i',
     lang: '{{ locale }}'
 });
 
-$('.datepicker').datetimepicker({
+$('.datepicker').DateTimePicker({
     format: 'd/m/Y',
     lang: '{{ locale }}'
 });
@@ -122,7 +122,15 @@ function searchAjax(target, url, text, returnObj) {
         form = "geoks_admin_update";
     }
 
-    target = "#" + form + "_" + targetEntity;
+    if ($("#geoks_filter_" + targetEntity).length) {
+        form = "geoks_filter";
+    }
+
+    if (form !== "") {
+        target = "#" + form + "_" + targetEntity;
+    } else {
+        target = "#" + targetEntity;
+    }
 
     var select2 = $(target).select2({
         placeholder: text,

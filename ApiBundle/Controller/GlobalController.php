@@ -51,6 +51,14 @@ abstract class GlobalController extends ApiController implements GlobalControlle
     }
 
     /**
+     * @param string $entityRepository
+     */
+    public function setEntityRepository($entityRepository)
+    {
+        $this->entityRepository = $entityRepository;
+    }
+
+    /**
      * @return string
      */
     protected function getFormCreate()
@@ -98,10 +106,6 @@ abstract class GlobalController extends ApiController implements GlobalControlle
             if (!$this->getUser()) {
                 return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
             }
-
-            if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
-                return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
-            }
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -109,6 +113,21 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         $entities = $em->getRepository($this->getEntityRepository())->findAll();
 
         return $this->serializeResponse(['list' => $entities]);
+    }
+
+    public function getAllPrepareAction($secure = null)
+    {
+        if ($secure) {
+            if (!$this->getUser()) {
+                return $this->serializeResponse('geoks.user.notConnected', Response::HTTP_FORBIDDEN);
+            }
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository($this->getEntityRepository())->findAll();
+
+        return $this->serializeResponse(['prepare' => $entities]);
     }
 
     public function getOneAction($id)
@@ -211,6 +230,27 @@ abstract class GlobalController extends ApiController implements GlobalControlle
         $entities = $em->getRepository($this->getEntityRepository())->findBy($criteria, $order, $limit, ($page - 1) * $limit);
 
         return $this->serializeResponse(['list' => $entities]);
+    }
+
+    /**
+     * @param Request $request
+     * @param array $criteria
+     * @param array $order
+     * @param integer $limit
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getAllByCriteriaOrderAndPaginationPrepareAction(Request $request, array $criteria = [], array $order = ["id" => "DESC"], $limit = 10)
+    {
+        if (!$this->getUser()) {
+            return $this->serializeResponse('geoks.user.forbidden', Response::HTTP_FORBIDDEN);
+        }
+
+        $page = $request->get('page', 1);
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository($this->getEntityRepository())->findBy($criteria, $order, $limit, ($page - 1) * $limit);
+
+        return $this->serializeResponse(['prepare' => $entities]);
     }
 
     public function getOneByCriteriaAction($id, array $criteria)

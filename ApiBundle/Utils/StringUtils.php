@@ -5,6 +5,19 @@ namespace Geoks\ApiBundle\Utils;
 class StringUtils
 {
     /**
+     * @var array
+     */
+    private $classPluralize;
+
+    /**
+     * @param array $classPluralize
+     */
+    public function __construct($classPluralize)
+    {
+        $this->classPluralize = $classPluralize;
+    }
+
+    /**
      * @param string $delimiter
      * @param string $string
      * @return string
@@ -99,6 +112,10 @@ class StringUtils
      */
     public function pluralize($word)
     {
+        if (array_key_exists($word, $this->classPluralize)) {
+            return $this->classPluralize[$word];
+        }
+
         $endLetter = substr($word, -1);
 
         switch ($endLetter)
