@@ -9,11 +9,22 @@
 }
 
 /* color */
-$primary-color: #1889ba;
-$secondary-color: #31af87;
-$lite-color: #F5F5F5;
-$background-color: #f5f5f5;
-$dark-background-color: #333;
+$primary-color: #E4E4E5 ;//#1889ba ;
+$secondary-color: #5CC7D3 ;//#31af87 ;
+$lite-color: #155282 ;//#f5f5f5 ;//#5CC7D3 ;
+$background-color: #5CC7D3 ;//#636363 ;//
+$dark-background-color: #155282 ;//#333;
+$title-color: #5CC7D3 ;//#1889ba ;
+
+
+$btn-primary-color: #00E785 ;//#2CD64E ;
+$btn-info-color: #636363 ;
+$btn-lite-color: #FF004F ;// rgba(230, 57, 36, .75);
+$dark-color: #39383A ;
+$lite-background-color: #1889ba ;
+
+$sidebar-font-size: 16px;
+$sidebar-padding: 20px 25px;
 
 /* radius */
 @mixin border-radius($radius) {
