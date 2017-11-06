@@ -1,0 +1,6 @@
+notification:
+  id: ID
+  type: Type
+  title: Titre
+  body: Corps
+  read: Lu

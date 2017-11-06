@@ -10,7 +10,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  * NotificationRepository
  *
  */
-class NotificationRepository extends EntityRepository
+class NotificationRepository extends GlobalRepository
 {
     /**
      * @param \DateTime $datetime

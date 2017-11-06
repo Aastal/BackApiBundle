@@ -11,15 +11,21 @@ $(document).on('click', '.confirm-submit', function () {
     return confirm("Voulez-vous vraiment envoyer ?");
 });
 
-$('.datetimepicker').DateTimePicker({
-    format: 'd/m/Y H:i',
-    lang: '{{ locale }}'
+$('.datetimepicker').datetimepicker({
+    format: 'd/m/Y H:i'
 });
 
-$('.datepicker').DateTimePicker({
-    format: 'd/m/Y',
-    lang: '{{ locale }}'
+$('.datepicker').datetimepicker({
+    timepicker: false,
+    format: 'd/m/Y'
 });
+
+$('.timepicker').datetimepicker({
+    datepicker: false,
+    format: 'H:i'
+});
+
+jQuery.datetimepicker.setLocale('{{ locale }}');
 
 $(document).on('click', '.btn-list-display', function () {
     $(this).parent().parent().find('.multiple').toggle('slide');
