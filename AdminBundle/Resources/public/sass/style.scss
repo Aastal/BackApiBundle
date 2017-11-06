@@ -87,18 +87,18 @@ h1 {
  */
 .navbar-inverse {
   background-color: $lite-color;
-  color: $secondary-color;
+  color: $navbar-text-color;
 
   .navbar-brand {
     font-size: 2em;
     margin: 10px;
-    color: $secondary-color;
+    color: $navbar-text-color;
     text-transform: uppercase;
   }
 
   .navbar-nav {
     > li > a {
-      color: $secondary-color;
+      color: $navbar-text-color;
     }
   }
 }
@@ -127,7 +127,7 @@ h1 {
       @include transition(all, .1s, ease-in-out);
 
       &:hover {
-        color: $primary-color;
+        color: $navbar-text-color;
         background-color: $lite-color;
       }
     }
@@ -135,7 +135,7 @@ h1 {
     > .active > a,
     > .active > a:hover,
     > .active > a:focus {
-      color: $primary-color;
+      color: $navbar-text-color;
       background-color: $lite-color;
     }
   }
@@ -626,7 +626,7 @@ select.control-animate {
 
     &.box-form {
       .form-right {
-        background-color: $lite-color;
+        background-color: $secondary-color;
         padding-bottom: 25px;
       }
 
@@ -691,7 +691,7 @@ select.control-animate {
 
     &:checked,
     &:hover {
-      background-color: #bdbdbd;
+      background-color: #E4E4E5;
     }
   }
   &.btn-light-info {
@@ -826,4 +826,19 @@ footer {
   font-size: 14px;
   padding-top: 4%;
   margin-top: 4%;
+}
+
+$spaceamounts: (5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 75, 100);
+$sides: (top, bottom, left, right);
+
+@each $space in $spaceamounts {
+  @each $side in $sides {
+    .block-margin-#{$side}-#{$space} {
+      margin-#{$side}: #{$space}px;
+    }
+
+    .block-padding-#{$side}-#{$space} {
+      padding-#{$side}: #{$space}px;
+    }
+  }
 }
