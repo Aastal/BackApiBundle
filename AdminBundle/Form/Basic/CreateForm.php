@@ -82,7 +82,7 @@ class CreateForm extends AbstractType
 
         if ($reader->getClassAnnotation($reflection, "Vich\\UploaderBundle\\Mapping\\Annotation\\Uploadable")) {
             foreach ($reflection->getProperties() as $reflectionProperty) {
-                if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Vich\\UploaderBundle\\Mapping\\Annotation\\UploadableField")) {
+                if ($annotation = $reader->getPropertyAnnotation($reflectionProperty, "Vich\\UploaderBundle\\Mapping\\Annotation\\UploadableField") && !in_array($reflectionProperty->name, $banList)) {
                     $builder
                         ->add($reflectionProperty->name, VichFileType::class, [
                             'label' => $this->entityName . '.' . $reflectionProperty->name,
@@ -115,8 +115,7 @@ class CreateForm extends AbstractType
                     $typeOptions['options']['required'] = true;
                 }
 
-                if ($class["type"] === 8 && in_array($name, $entityFields->getMultipleFields())) {
-
+                if ($class["type"] === 8 && in_array($name, $entityFields->getMultipleFields()) && !$class['mappedBy']) {
                     $typeOptions['options']['expanded'] = true;
                     $typeOptions['options']['multiple'] = true;
                     $typeOptions['options']['attr']['class'] = 'multiple';
