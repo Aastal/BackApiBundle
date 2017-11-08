@@ -27,12 +27,12 @@ abstract class GlobalController extends ApiController implements GlobalControlle
     /**
      * @var string
      */
-    private $formCreate = "Geoks\\ApiBundle\\Form\\Basic\\CreateForm";
+    protected $formCreate = "Geoks\\ApiBundle\\Form\\Basic\\CreateForm";
 
     /**
      * @var string
      */
-    private $formUpdate = "Geoks\\ApiBundle\\Form\\Basic\\UpdateForm";
+    protected $formUpdate = "Geoks\\ApiBundle\\Form\\Basic\\UpdateForm";
 
     /**
      * @return string
