@@ -6,13 +6,6 @@ hwi_oauth_connect:
     resource: "@HWIOAuthBundle/Resources/config/routing/connect.xml"
     prefix:   /connect
 
-hwi_oauth_login:
-    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
-    prefix:   /login
-
-fos_user_security:
-    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
-
 fos_user_profile:
     resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
     prefix: /profile
@@ -29,6 +22,10 @@ fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
 
+fos_user_group:
+    resource: "@FOSUserBundle/Resources/config/routing/group.xml"
+    prefix: /group
+
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
@@ -41,10 +38,13 @@ admin:
     requirements:
         _locale: fr|en
 
-
 NelmioApiDocBundle:
     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
     prefix:   /public/doc
+
+_main:
+    path: /
+    defaults: { _controller: FrameworkBundle:Redirect:redirect, route: geoks_admin_index, permanent: true }
 
 _admin:
     path: /admin
@@ -52,3 +52,11 @@ _admin:
 
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+admin_panel:
+    resource: "@GeoksAdminBundle/Controller/"
+    type:     annotation
+    prefix:   /admin/{_locale}
+    defaults:  { _locale: fr }
+    requirements:
+        _locale: fr|en

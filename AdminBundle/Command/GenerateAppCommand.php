@@ -126,7 +126,9 @@ class GenerateAppCommand extends ContainerAwareCommand
 
         // Npm and Bower
         exec('cd src/Geoks && npm install');
-        exec('cd src/Geoks && bower install');
+        exec('cd src/Geoks && yarn install --modules-folder ../../web/vendors');
+
+        exec('php bin/console doctrine:fixtures:load');
 
         // Remove Default Elements
         $fs->remove($kernel->getRootDir() . '/../tests');

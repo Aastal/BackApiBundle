@@ -16,21 +16,17 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
 
-            new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new AppBundle\AppBundle(),
             new AdminBundle\AdminBundle(),
 
-            // JMS + APIDoc
+            // Geoks Bundle
             new JMS\TranslationBundle\JMSTranslationBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
-
-            // FOSRestBundle + FOSOAuthServerBundle
             new FOS\RestBundle\FOSRestBundle(),
             new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
-            new \Hip\MandrillBundle\HipMandrillBundle(),
-
-            // Geoks Bundle
+            new Slot\MandrillBundle\SlotMandrillBundle(),
+            new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Geoks\ApiBundle\GeoksApiBundle(),
             new Geoks\UserBundle\GeoksUserBundle(),
             new Geoks\AdminBundle\GeoksAdminBundle(),
@@ -45,8 +41,6 @@ class AppKernel extends Kernel
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
             new Misd\PhoneNumberBundle\MisdPhoneNumberBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
-
-            // FOS
             new FOS\UserBundle\FOSUserBundle(),
         );
 

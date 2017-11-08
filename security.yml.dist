@@ -33,10 +33,10 @@ security:
             oauth:
                 resource_owners:
                     oauth2:       "/login/check"
-                login_path:        /api/v1/sessions/login
-                check_path:        /api/v1/sessions/login/check
-                use_forward:       false
-                failure_path:      /api/v1/sessions/login
+                login_path:        api_login_post
+                check_path:        api_login_post
+                use_forward:       true
+                failure_path:      api_login_post
                 oauth_user_provider:
                     service: geoks.user_provider
 
@@ -58,7 +58,10 @@ security:
         - { path: "^/admin/[^/]+/logout$", role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: ^/admin, role: ROLE_ADMIN }
+
         - { path: ^/api/v1/sessions, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api, roles: ROLE_USER }
+
         - { path: "^/.*", role: IS_AUTHENTICATED_ANONYMOUSLY }
+
         - { path: "^/public/doc", role: IS_AUTHENTICATED_ANONYMOUSLY }

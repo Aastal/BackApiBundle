@@ -68,8 +68,10 @@ swiftmailer:
 
 assetic:
     bundles:
-        - AppBundle
+        - GeoksAdminBundle
         - AdminBundle
+        - AppBundle
+
     debug:          '%kernel.debug%'
     use_controller: '%kernel.debug%'
     filters:
@@ -79,19 +81,16 @@ assetic:
 
 jms_serializer:
     metadata:
-        directories:
-            FOSUB:
-                namespace_prefix: "FOS\\UserBundle"
-                path: "@GeoksUserBundle/Resources/config/serializer/"
-            APP:
-                namespace_prefix: "AppBundle"
-                path: "@AppBundle/Resources/config/serializer/"
+        directories: ~
 
 # FOSUserBundle
 fos_user:
     db_driver:      orm
     firewall_name:  main
     user_class:     AppBundle\Entity\User
+    from_email:
+        address:    "no-reply@geoks.fr"
+        sender_name: projectName
 
 # FOSRestBundle
 fos_rest:
@@ -153,11 +152,14 @@ geoks_admin:
     local_bundle: "AdminBundle"
     app_name: "projectName"
     ban_fields: []
+    multiple_fields: []
 
 geoks_api:
     app_bundle: "AppBundle"
     user_class: 'AppBundle\Entity\User'
-    jms_groups: ["details", "list"]
+    jms_groups: ["prepare", "details", "list"]
+    class_pluralize:
+        examples: "exampleses"
     tests:
         entities: ["users"]
 
